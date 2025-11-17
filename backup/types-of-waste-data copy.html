@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECOBANK for Community</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0b0e11;
+            color: #eaecef;
+        }
+
+        .header {
+            background: #181a20;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            color: #f0b90b;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: #f0b90b;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: #848e9c;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: #eaecef;
+        }
+
+        .btn-signup {
+            background: #f0b90b;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .btn-signup:hover {
+            background: #f8d12f;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 30px;
+        }
+
+        .main-tabs {
+            display: flex;
+            gap: 30px;
+            margin: 20px 0 30px 0;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        .main-tab {
+            padding: 10px 0;
+            color: #848e9c;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            font-size: 15px;
+            text-decoration: none;
+        }
+
+        .main-tab.active {
+            color: #eaecef;
+            border-bottom-color: #f0b90b;
+        }
+
+        .sub-tabs {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .sub-tab {
+            padding: 8px 0;
+            color: #848e9c;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-size: 14px;
+        }
+
+        .sub-tab.active {
+            color: #f0b90b;
+            border-bottom-color: #f0b90b;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .ranking-card {
+            background: #1e2329;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #eaecef;
+        }
+
+        .dropdown {
+            background: #2b3139;
+            color: #eaecef;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 40px 1fr 110px 110px;
+            padding: 10px 0;
+            color: #848e9c;
+            font-size: 12px;
+            border-bottom: 1px solid #2b3139;
+            margin-bottom: 5px;
+        }
+
+        .table-header div:nth-child(3),
+        .table-header div:nth-child(4) {
+            text-align: right;
+        }
+
+        .coin-list {
+            list-style: none;
+        }
+
+        .coin-row {
+            display: grid;
+            grid-template-columns: 40px 1fr 110px 110px;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #2b3139;
+            gap: 10px;
+        }
+
+        .coin-row:last-child {
+            border-bottom: none;
+        }
+
+        .rank {
+            color: #848e9c;
+            font-size: 14px;
+        }
+
+        .coin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .coin-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .coin-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #eaecef;
+        }
+
+        .price {
+            font-size: 14px;
+            text-align: right;
+            color: #eaecef;
+        }
+
+        .change {
+            font-size: 14px;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .positive {
+            color: #0ecb81;
+        }
+
+        .negative {
+            color: #f6465d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">ECOBANK</div>
+            <div class="nav">
+                <a href="index.html"><h3>Home</h3></a>
+                <a href="types-of-waste-data.html" ><h3>Type</h3></a>
+                <a href="#">Trade</a>
+                <a href="#">Futures</a>
+                <a href="#">Earn</a>
+                <a href="#">Square</a>
+                <a href="#">More</a>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="icon-btn">🔍</button>
+            <button class="icon-btn">📱</button>
+            <button class="icon-btn">⚙️</button>
+            <button class="icon-btn">🌙</button>
+            <a href="login-page.html"><button class="btn btn-login">Log In</button></a>
+            <a href="register-page.html"><button class="btn btn-signup">Sign Up</button></a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-tabs">
+            <a href="index.html" class="main-tab">Overview</a>
+            <div class="main-tab active">Types of Waste</div>
+            <div class="main-tab">AI Select</div>
+            <div class="main-tab">Token Unlock</div>
+        </div>
+
+        <div class="sub-tabs">
+            <div class="sub-tab active">Rankings</div>
+            <div class="sub-tab">USD⊗-M Futures</div>
+            <div class="sub-tab">COIN-M Futures</div>
+            <div class="sub-tab">Options</div>
+        </div>
+
+        <div class="cards-grid">
+            <!-- Hot Coins Card -->
+            <div class="ranking-card">
+                <div class="card-header">
+                    <div class="card-title">Yesterday's price</div>
+                    <select class="dropdown">
+                        <option>Crypto</option>
+                    </select>
+                </div>
+                <div class="table-header">
+                    <div></div>
+                    <div>Name</div>
+                    <div>Price</div>
+                    <div>24h Change ▼</div>
+                </div>
+                <ul class="coin-list">
+                    <li class="coin-row">
+                        <span class="rank">1</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #f3ba2f; color: #000;">B</div>
+                            <span class="coin-name">BNB</span>
+                        </div>
+                        <div class="price">$992.05</div>
+                        <div class="change negative">-0.77%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">2</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #f7931a; color: #fff;">₿</div>
+                            <span class="coin-name">BTC</span>
+                        </div>
+                        <div class="price">$101,994.74</div>
+                        <div class="change negative">-0.25%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">3</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #627eea; color: #fff;">Ξ</div>
+                            <span class="coin-name">ETH</span>
+                        </div>
+                        <div class="price">$3,426.19</div>
+                        <div class="change negative">-0.72%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">4</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #14f195; color: #000;">≡</div>
+                            <span class="coin-name">SOL</span>
+                        </div>
+                        <div class="price">$159.24</div>
+                        <div class="change negative">-1.43%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">5</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #00d4aa; color: #fff;">G</div>
+                            <span class="coin-name">GIGGLE</span>
+                        </div>
+                        <div class="price">$163.65</div>
+                        <div class="change positive">+23.17%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">6</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #f4b728; color: #000;">Z</div>
+                            <span class="coin-name">ZEC</span>
+                        </div>
+                        <div class="price">$589.78</div>
+                        <div class="change positive">+5.07%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">7</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #c2a633; color: #fff;">Ð</div>
+                            <span class="coin-name">DOGE</span>
+                        </div>
+                        <div class="price">$0.17454</div>
+                        <div class="change negative">-3.38%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">8</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #23292f; color: #fff;">✕</div>
+                            <span class="coin-name">XRP</span>
+                        </div>
+                        <div class="price">$2.29</div>
+                        <div class="change negative">-1.34%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">9</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #345d9d; color: #fff;">Ł</div>
+                            <span class="coin-name">LTC</span>
+                        </div>
+                        <div class="price">$101.08</div>
+                        <div class="change positive">+1.74%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">10</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #3772ff; color: #fff;">S</div>
+                            <span class="coin-name">SAPIEN</span>
+                        </div>
+                        <div class="price">$0.2777</div>
+                        <div class="change positive">+18.22%</div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Top Gainers Card -->
+            <div class="ranking-card">
+                <div class="card-header">
+                    <div class="card-title">Top Gainers</div>
+                    <select class="dropdown">
+                        <option>Crypto</option>
+                    </select>
+                </div>
+                <div class="table-header">
+                    <div></div>
+                    <div>Name</div>
+                    <div>Price</div>
+                    <div>24h Change ▼</div>
+                </div>
+                <ul class="coin-list">
+                    <li class="coin-row">
+                        <span class="rank">1</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #ff6b35; color: #fff;">P</div>
+                            <span class="coin-name">PYR</span>
+                        </div>
+                        <div class="price">$1.05</div>
+                        <div class="change positive">+89.73%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">2</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #00ffa3; color: #000;">K</div>
+                            <span class="coin-name">KAVA</span>
+                        </div>
+                        <div class="price">$0.1656</div>
+                        <div class="change positive">+29.07%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">3</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #00d4aa; color: #fff;">G</div>
+                            <span class="coin-name">GIGGLE</span>
+                        </div>
+                        <div class="price">$163.65</div>
+                        <div class="change positive">+23.17%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">4</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #14b6e7; color: #fff;">X</div>
+                            <span class="coin-name">XNO</span>
+                        </div>
+                        <div class="price">$1.09</div>
+                        <div class="change positive">+19.93%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">5</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #3772ff; color: #fff;">S</div>
+                            <span class="coin-name">SAPIEN</span>
+                        </div>
+                        <div class="price">$0.2777</div>
+                        <div class="change positive">+18.22%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">6</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #7c3aed; color: #fff;">R</div>
+                            <span class="coin-name">RESOLV</span>
+                        </div>
+                        <div class="price">$0.1116</div>
+                        <div class="change positive">+13.76%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">7</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #4a5568; color: #fff;">H</div>
+                            <span class="coin-name">HIGH</span>
+                        </div>
+                        <div class="price">$0.322</div>
+                        <div class="change positive">+12.98%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">8</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #ff69b4; color: #fff;">A</div>
+                            <span class="coin-name">ALICE</span>
+                        </div>
+                        <div class="price">$0.3001</div>
+                        <div class="change positive">+11.48%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">9</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #4169e1; color: #fff;">N</div>
+                            <span class="coin-name">NXPC</span>
+                        </div>
+                        <div class="price">$0.4004</div>
+                        <div class="change positive">+10.49%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">10</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #a855f7; color: #fff;">I</div>
+                            <span class="coin-name">ILV</span>
+                        </div>
+                        <div class="price">$10.50</div>
+                        <div class="change positive">+9.83%</div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Top Losers Card -->
+            <div class="ranking-card">
+                <div class="card-header">
+                    <div class="card-title">Top Losers</div>
+                    <select class="dropdown">
+                        <option>Crypto</option>
+                    </select>
+                </div>
+                <div class="table-header">
+                    <div></div>
+                    <div>Name</div>
+                    <div>Price</div>
+                    <div>24h Change ▼</div>
+                </div>
+                <ul class="coin-list">
+                    <li class="coin-row">
+                        <span class="rank">1</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #4dabf7; color: #fff;">A</div>
+                            <span class="coin-name">AR</span>
+                        </div>
+                        <div class="price">$5.50</div>
+                        <div class="change negative">-24.24%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">2</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #00bcd4; color: #fff;">F</div>
+                            <span class="coin-name">FIL</span>
+                        </div>
+                        <div class="price">$2.64</div>
+                        <div class="change negative">-21.22%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">3</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #20c997; color: #fff;">F</div>
+                            <span class="coin-name">FLUX</span>
+                        </div>
+                        <div class="price">$0.1842</div>
+                        <div class="change negative">-21.01%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">4</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #7950f2; color: #fff;">F</div>
+                            <span class="coin-name">FET</span>
+                        </div>
+                        <div class="price">$0.2951</div>
+                        <div class="change negative">-20.50%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">5</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #00897b; color: #fff;">K</div>
+                            <span class="coin-name">KDA</span>
+                        </div>
+                        <div class="price">$0.024</div>
+                        <div class="change negative">-19.46%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">6</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #495057; color: #fff;">O</div>
+                            <span class="coin-name">ORDI</span>
+                        </div>
+                        <div class="price">$5.07</div>
+                        <div class="change negative">-13.29%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">7</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #868e96; color: #fff;">$</div>
+                            <span class="coin-name">SCRT</span>
+                        </div>
+                        <div class="price">$0.2132</div>
+                        <div class="change negative">-12.12%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">8</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #718096; color: #fff;">S</div>
+                            <span class="coin-name">S</span>
+                        </div>
+                        <div class="price">$0.1586</div>
+                        <div class="change negative">-11.89%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">9</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #ffd43b; color: #000;">P</div>
+                            <span class="coin-name">PHA</span>
+                        </div>
+                        <div class="price">$0.0584</div>
+                        <div class="change negative">-11.65%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">10</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #fab005; color: #000;">P</div>
+                            <span class="coin-name">PEOPLE</span>
+                        </div>
+                        <div class="price">$0.01194</div>
+                        <div class="change negative">-11.16%</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Second Row: Top Volume, USD Futures, Coin Futures -->
+        <div class="cards-grid" style="margin-top: 20px;">
+            <!-- Top Volume Card -->
+            <div class="ranking-card">
+                <div class="card-header">
+                    <div class="card-title">Top Volume</div>
+                    <select class="dropdown">
+                        <option>Crypto</option>
+                    </select>
+                </div>
+                <div class="table-header">
+                    <div></div>
+                    <div>Name</div>
+                    <div>Price</div>
+                    <div>24h Change ▼</div>
+                </div>
+                <ul class="coin-list">
+                    <li class="coin-row">
+                        <span class="rank">1</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #f7931a; color: #fff;">₿</div>
+                            <span class="coin-name">BTC</span>
+                        </div>
+                        <div class="price">$102,084.79</div>
+                        <div class="change negative">-0.25%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">2</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #627eea; color: #fff;">Ξ</div>
+                            <span class="coin-name">ETH</span>
+                        </div>
+                        <div class="price">$3,431.17</div>
+                        <div class="change negative">-0.72%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">3</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #14f195; color: #000;">≡</div>
+                            <span class="coin-name">SOL</span>
+                        </div>
+                        <div class="price">$159.76</div>
+                        <div class="change negative">-1.23%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">4</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #f4b728; color: #000;">Z</div>
+                            <span class="coin-name">ZEC</span>
+                        </div>
+                        <div class="price">$592.16</div>
+                        <div class="change positive">+4.26%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">5</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #23292f; color: #fff;">✕</div>
+                            <span class="coin-name">XRP</span>
+                        </div>
+                        <div class="price">$2.29</div>
+                        <div class="change negative">-1.43%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">6</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #f3ba2f; color: #000;">B</div>
+                            <span class="coin-name">BNB</span>
+                        </div>
+                        <div class="price">$993.72</div>
+                        <div class="change negative">-0.66%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">7</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #00bcd4; color: #fff;">F</div>
+                            <span class="coin-name">FIL</span>
+                        </div>
+                        <div class="price">$2.66</div>
+                        <div class="change negative">-21.09%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">8</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #c2a633; color: #fff;">Ð</div>
+                            <span class="coin-name">DOGE</span>
+                        </div>
+                        <div class="price">$0.17488</div>
+                        <div class="change negative">-3.47%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">9</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #6c5ce7; color: #fff;">I</div>
+                            <span class="coin-name">ICP</span>
+                        </div>
+                        <div class="price">$7.82</div>
+                        <div class="change negative">-9.57%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">10</span>
+                        <div class="coin-info">
+                            <div class="coin-icon" style="background: #0033ad; color: #fff;">N</div>
+                            <span class="coin-name">NEAR</span>
+                        </div>
+                        <div class="price">$2.78</div>
+                        <div class="change negative">-0.71%</div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- USD Futures Card -->
+            <div class="ranking-card">
+                <div class="card-header">
+                    <div class="card-title">USD Futures</div>
+                </div>
+                <div class="table-header">
+                    <div></div>
+                    <div>Name</div>
+                    <div>Price</div>
+                    <div>Change</div>
+                </div>
+                <ul class="coin-list">
+                    <li class="coin-row">
+                        <span class="rank">1</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">TRUTHUSDTPer...</span>
+                        </div>
+                        <div class="price">0.032929</div>
+                        <div class="change positive">+64.39%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">2</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">GIGGLEUSDTPer...</span>
+                        </div>
+                        <div class="price">165.70</div>
+                        <div class="change positive">+24.78%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">3</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">KAVAUSDTPerpe...</span>
+                        </div>
+                        <div class="price">0.1616</div>
+                        <div class="change positive">+24.69%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">4</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">COMMONUSDTP...</span>
+                        </div>
+                        <div class="price">0.013043</div>
+                        <div class="change positive">+23.01%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">5</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">APRUSDTPerpet...</span>
+                        </div>
+                        <div class="price">0.29195</div>
+                        <div class="change positive">+21.88%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">6</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">SAPIENUSDTPer...</span>
+                        </div>
+                        <div class="price">0.27962</div>
+                        <div class="change positive">+18.46%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">7</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">XMRUSDTPerpet...</span>
+                        </div>
+                        <div class="price">417.50</div>
+                        <div class="change positive">+13.92%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">8</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">RESOLVUSDTPe...</span>
+                        </div>
+                        <div class="price">0.11248</div>
+                        <div class="change positive">+13.20%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">9</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">HIGHUSDTPerpe...</span>
+                        </div>
+                        <div class="price">0.3225</div>
+                        <div class="change positive">+12.72%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">10</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">MYXUSDTPerpet...</span>
+                        </div>
+                        <div class="price">2.447</div>
+                        <div class="change positive">+11.74%</div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Coin Futures Card -->
+            <div class="ranking-card">
+                <div class="card-header">
+                    <div class="card-title">Coin Futures</div>
+                </div>
+                <div class="table-header">
+                    <div></div>
+                    <div>Name</div>
+                    <div>Price</div>
+                    <div>Change</div>
+                </div>
+                <ul class="coin-list">
+                    <li class="coin-row">
+                        <span class="rank">1</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">LTCUSD_CMPerp...</span>
+                        </div>
+                        <div class="price">101.03</div>
+                        <div class="change positive">+1.58%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">2</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">BTCUSD_CMPerp...</span>
+                        </div>
+                        <div class="price">101,909.40</div>
+                        <div class="change negative">-0.25%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">3</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">BTCUSD_CMQua...</span>
+                        </div>
+                        <div class="price">103,660.10</div>
+                        <div class="change negative">-0.47%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">4</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">BTCUSD_CMQua...</span>
+                        </div>
+                        <div class="price">102,296.30</div>
+                        <div class="change negative">-0.52%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">5</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">BNBUSD_CMQua...</span>
+                        </div>
+                        <div class="price">999.37</div>
+                        <div class="change negative">-0.63%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">6</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">TRXUSD_CMPerp...</span>
+                        </div>
+                        <div class="price">0.28991</div>
+                        <div class="change negative">-0.65%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">7</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">ETHUSD_CMPer...</span>
+                        </div>
+                        <div class="price">3,429.26</div>
+                        <div class="change negative">-0.67%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">8</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">BNBUSD_CMPer...</span>
+                        </div>
+                        <div class="price">992.00</div>
+                        <div class="change negative">-0.74%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">9</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">BNBUSD_CMQua...</span>
+                        </div>
+                        <div class="price">993.69</div>
+                        <div class="change negative">-0.78%</div>
+                    </li>
+                    <li class="coin-row">
+                        <span class="rank">10</span>
+                        <div class="coin-info">
+                            <span class="coin-name" style="font-size: 13px;">ETHUSD_CMQua...</span>
+                        </div>
+                        <div class="price">3,469.41</div>
+                        <div class="change negative">-0.78%</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binance - Markets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #0b0e11;
+            color: #ffffff;
+        }
+
+        /* Header */
+        header {
+            background-color: #181a20;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #f0b90b;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            gap: 24px;
+        }
+
+        nav a {
+            color: #848e9c;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #ffffff;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-login {
+            background-color: transparent;
+            color: #f0b90b;
+        }
+
+        .btn-signup {
+            background-color: #f0b90b;
+            color: #000000;
+        }
+
+        .btn-signup:hover {
+            background-color: #fcd535;
+        }
+
+        /* Tabs */
+        .tabs {
+            background-color: #181a20;
+            padding: 16px 24px;
+            display: flex;
+            gap: 32px;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        .tab {
+            color: #848e9c;
+            text-decoration: none;
+            font-size: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: #ffffff;
+            border-bottom-color: #f0b90b;
+        }
+
+        /* Market Cards */
+        .market-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .market-card {
+            background-color: #181a20;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            color: #848e9c;
+            font-size: 12px;
+        }
+
+        .more-link {
+            color: #f0b90b;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        .coin-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .coin-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .coin-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        .coin-symbol {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .coin-price {
+            font-size: 14px;
+            margin-right: 8px;
+        }
+
+        .percentage {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .positive {
+            color: #0ecb81;
+        }
+
+        .negative {
+            color: #f6465d;
+        }
+
+        /* Filter Tabs */
+        .filter-section {
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            background-color: transparent;
+            color: #848e9c;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .filter-tab.active,
+        .filter-tab:hover {
+            background-color: #2b3139;
+            color: #ffffff;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 16px;
+        }
+
+        .category-tab {
+            padding: 6px 12px;
+            background-color: #2b3139;
+            color: #848e9c;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .category-tab:hover {
+            background-color: #3e4451;
+            color: #ffffff;
+        }
+
+        .badge {
+            background-color: #f0b90b;
+            color: #000000;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            margin-left: 4px;
+        }
+
+        /* Table */
+        .table-section {
+            padding: 0 24px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .table-header {
+            margin-bottom: 16px;
+        }
+
+        .table-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .table-description {
+            color: #848e9c;
+            font-size: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #181a20;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            text-align: left;
+            padding: 16px;
+            color: #848e9c;
+            font-size: 12px;
+            font-weight: 500;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: #1e2329;
+        }
+
+        .coin-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .coin-full-name {
+            color: #848e9c;
+            font-size: 12px;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background-color: transparent;
+            border: none;
+            color: #848e9c;
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-section">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+                    <path d="M2 17L12 22L22 17L12 12L2 17Z"/>
+                    <path d="M2 12L12 17L22 12"/>
+                </svg>
+                <span>Ecobank for Community</span>
+            </div>
+            <nav>
+                <a href="#">Buy Crypto</a>
+                <a href="#">Markets</a>
+                <a href="#">Trade</a>
+                <a href="#">Futures</a>
+                <a href="#">Earn</a>
+                <a href="#">Square</a>
+                <a href="#">More</a>
+            </nav>
+        </div>
+        <div class="header-actions">
+            <a href="login-page.html"><button class="btn btn-login">Log In</button></a>
+            <a href="login.html"><button class="btn btn-signup">Sign Up</button></a>
+        </div></a>
+    </header>
+
+    <div class="tabs">
+        <a href="#" class="tab active">Overview</a>
+        <a href="#" class="tab">Trading Data</a>
+        <a href="#" class="tab">AI Select</a>
+        <a href="#" class="tab">Token Unlock</a>
+    </div>
+
+    <div class="market-cards">
+        <div class="market-card">
+            <div class="card-header">
+                <span class="card-title">Hot</span>
+                <a href="#" class="more-link">More ›</a>
+            </div>
+            <div class="coin-item">
+                <div class="coin-info">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, #f0b90b, #f8d12f);"></div>
+                    <span class="coin-symbol">BNB</span>
+                </div>
+                <div>
+                    <span class="coin-price">$989.00</span>
+                    <span class="percentage positive">+4.85%</span>
+                </div>
+            </div>
+            <div class="coin-item">
+                <div class="coin-info">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, #f7931a, #ffa726);"></div>
+                    <span class="coin-symbol">BTC</span>
+                </div>
+                <div>
+                    <span class="coin-price">$101.75K</span>
+                    <span class="percentage positive">+0.81%</span>
+                </div>
+            </div>
+            <div class="coin-item">
+                <div class="coin-info">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, #627eea, #8fa3f0);"></div>
+                    <span class="coin-symbol">ETH</span>
+                </div>
+                <div>
+                    <span class="coin-price">$3.36K</span>
+                    <span class="percentage positive">+2.33%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="market-card">
+            <div class="card-header">
+                <span class="card-title">New</span>
+                <a href="#" class="more-link">More ›</a>
+            </div>
+            <div class="coin-item">
+                <div class="coin-info">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, #5865f2, #7289da);"></div>
+                    <span class="coin-symbol">SAPIEN</span>
+                </div>
+                <div>
+                    <span class="coin-price">$0.2162</span>
+                    <span class="percentage negative">-15.35%</span>
+                </div>
+            </div>
+            <div class="coin-item">
+                <div class="coin-info">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, #1e90ff, #4fc3f7);"></div>
+                    <span class="coin-symbol">MMT</span>
+                </div>
+                <div>
+                    <span class="coin-price">$0.5804</span>
+                    <span class="percentage positive">+6.20%</span>
+                </div>
+            </div>
+            <div class="coin-item">
+                <div class="coin-info">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, #64b5f6, #90caf9);"></div>
+                    <span class="coin-symbol">KITE</span>
+                </div>
+                <div>
+                    <span class="coin-price">$0.0696</span>
+                    <span class="percentage negative">-7.08%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="market-card">
+            <div class="card-header">
+                <span class="card-title">Top Gainer</span>
+                <a href="#" class="more-link">More ›</a>
+            </div>
+            <div class="coin-item">
+                <div class="coin-info">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, #ff6b35, #f7931e);"></div>
+                    <span class="coin-symbol">PYR</span>
+                </div>
+                <div>
+                    <span class="coin-price">$1.11</span>
+                    <span class="percentage positive">+106.73%</span>
+                </div>
+            </div>
+            <div class="coin-item">
+                <div class="coin-info">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, #4dabf7, #74c0fc);"></div>
+                    <span class="coin-symbol">FLUX</span>
+                </div>
+                <div>
+                    <span class="coin-price">$0.2065</span>
+                    <span class="percentage positive">+83.56%</span>
+                </div>
+            </div>
+            <div class="coin-item">
+                <div class="coin-info">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, #20c997, #51cf66);"></div>
+                    <span class="coin-symbol">HIGH</span>
+                </div>
+                <div>
+                    <span class="coin-price">$0.44</span>
+                    <span class="percentage positive">+61.76%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="market-card">
+            <div class="card-header">
+                <span class="card-title">Top Volume</span>
+                <a href="#" class="more-link">More ›</a>
+            </div>
+            <div class="coin-item">
+                <div class="coin-info">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, #f7931a, #ffa726);"></div>
+                    <span class="coin-symbol">BTC</span>
+                </div>
+                <div>
+                    <span class="coin-price">$101.75K</span>
+                    <span class="percentage positive">+0.81%</span>
+                </div>
+            </div>
+            <div class="coin-item">
+                <div class="coin-info">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, #627eea, #8fa3f0);"></div>
+                    <span class="coin-symbol">ETH</span>
+                </div>
+                <div>
+                    <span class="coin-price">$3.36K</span>
+                    <span class="percentage positive">+2.33%</span>
+                </div>
+            </div>
+            <div class="coin-item">
+                <div class="coin-info">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, #9945ff, #c084fc);"></div>
+                    <span class="coin-symbol">SOL</span>
+                </div>
+                <div>
+                    <span class="coin-price">$196.48</span>
+                    <span class="percentage positive">+0.49%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <div class="filter-tabs">
+            <button class="filter-tab">Favorites</button>
+            <button class="filter-tab active">Cryptos</button>
+            <button class="filter-tab">Spot</button>
+            <button class="filter-tab">Futures</button>
+            <button class="filter-tab">Alpha<span class="badge">PRO</span></button>
+            <button class="filter-tab">New</button>
+            <button class="filter-tab">Zones</button>
+        </div>
+        <div class="category-tabs">
+            <button class="category-tab">All</button>
+            <button class="category-tab">BNB Chain</button>
+            <button class="category-tab">Solana<span class="badge">New</span></button>
+            <button class="category-tab">RWA</button>
+            <button class="category-tab">Meme</button>
+            <button class="category-tab">Payments</button>
+            <button class="category-tab">AI</button>
+            <button class="category-tab">Layer 1 / Layer 2</button>
+            <button class="category-tab">Metaverse</button>
+            <button class="category-tab">Seed</button>
+            <button class="category-tab">Launchpool<span class="badge">New</span></button>
+            <button class="category-tab">Megadrop<span class="badge">New</span></button>
+            <button class="category-tab">Gaming</button>
+        </div>
+    </div>
+
+    <div class="table-section">
+        <div class="table-header">
+            <div class="table-title">Top Tokens by Market Capitalization</div>
+            <div class="table-description">Get a comprehensive snapshot of all cryptocurrencies available on Binance. This page displays the latest prices, 24-hour trading volume, price changes, and market capitalizations for all cryptocurrencies on Binance.</div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>24h</th>
+                    <th>Change</th>
+                    <th>24h Volume</th>
+                    <th>Market Cap</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="coin-name">
+                            <div class="coin-icon" style="background: linear-gradient(135deg, #f7931a, #ffa726);"></div>
+                            <div>
+                                <div class="coin-symbol">BTC</div>
+                                <div class="coin-full-name">Bitcoin</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>101,752.97<br><span style="color: #848e9c; font-size: 12px;">$101,752.97</span></td>
+                    <td><span class="percentage positive">+0.81%</span></td>
+                    <td>$67.40B</td>
+                    <td>$2.02T</td>
+                    <td>
+                        <div class="action-icons">
+                            <button class="icon-btn">⭐</button>
+                            <button class="icon-btn">📊</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="coin-name">
+                            <div class="coin-icon" style="background: linear-gradient(135deg, #627eea, #8fa3f0);"></div>
+                            <div>
+                                <div class="coin-symbol">ETH</div>
+                                <div class="coin-full-name">Ethereum</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>3,369.80<br><span style="color: #848e9c; font-size: 12px;">$3,369.80</span></td>
+                    <td><span class="percentage positive">+2.33%</span></td>
+                    <td>$32.73B</td>
+                    <td>$406.79B</td>
+                    <td>
+                        <div class="action-icons">
+                            <button class="icon-btn">⭐</button>
+                            <button class="icon-btn">📊</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="coin-name">
+                            <div class="coin-icon" style="background: linear-gradient(135deg, #26a69a, #4db6ac);"></div>
+                            <div>
+                                <div class="coin-symbol">USDT</div>
+                                <div class="coin-full-name">TetherUS</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>1.00<br><span style="color: #848e9c; font-size: 12px;">$1.00</span></td>
+                    <td><span class="percentage positive">+0.04%</span></td>
+                    <td>$134.82B</td>
+                    <td>$183.37B</td>
+                    <td>
+                        <div class="action-icons">
+                            <button class="icon-btn">⭐</button>
+                            <button class="icon-btn">📊</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="coin-name">
+                            <div class="coin-icon" style="background: linear-gradient(135deg, #f0b90b, #f8d12f);"></div>
+                            <div>
+                                <div class="coin-symbol">BNB</div>
+                                <div class="coin-full-name">BNB</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>989.00<br><span style="color: #848e9c; font-size: 12px;">$989.00</span></td>
+                    <td><span class="percentage positive">+4.85%</span></td>
+                    <td>$3.47B</td>
+                    <td>$136.09B</td>
+                    <td>
+                        <div class="action-icons">
+                            <button class="icon-btn">⭐</button>
+                            <button class="icon-btn">📊</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="coin-name">
+                            <div class="coin-icon" style="background: linear-gradient(135deg, #345d9d, #4a90e2);"></div>
+                            <div>
+                                <div class="coin-symbol">XRP</div>
+                                <div class="coin-full-name">XRP</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>2.26<br><span style="color: #848e9c; font-size: 12px;">$2.26</span></td>
+                    <td><span class="percentage positive">+1.99%</span></td>
+                    <td>$4.89B</td>
+                    <td>$135.61B</td>
+                    <td>
+                        <div class="action-icons">
+                            <button class="icon-btn">⭐</button>
+                            <button class="icon-btn">📊</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

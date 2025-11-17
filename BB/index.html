@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECOBANK for Community</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0b0e11;
+            color: #eaecef;
+        }
+
+        .header {
+            background: #181a20;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            color: #f0b90b;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .nav a:hover {
+            color: #f0b90b;
+        }
+
+        
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: #848e9c;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: #eaecef;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: #eaecef;
+        }
+
+        .btn-signup {
+            background: #f0b90b;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .btn-signup:hover {
+            background: #f8d12f;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 30px;
+        }
+
+        .container :hover {
+            color: #eaecef;
+        }
+
+        .main-tabs {
+            display: flex;
+            gap: 30px;
+            margin: 20px 0 30px 0;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        .main-tab {
+            padding: 10px 0;
+            color: #848e9c;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            font-size: 15px;
+            text-decoration: none;
+        }
+
+        .main-tab.active {
+            color: #eaecef;
+            border-bottom-color: #f0b90b;
+        }
+        
+
+        .market-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .market-card {
+            background: #1e2329;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .card-header {
+            color: #848e9c;
+            font-size: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dropdown {
+            background: #2b3139;
+            color: #eaecef;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .more-link {
+            color: #f0b90b;
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        .coin-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .coin-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .coin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .coin-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .coin-icon img {  
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .coin-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .coin-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #eaecef;
+        }
+
+        .coin-price {
+            font-size: 13px;
+            color: #848e9c;
+        }
+
+        .coin-right {
+            text-align: right;
+        }
+
+        .change {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .positive {
+            color: #0ecb81;
+        }
+
+        .negative {
+            color: #f6465d;
+        }
+
+        .secondary-tabs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #2b3139;
+            overflow-x: auto;
+        }
+
+        .secondary-tab {
+            padding: 10px 15px;
+            color: #848e9c;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            font-size: 14px;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .secondary-tab.active {
+            color: #f0b90b;
+            border-bottom-color: #f0b90b;
+        }
+
+        .secondary-tab .badge {
+            background: #f0b90b;
+            color: #000;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-left: 5px;
+            font-weight: 600;
+        }
+
+        .secondary-tab:hover {
+            color: #eaecef;
+        }
+
+        .secondary-tab.active:hover {
+            color: #f0b90b;
+        }
+
+
+        .filter-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 6px 12px;
+            background: #2b3139;
+            border: 1px solid #2b3139;
+            color: #848e9c;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .filter-tab:hover {
+            color: #eaecef;
+            border-color: #474d57;
+        }
+
+        .filter-tab.active {
+            background: #2b3139;
+            color: #eaecef;
+            border-color: #474d57;
+        }
+
+        .table-container {
+            background: #1e2329;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: center;
+            padding: 15px 20px;
+            color: #848e9c;
+            font-size: 12px;
+            font-weight: 500;
+            border-bottom: 1px solid #2b3139;
+        }
+        
+
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #2b3139;
+            text-align: center;
+        }
+
+        td:first-child {
+            text-align: left;    
+        }
+
+        tr:hover {
+            background: #23262f;
+        }
+
+        .token-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .token-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            overflow: hidden;
+        }
+
+        .token-icon img {  
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .token-name {
+            font-weight: 600;
+        }
+
+        .token-symbol {
+            color: #848e9c;
+            font-size: 12px;
+        }
+
+        .price-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .page-btn {
+            padding: 8px 12px;
+            background: #2b3139;
+            border: none;
+            color: #eaecef;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover {
+            background: #3a4149;
+        }
+
+        .page-btn.active {
+            background: #f0b90b;
+            color: #000;
+        }
+
+        .search-notify {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">ECOBANK</div>
+            <div class="nav">
+                <a href="index.html"><h3>Home</h3></a>
+                <a href="types-of-waste-data.html" ><h3>Type</h3></a>
+                <a href="#" >More</a>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="icon-btn">🔍</button>
+            <button class="icon-btn">📱</button>
+            <button class="icon-btn">⚙️</button>
+            <button class="icon-btn">🌙</button>
+            <a href="login-page.html"><button class="btn btn-login">Log In</button></a>
+            <a href="register-page.html"><button class="btn btn-signup">Sign Up</button></a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-tabs">
+            <div class="main-tab active">Overview</div>
+            <a href="types-of-waste-data.html" class="main-tab" >Types of Waste</a>
+        </div>
+
+        <div class="market-cards">
+            <div class="market-card">
+                <div class="card-header">
+                    <span>To day</span>
+                    <a href="" class="more-link">More ›</a>
+                </div>
+                <div class="coin-item">
+                    <div class="coin-info">
+                        <div class="coin-icon"><img src="images/wiki.png"></div>
+                        <div class="coin-details">
+                            <div class="coin-name">ขวดน้ำใส</div>
+                            <div class="coin-price">8/บ.</div>
+                        </div>
+                    </div>
+                    <div class="coin-right">
+                        <div class="change positive">8/บ.</div>
+                    </div>
+                </div>
+                <div class="coin-item">
+                    <div class="coin-info">
+                        <div class="coin-icon"><img src="images/wiki.png"></div>
+                        <div class="coin-details">
+                            <div class="coin-name">ขวดน้ำใส</div>
+                            <div class="coin-price">8/บ.</div>
+                        </div>
+                    </div>
+                    <div class="coin-right">
+                        <div class="change positive">8/บ.</div>
+                    </div>
+                </div>
+                <div class="coin-item">
+                    <div class="coin-info">
+                        <div class="coin-icon"><img src="images/wiki.png"></div>
+                        <div class="coin-details">
+                            <div class="coin-name">ขวดน้ำใส</div>
+                            <div class="coin-price">8/บ.</div>
+                        </div>
+                    </div>
+                    <div class="coin-right">
+                        <div class="change positive">8/บ.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="market-card">
+                <div class="card-header">
+                    <span>Week</span>
+                    <a href="" class="more-link">More ›</a>
+                </div>
+                <div class="coin-item">
+                    <div class="coin-info">
+                        <div class="coin-icon"><img src="images/wiki.png"></div>
+                        <div class="coin-details">
+                            <div class="coin-name">ขวดน้ำใส</div>
+                            <div class="coin-price">8/บ.</div>
+                        </div>
+                    </div>
+                    <div class="coin-right">
+                        <div class="change positive">8/บ.</div>
+                    </div>
+                </div>
+                <div class="coin-item">
+                    <div class="coin-info">
+                        <div class="coin-icon"><img src="images/wiki.png"></div>
+                        <div class="coin-details">
+                            <div class="coin-name">ขวดน้ำใส</div>
+                            <div class="coin-price">8/บ.</div>
+                        </div>
+                    </div>
+                    <div class="coin-right">
+                        <div class="change positive">8/บ.</div>
+                    </div>
+                </div>
+                <div class="coin-item">
+                    <div class="coin-info">
+                        <div class="coin-icon"><img src="images/wiki.png"></div>
+                        <div class="coin-details">
+                            <div class="coin-name">ขวดน้ำใส</div>
+                            <div class="coin-price">8/บ.</div>
+                        </div>
+                    </div>
+                    <div class="coin-right">
+                        <div class="change positive">8/บ.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="market-card">
+                <div class="card-header">
+                    <span>Month</span>
+                    <a href="" class="more-link">More ›</a>
+                </div>
+                <div class="coin-item">
+                    <div class="coin-info">
+                        <div class="coin-icon"><img src="images/wiki.png"></div>
+                        <div class="coin-details">
+                            <div class="coin-name">ขวดน้ำใส</div>
+                            <div class="coin-price">8/บ.</div>
+                        </div>
+                    </div>
+                    <div class="coin-right">
+                        <div class="change positive">8/บ.</div>
+                    </div>
+                </div>
+                <div class="coin-item">
+                    <div class="coin-info">
+                        <div class="coin-icon"><img src="images/wiki.png"></div>
+                        <div class="coin-details">
+                            <div class="coin-name">ขวดน้ำใส</div>
+                            <div class="coin-price">8/บ.</div>
+                        </div>
+                    </div>
+                    <div class="coin-right">
+                        <div class="change positive">8/บ.</div>
+                    </div>
+                </div>
+                <div class="coin-item">
+                    <div class="coin-info">
+                        <div class="coin-icon"><img src="images/wiki.png"></div>
+                        <div class="coin-details">
+                            <div class="coin-name">ขวดน้ำใส</div>
+                            <div class="coin-price">8/บ.</div>
+                        </div>
+                    </div>
+                    <div class="coin-right">
+                        <div class="change positive">8/บ.</div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="market-card">
+                <div class="card-header">
+                    <span>Year</span>
+                    <a href="" class="more-link">More ›</a>
+                </div>
+                <div class="coin-item">
+                    <div class="coin-info">
+                        <div class="coin-icon"><img src="images/wiki.png"></div>
+                        <div class="coin-details">
+                            <div class="coin-name">ขวดน้ำใส</div>
+                            <div class="coin-price">8/บ.</div>
+                        </div>
+                    </div>
+                    <div class="coin-right">
+                        <div class="change positive">8/บ.</div>
+                    </div>
+                </div>
+                <div class="coin-item">
+                    <div class="coin-info">
+                        <div class="coin-icon"><img src="images/wiki.png"></div>
+                        <div class="coin-details">
+                            <div class="coin-name">ขวดน้ำใส</div>
+                            <div class="coin-price">8/บ.</div>
+                        </div>
+                    </div>
+                    <div class="coin-right">
+                        <div class="change positive">8/บ.</div>
+                    </div>
+                </div>
+                <div class="coin-item">
+                    <div class="coin-info">
+                        <div class="coin-icon"><img src="images/wiki.png"></div>
+                        <div class="coin-details">
+                            <div class="coin-name">ขวดน้ำใส</div>
+                            <div class="coin-price">8/บ.</div>
+                        </div>
+                    </div>
+                    <div class="coin-right">
+                        <div class="change positive">8/บ.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="secondary-tabs">
+            <div class="secondary-tab active">
+                Trending
+                <span class="badge">NEW</span>
+            </div>
+        </div>
+
+        <div class="filter-tabs">
+            <div class="filter-tab active">All</div>
+            <div class="filter-tab">→</div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                Top Trash by Market Capitalization
+                <div class="search-notify" style="float: right; font-size: 14px;">
+                    <button class="icon-btn">🔍</button>
+                    <button class="icon-btn">🔔</button>
+                </div>
+            </div>
+            <table id="cryptoTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th><select class="dropdown">
+                            <option>Category</option>
+                            <option>BB</option>
+                        </select></th>
+                        <th>Price <div style="font-size: 10px; ">/kg</div></th></th>
+                        <th>Week</th>
+                        <th>Month</th>
+                        <th>Market Cap <div style="font-size: 10px; ">/ Year</div></th>
+                        </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div class="pagination">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn">5</button>
+                <button class="page-btn">...</button>
+                <button class="page-btn">15</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cryptoData = [
+            { 
+                name: 'PET', 
+                symbol: 'ขวดน้ำใส', 
+                Category: 'Plastic',
+                price: '8', 
+                MKCap: -0.63, 
+                PWeek: '7.80', 
+                PMonth: '7.50', 
+                iconImage: 'images/wiki.png',
+            },
+            { 
+                name: 'A4', 
+                symbol: 'กระดาษขาว-ดำ', 
+                Category: 'Paper',
+                price: '3.60', 
+                MKCap: -0.63, 
+                PWeek: '3.60', 
+                PMonth: '3.50', 
+                iconImage: 'images/wiki.png', 
+            },
+            { 
+                name: 'PVC', 
+                symbol: 'ท่อสีฟ้า', 
+                Category: 'Plastic',
+                price: '1.50', 
+                MKCap: -0.63, 
+                PWeek: '1.50', 
+                PMonth: '1.40', 
+                iconImage: 'images/wiki.png',
+            },
+            { 
+                name: 'Copper', 
+                symbol: 'ทองแดง', 
+                Category: 'Metal',
+                price: '260', 
+                MKCap: -0.63, 
+                PWeek: '258', 
+                PMonth: '256', 
+                iconImage: 'images/wiki.png',
+            },
+            { 
+                name: 'Glass Bottle', 
+                symbol: 'ขวดแก้ว', 
+                Category: 'Glass',
+                price: '1', 
+                MKCap: -0.63, 
+                PWeek: '1', 
+                PMonth: '1', 
+                iconImage: 'images/wiki.png',
+            },
+            { 
+                name: 'PET', 
+                symbol: 'ขวดน้ำใส', 
+                Category: 'Plastic',
+                price: '6', 
+                MKCap: -0.63, 
+                PWeek: '$50.55B', 
+                PMonth: '$2.02T', 
+                iconImage: 'images/wiki.png',
+            },
+            { 
+                name: 'PET', 
+                symbol: 'ขวดน้ำใส', 
+                Category: 'Plastic',
+                price: '6', 
+                MKCap: -0.63, 
+                PWeek: '$50.55B', 
+                PMonth: '$2.02T', 
+                iconImage: 'images/wiki.png',
+            },
+            { 
+                name: 'PET', 
+                symbol: 'ขวดน้ำใส', 
+                Category: 'Plastic',
+                price: '6', 
+                MKCap: -0.63, 
+                PWeek: '$50.55B', 
+                PMonth: '$2.02T', 
+                iconImage: 'images/wiki.png',
+            },
+            { 
+                name: 'PET', 
+                symbol: 'ขวดน้ำใส', 
+                Category: 'Plastic',
+                price: '6', 
+                MKCap: -0.63, 
+                PWeek: '$50.55B', 
+                PMonth: '$2.02T', 
+                iconImage: 'images/wiki.png',
+            },
+            { 
+                name: 'PET', 
+                symbol: 'ขวดน้ำใส', 
+                Category: 'Plastic',
+                price: '6', 
+                MKCap: -0.63, 
+                PWeek: '$50.55B', 
+                PMonth: '$2.02T', 
+                iconImage: 'images/wiki.png', 
+            },
+            
+        ];
+        
+        const tbody = document.querySelector('#cryptoTable tbody');
+        
+        cryptoData.forEach(crypto => {
+            const row = document.createElement('tr');
+            const changeClass = crypto.change >= 0 ? 'positive' : 'negative';
+            const changeSymbol = crypto.change >= 0 ? '+' : '';
+            
+            // ตรวจสอบว่ามีรูปภาพหรือไม่  ← เพิ่มส่วนนี้ใหม่ทั้งหมด
+            let iconHTML;
+            if (crypto.iconImage) {
+                // ถ้ามีรูป
+                iconHTML = `<img src="${crypto.iconImage}" ...>`;
+            } else {
+                // ถ้าไม่มีรูป ใช้ตัวอักษร
+                iconHTML = crypto.icon;
+            }
+
+            row.innerHTML = `
+                <td>
+                    <div class="token-cell">
+                        <div class="token-icon" style="background: ${crypto.color};">
+                            ${iconHTML}  
+                        </div>
+                        <div>
+                            <div class="token-name">${crypto.symbol}</div>
+                            <div class="token-symbol">${crypto.name}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>${crypto.Category}</td>
+                <td class="price-value">${crypto.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                <td>${crypto.PWeek}</td>
+                <td>${crypto.PMonth}</td>
+                <td class="change ${changeClass}">${changeSymbol}${crypto.MKCap}%</td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // Add click handlers for pagination
+        document.querySelectorAll('.page-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Add click handlers for pagination
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

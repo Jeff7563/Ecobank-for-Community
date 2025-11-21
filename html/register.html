@@ -1,37 +1,598 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>register page</title>
-    <link rel="stylesheet" href="../css/logregis.css">
-    
+    <title>สมัครสมาชิก - ECOBANK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e2329 0%, #2b3139 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #1e2329;
+            border-radius: 16px;
+            padding: 48px 40px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            justify-content: center;
+        }
+
+        .logo-text {
+            color: #b2ff59;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            color: #eaecef;
+            font-size: 28px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #eaecef;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #2b3139;
+            border: 1px solid #474d57;
+            border-radius: 8px;
+            color: #eaecef;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #b2ff59;
+            background: #1e2329;
+        }
+
+        input::placeholder {
+            color: #848e9c;
+        }
+
+        .password-input {
+            position: relative;
+        }
+
+        .password-input input {
+            padding-right: 45px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #848e9c;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+            font-size: 18px;
+        }
+
+        .toggle-password:hover {
+            color: #eaecef;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #98f330;
+            color: #1e2329;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 16px;
+        }
+
+        .btn-primary:hover {
+            background: #b2ff59;
+        }
+
+        .btn-primary:disabled {
+            background: #474d57;
+            cursor: not-allowed;
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .terms-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: #b2ff59;
+        }
+
+        .terms-checkbox label {
+            color: #848e9c;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .terms-checkbox label a {
+            color: #eaecef;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .terms-checkbox label a:hover {
+            color: #98f330;
+        }
+
+        .create-account {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .create-account a {
+            color: #b2ff59;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+
+        .create-account a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #474d57;
+            flex-wrap: wrap;
+        }
+
+        .footer a {
+            color: #848e9c;
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #eaecef;
+        }
+
+        .language-selector {
+            position: relative;
+            display: inline-block;
+        }
+
+        .language-btn {
+            background: transparent;
+            border: none;
+            color: #848e9c;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.3s;
+        }
+
+        .language-btn:hover {
+            color: #eaecef;
+        }
+
+        .language-dropdown {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: #2b3139;
+            border: 1px solid #474d57;
+            border-radius: 8px;
+            padding: 8px 0;
+            margin-bottom: 8px;
+            min-width: 150px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .language-dropdown.active {
+            display: block;
+        }
+
+        .language-option {
+            padding: 10px 16px;
+            color: #eaecef;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 13px;
+        }
+
+        .language-option:hover {
+            background: #1e2329;
+        }
+
+        .language-option.selected {
+            color: #98f330;
+            background: #1e2329;
+        }
+
+        .back-home {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .back-home a {
+            color: #848e9c;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s;
+        }
+
+        .back-home a:hover {
+            color: #b2ff59;
+        }
+
+        .password-strength {
+            height: 4px;
+            background: #2b3139;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+        }
+
+        .password-strength-bar.weak {
+            width: 33%;
+            background: #f6465d;
+        }
+
+        .password-strength-bar.medium {
+            width: 66%;
+            background: #f0b90b;
+        }
+
+        .password-strength-bar.strong {
+            width: 100%;
+            background: #0ecb81;
+        }
+
+        .password-match {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #848e9c;
+        }
+
+        .password-match.error {
+            color: #f6465d;
+        }
+
+        .password-match.success {
+            color: #0ecb81;
+        }
+    </style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-left">
-            <div class="logo">ECOBANK</div>
-        </div>
-    </div>
-
     <div class="container">
-        <div class="cards">
-            <div class="card">
-                <div class="item">
-                    <div class="info">
-                        <div class="details">
-                            <div class="name">REGISTER</div>
-                            <div >Username</div>
-                            <div >Phone Number</div>
-                            <div >locations</div>
-                            <a href="trash_types.html"><button class="btn btn-n">Register</button></a>
-                        </div>
-                    </div>
-                </div>
-                You don't have an account?  <a href="login.html" style="color: blue; text-decoration-line: none;">Login</a>
+        <div class="back-home">
+            <a href="index.html">← กลับหน้าแรก</a>
+        </div>
+
+        <div class="logo">
+            <span style="font-size: 32px;">🌿</span>
+            <span class="logo-text">ECOBANK</span>
+        </div>
+
+        <div class="header">
+            <h1 id="pageTitle">ยินดีต้อนรับสู่ EC</h1>
+        </div>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label id="emailLabel">อีเมล/ชื่อผู้ใช้</label>
+                <input type="text" placeholder="อีเมล/ชื่อผู้ใช้" id="emailInput" required>
             </div>
+
+            <div class="form-group">
+                <label id="phoneLabel">หมายเลขโทรศัพท์</label>
+                <input type="tel" placeholder="หมายเลขโทรศัพท์" id="phoneInput" required>
+            </div>
+
+            <div class="form-group">
+                <label id="passwordLabel">รหัสผ่าน</label>
+                <div class="password-input">
+                    <input type="password" placeholder="รหัสผ่าน" id="passwordInput" required>
+                    <button type="button" class="toggle-password" id="togglePassword">
+                        👁️
+                    </button>
+                </div>
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="strengthBar"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="confirmPasswordLabel">ยืนยันรหัสผ่าน</label>
+                <div class="password-input">
+                    <input type="password" placeholder="ยืนยันรหัสผ่าน" id="confirmPasswordInput" required>
+                    <button type="button" class="toggle-password" id="toggleConfirmPassword">
+                        👁️
+                    </button>
+                </div>
+                <div class="password-match" id="passwordMatch"></div>
+            </div>
+
+            <div class="terms-checkbox">
+                <input type="checkbox" id="terms" required>
+                <label for="terms" id="termsLabel">
+                    การสร้างบัญชี ถือว่าฉันยอมรับ <a href="#">ข้อกำหนดการให้บริการ</a> และ <a href="#">ประกาศความเป็นส่วนตัว</a> ของ EC
+                </label>
+            </div>
+
+            <button type="submit" class="btn-primary" id="continueBtn" disabled>ดำเนินการต่อ</button>
+        </form>
+
+        <div class="create-account">
+            <a href="login.html" id="loginLink">เข้าสู่ระบบ</a>
+        </div>
+
+        <div class="footer">
+            <div class="language-selector">
+                <button type="button" class="language-btn" id="languageBtn">
+                    <span id="currentLanguage">ไทย</span>
+                    <span>▼</span>
+                </button>
+                <div class="language-dropdown" id="languageDropdown">
+                    <div class="language-option selected" data-lang="th">🇹🇭 ไทย (Thai)</div>
+                    <div class="language-option" data-lang="en">🇬🇧 English</div>
+                </div>
+            </div>
+            <a href="#">คุกกี้</a>
+            <a href="#">เงื่อนไข</a>
+            <a href="#">ความเป็นส่วนตัว</a>
         </div>
     </div>
 
+    <script>
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('passwordInput');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            togglePassword.textContent = type === 'text' ? '🙈' : '👁️';
+        });
+
+        toggleConfirmPassword.addEventListener('click', () => {
+            const type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
+            confirmPasswordInput.type = type;
+            toggleConfirmPassword.textContent = type === 'text' ? '🙈' : '👁️';
+        });
+
+        // Password strength checker
+        passwordInput.addEventListener('input', () => {
+            const password = passwordInput.value;
+            const strengthBar = document.getElementById('strengthBar');
+            
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+            
+            strengthBar.className = 'password-strength-bar';
+            if (strength >= 3) {
+                strengthBar.classList.add('strong');
+            } else if (strength >= 2) {
+                strengthBar.classList.add('medium');
+            } else if (strength >= 1) {
+                strengthBar.classList.add('weak');
+            }
+            
+            checkPasswordMatch();
+        });
+
+        // Password match checker
+        function checkPasswordMatch() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            const matchDiv = document.getElementById('passwordMatch');
+            
+            if (confirmPassword === '') {
+                matchDiv.textContent = '';
+                matchDiv.className = 'password-match';
+            } else if (password === confirmPassword) {
+                matchDiv.textContent = '✓ รหัสผ่านตรงกัน';
+                matchDiv.className = 'password-match success';
+            } else {
+                matchDiv.textContent = '✗ รหัสผ่านไม่ตรงกัน';
+                matchDiv.className = 'password-match error';
+            }
+            
+            checkFormValidity();
+        }
+
+        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+
+        // Check form validity
+        function checkFormValidity() {
+            const email = document.getElementById('emailInput').value;
+            const phone = document.getElementById('phoneInput').value;
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            const terms = document.getElementById('terms').checked;
+            const continueBtn = document.getElementById('continueBtn');
+            
+            const isValid = email && phone && password && confirmPassword && 
+                          password === confirmPassword && password.length >= 6 && terms;
+            
+            continueBtn.disabled = !isValid;
+        }
+
+        document.getElementById('emailInput').addEventListener('input', checkFormValidity);
+        document.getElementById('phoneInput').addEventListener('input', checkFormValidity);
+        document.getElementById('terms').addEventListener('change', checkFormValidity);
+
+        // Language selector
+        const languageBtn = document.getElementById('languageBtn');
+        const languageDropdown = document.getElementById('languageDropdown');
+        const currentLanguage = document.getElementById('currentLanguage');
+        const languageOptions = document.querySelectorAll('.language-option');
+
+        languageBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            languageDropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', () => {
+            languageDropdown.classList.remove('active');
+        });
+
+        languageOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const lang = option.dataset.lang;
+                const langText = option.textContent;
+
+                currentLanguage.textContent = langText.split(' ')[1];
+                languageOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                languageDropdown.classList.remove('active');
+                
+                changeLanguage(lang);
+            });
+        });
+
+        function changeLanguage(lang) {
+            const translations = {
+                th: {
+                    title: 'ยินดีต้อนรับสู่ EC',
+                    emailLabel: 'อีเมล/ชื่อผู้ใช้',
+                    emailPlaceholder: 'อีเมล/ชื่อผู้ใช้',
+                    phoneLabel: 'หมายเลขโทรศัพท์',
+                    phonePlaceholder: 'หมายเลขโทรศัพท์',
+                    passwordLabel: 'รหัสผ่าน',
+                    passwordPlaceholder: 'รหัสผ่าน',
+                    confirmPasswordLabel: 'ยืนยันรหัสผ่าน',
+                    confirmPasswordPlaceholder: 'ยืนยันรหัสผ่าน',
+                    continueBtn: 'ดำเนินการต่อ',
+                    terms: 'การสร้างบัญชี ถือว่าฉันยอมรับ',
+                    termsLink: 'ข้อกำหนดการให้บริการ',
+                    privacyLink: 'ประกาศความเป็นส่วนตัว',
+                    loginLink: 'เข้าสู่ระบบ',
+                },
+                en: {
+                    title: 'Welcome to EC',
+                    emailLabel: 'Email/Username',
+                    emailPlaceholder: 'Email/Username',
+                    phoneLabel: 'Phone Number',
+                    phonePlaceholder: 'Phone Number',
+                    passwordLabel: 'Password',
+                    passwordPlaceholder: 'Password',
+                    confirmPasswordLabel: 'Confirm Password',
+                    confirmPasswordPlaceholder: 'Confirm Password',
+                    continueBtn: 'Continue',
+                    terms: 'By creating an account, I agree to EC',
+                    termsLink: 'Terms of Service',
+                    privacyLink: 'Privacy Notice',
+                    loginLink: 'Login',
+                }
+            };
+
+            const t = translations[lang] || translations.th;
+
+            document.getElementById('pageTitle').textContent = t.title;
+            document.getElementById('emailLabel').textContent = t.emailLabel;
+            document.getElementById('phoneLabel').textContent = t.phoneLabel;
+            document.getElementById('passwordLabel').textContent = t.passwordLabel;
+            document.getElementById('confirmPasswordLabel').textContent = t.confirmPasswordLabel;
+            document.getElementById('emailInput').placeholder = t.emailPlaceholder;
+            document.getElementById('phoneInput').placeholder = t.phonePlaceholder;
+            document.getElementById('passwordInput').placeholder = t.passwordPlaceholder;
+            document.getElementById('confirmPasswordInput').placeholder = t.confirmPasswordPlaceholder;
+            document.getElementById('continueBtn').textContent = t.continueBtn;
+            document.getElementById('loginLink').textContent = t.loginLink;
+            
+            const termsLabel = document.getElementById('termsLabel');
+            termsLabel.innerHTML = `${t.terms} <a href="#">${t.termsLink}</a> และ <a href="#">${t.privacyLink}</a> ของ EC`;
+        }
+
+        // Form submission
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            const phone = document.getElementById('phoneInput').value;
+            const password = passwordInput.value;
+            
+            // ในการใช้งานจริง จะส่งข้อมูลไปยังเซิร์ฟเวอร์
+            console.log('Register attempt:', { email, phone, password });
+            alert('กำลังสร้างบัญชี...\n(ในการใช้งานจริงจะเชื่อมต่อกับฐานข้อมูล)');
+        });
+
+        // Set Thai as default
+        changeLanguage('th');
+    </script>
 </body>
 </html>

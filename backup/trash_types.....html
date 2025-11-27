@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ECOBANK for Community</title>
     <style>
-                * {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -138,6 +138,11 @@
             border-bottom-color: #b2ff59;
         }
 
+        .main-tab.active:hover {
+            color: #f8d12f;
+        }
+        
+
         .market-cards {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -194,24 +199,6 @@
             gap: 10px;
         }
 
-        .trash-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: bold;
-            overflow: hidden;
-        }
-
-        .trash-icon img {  
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         .trash-details {
             display: flex;
             flex-direction: column;
@@ -243,6 +230,35 @@
 
         .negative {
             color: #f6465d;
+        }
+
+        .sub-tabs {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .sub-tab {
+            padding: 8px 16px;
+            background: #2b3139;
+            color: #848e9c;
+            cursor: pointer;
+            border: 1px solid #2b3139;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .sub-tab.active {
+            background: #f0b90b;
+            color: #000;
+            border-color: #f0b90b;
+        }
+
+        .sub-tab:hover {
+            border-color: #f0b90b;
+            color: #eaecef;
         }
 
         .secondary-tabs {
@@ -434,7 +450,7 @@
 <body>
     <div class="header">
         <div class="header-left">
-            <div class="logo">🌿 ECOBANK</div>
+            <div class="logo">ECOBANK</div>
             <div class="nav">
                 <a href="index.html"><h3>Home</h3></a>
                 <a href="trash_types.html" ><h3>Type</h3></a>
@@ -451,194 +467,22 @@
 
     <div class="container">
         <div class="main-tabs">
-            <a href="index.html" class="main-tab active" >Overview</a>
-            <a href="trash_types.html" class="main-tab" >Types of Waste</a>
-        </div>
-
-        <div class="market-cards">
-            <div class="market-card">
-                <div class="card-header">
-                    <span>To day</span>
-                    <a href="trash_types.html" class="more-link">More ›</a>
-                </div>
-                <div class="trash-item">
-                    <div class="trash-info">
-                        <div class="trash-icon"><img src="../image/ขวดพลาสติกPET.12.png"></div>
-                        <div class="trash-details">
-                            <div class="trash-name">ขวดน้ำใส</div>
-                            <div class="trash-price">PET</div>
-                        </div>
-                    </div>
-                    <div class="trash-right">
-                        <div class="change positive">8 บ./kg</div>
-                    </div>
-                </div>
-                <div class="trash-item">
-                    <div class="trash-info">
-                        <div class="trash-icon"><img src="../image/กระดาษ.png"></div>
-                        <div class="trash-details">
-                            <div class="trash-name">กระดาษ</div>
-                            <div class="trash-price">AAA</div>
-                        </div>
-                    </div>
-                    <div class="trash-right">
-                        <div class="change positive">3 บ./kg</div>
-                    </div>
-                </div>
-                <div class="trash-item">
-                    <div class="trash-info">
-                        <div class="trash-icon"><img src="../image/กระป๋ิองอลูมิเนียม.38.png"></div>
-                        <div class="trash-details">
-                            <div class="trash-name">อลูมิเนียม</div>
-                            <div class="trash-price"></div>
-                        </div>
-                    </div>
-                    <div class="trash-right">
-                        <div class="change positive">3.4 บ./kg</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="market-card">
-                <div class="card-header">
-                    <span>Week</span>
-                    <a href="trash_types.html" class="more-link">More ›</a>
-                </div>
-                <div class="trash-item">
-                    <div class="trash-info">
-                        <div class="trash-icon"><img src="../image/ขวดพลาสติกPET.12.png"></div>
-                        <div class="trash-details">
-                            <div class="trash-name">ขวดน้ำใส</div>
-                            <div class="trash-price">PET</div>
-                        </div>
-                    </div>
-                    <div class="trash-right">
-                        <div class="change positive">8 บ./kg</div>
-                    </div>
-                </div>
-                <div class="trash-item">
-                    <div class="trash-info">
-                        <div class="trash-icon"><img src="../image/กระดาษ.png"></div>
-                        <div class="trash-details">
-                            <div class="trash-name">กระดาษ</div>
-                            <div class="trash-price">AAA</div>
-                        </div>
-                    </div>
-                    <div class="trash-right">
-                        <div class="change positive">3 บ./kg</div>
-                    </div>
-                </div>
-                <div class="trash-item">
-                    <div class="trash-info">
-                        <div class="trash-icon"><img src="../image/กระป๋ิองอลูมิเนียม.38.png"></div>
-                        <div class="trash-details">
-                            <div class="trash-name">อลูมิเนียม</div>
-                            <div class="trash-price"></div>
-                        </div>
-                    </div>
-                    <div class="trash-right">
-                        <div class="change positive">3.4 บ./kg</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="market-card">
-                <div class="card-header">
-                    <span>Month</span>
-                    <a href="trash_types.html" class="more-link">More ›</a>
-                </div>
-                <div class="trash-item">
-                    <div class="trash-info">
-                        <div class="trash-icon"><img src="../image/ขวดพลาสติกPET.12.png"></div>
-                        <div class="trash-details">
-                            <div class="trash-name">ขวดน้ำใส</div>
-                            <div class="trash-price">PET</div>
-                        </div>
-                    </div>
-                    <div class="trash-right">
-                        <div class="change positive">6 บ./kg</div>
-                    </div>
-                </div>
-                <div class="trash-item">
-                    <div class="trash-info">
-                        <div class="trash-icon"><img src="../image/กระดาษ.png"></div>
-                        <div class="trash-details">
-                            <div class="trash-name">กระดาษ</div>
-                            <div class="trash-price">AAA</div>
-                        </div>
-                    </div>
-                    <div class="trash-right">
-                        <div class="change positive">2.8 บ./kg</div>
-                    </div>
-                </div>
-                <div class="trash-item">
-                    <div class="trash-info">
-                        <div class="trash-icon"><img src="../image/กระป๋ิองอลูมิเนียม.38.png"></div>
-                        <div class="trash-details">
-                            <div class="trash-name">อลูมิเนียม</div>
-                            <div class="trash-price"></div>
-                        </div>
-                    </div>
-                    <div class="trash-right">
-                        <div class="change positive">3 บ./kg</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="market-card">
-                <div class="card-header">
-                    <span>Year</span>
-                    <a href="trash_types.html" class="more-link">More ›</a>
-                </div>
-                <div class="trash-item">
-                    <div class="trash-info">
-                        <div class="trash-icon"><img src="../image/ขวดพลาสติกPET.12.png"></div>
-                        <div class="trash-details">
-                            <div class="trash-name">ขวดน้ำใส</div>
-                            <div class="trash-price">PET</div>
-                        </div>
-                    </div>
-                    <div class="trash-right">
-                        <div class="change positive">5.8 บ./kg</div>
-                    </div>
-                </div>
-                <div class="trash-item">
-                    <div class="trash-info">
-                        <div class="trash-icon"><img src="../image/กระดาษ.png"></div>
-                        <div class="trash-details">
-                            <div class="trash-name">กระดาษ</div>
-                            <div class="trash-price">AAA</div>
-                        </div>
-                    </div>
-                    <div class="trash-right">
-                        <div class="change positive">2.6 บ./kg</div>
-                    </div>
-                </div>
-                <div class="trash-item">
-                    <div class="trash-info">
-                        <div class="trash-icon"><img src="../image/กระป๋ิองอลูมิเนียม.38.png"></div>
-                        <div class="trash-details">
-                            <div class="trash-name">อลูมิเนียม</div>
-                            <div class="trash-price"></div>
-                        </div>
-                    </div>
-                    <div class="trash-right">
-                        <div class="change positive">3 บ./kg</div>
-                    </div>
-                </div>
-            </div>
+            <a href="index.html" class="main-tab" >Overview</a>
+            <a href="trash_types.html" class="main-tab active" >Types of Waste</a>
         </div>
 
         <div class="secondary-tabs">
-            <div class="secondary-tab active">
-                Trending
-                <span class="badge">NEW</span>
-            </div>
+            <div class="secondary-tab active">Today</div>
+            <div class="secondary-tab ">Week</div>
+            <div class="secondary-tab ">Month</div>
+            <div class="secondary-tab ">Year</div>
         </div>
-
-        <div class="filter-tabs">
-            <div class="filter-tab active">All</div>
-            <div class="filter-tab">→</div>
+        
+        <div class="sub-tabs">
+            <div class="sub-tab active" data-period="today">📅 วันนี้</div>
+            <div class="sub-tab" data-period="week">📊 สัปดาห์</div>
+            <div class="sub-tab" data-period="month">📈 เดือน</div>
+            <div class="sub-tab" data-period="year">🏆 ปี</div>
         </div>
 
         <div class="table-container">
@@ -656,6 +500,7 @@
                         <th>Price <div style="font-size: 10px; ">/kg</div></th></th>
                         <th>Week</th>
                         <th>Month</th>
+                        <th>Year</th>
                         <th>Market Cap <div style="font-size: 10px; ">/ Year</div></th>
                         </tr>
                 </thead>
@@ -673,7 +518,7 @@
         </div>
     </div>
 
-    <script>
+    <script> 
         const trashData = [
             { 
                 name: 'Copper', 
@@ -766,7 +611,6 @@
                 iconImage: '../image/ขวดแก้ว.1.png',
             },
             
-                       
         ];
         
         const tbody = document.querySelector('#trashTable tbody');
@@ -818,6 +662,159 @@
                 this.classList.add('active');
             });
         });
+    </script>
+
+    <script>
+        const rankingData = {
+            today: [
+                { name: 'PET', symbol: 'ขวดน้ำใส', category: 'พลาสติก', price: 8, change: 0.50, week: 7.80, month: 7.50, year: '50,000', icon: '♻️', color: '#4CAF50' },
+                { name: 'Copper', symbol: 'ทองแดง', category: 'โลหะ', price: 260, change: 1.20, week: 258, month: 256, year: '1,500,000', icon: '🔩', color: '#FF6B35' },
+                { name: 'A4', symbol: 'กระดาษขาว-ดำ', category: 'กระดาษ', price: 3.60, change: -0.30, week: 3.65, month: 3.70, year: '25,000', icon: '📄', color: '#FF9800' },
+                { name: 'Aluminum', symbol: 'กระป๋องอลูมิเนียม', category: 'โลหะ', price: 45, change: 2.15, week: 44, month: 43, year: '280,000', icon: '🥫', color: '#607D8B' },
+                { name: 'PVC', symbol: 'ท่อสีฟ้า', category: 'พลาสติก', price: 1.50, change: -0.80, week: 1.52, month: 1.55, year: '12,000', icon: '🔌', color: '#9C27B0' },
+                { name: 'Glass', symbol: 'ขวดแก้ว', category: 'แก้ว', price: 1, change: 0, week: 1, month: 1, year: '8,000', icon: '🍾', color: '#2196F3' },
+                { name: 'Cardboard', symbol: 'กล่องกระดาษ', category: 'กระดาษ', price: 2.50, change: 1.20, week: 2.45, month: 2.40, year: '18,000', icon: '📦', color: '#795548' },
+                { name: 'Steel', symbol: 'เหล็ก', category: 'โลหะ', price: 12, change: -1.50, week: 12.20, month: 12.50, year: '85,000', icon: '⚙️', color: '#455A64' },
+            ],
+            week: [
+                { name: 'Aluminum', symbol: 'กระป๋องอลูมิเนียม', category: 'โลหะ', price: 45, change: 3.20, week: 43.5, month: 42, year: '280,000', icon: '🥫', color: '#607D8B' },
+                { name: 'Copper', symbol: 'ทองแดง', category: 'โลหะ', price: 260, change: 2.50, week: 254, month: 250, year: '1,500,000', icon: '🔩', color: '#FF6B35' },
+                { name: 'Cardboard', symbol: 'กล่องกระดาษ', category: 'กระดาษ', price: 2.50, change: 2.00, week: 2.45, month: 2.35, year: '18,000', icon: '📦', color: '#795548' },
+                { name: 'PET', symbol: 'ขวดน้ำใส', category: 'พลาสติก', price: 8, change: 1.50, week: 7.88, month: 7.75, year: '50,000', icon: '♻️', color: '#4CAF50' },
+                { name: 'A4', symbol: 'กระดาษขาว-ดำ', category: 'กระดาษ', price: 3.60, change: 0.80, week: 3.57, month: 3.50, year: '25,000', icon: '📄', color: '#FF9800' },
+                { name: 'Steel', symbol: 'เหล็ก', category: 'โลหะ', price: 12, change: -0.50, week: 12.06, month: 12.20, year: '85,000', icon: '⚙️', color: '#455A64' },
+                { name: 'PVC', symbol: 'ท่อสีฟ้า', category: 'พลาสติก', price: 1.50, change: -1.20, week: 1.52, month: 1.60, year: '12,000', icon: '🔌', color: '#9C27B0' },
+                { name: 'Glass', symbol: 'ขวดแก้ว', category: 'แก้ว', price: 1, change: 0, week: 1, month: 1, year: '8,000', icon: '🍾', color: '#2196F3' },
+            ],
+            month: [
+                { name: 'Copper', symbol: 'ทองแดง', category: 'โลหะ', price: 260, change: 4.50, week: 258, month: 248, year: '1,500,000', icon: '🔩', color: '#FF6B35' },
+                { name: 'Aluminum', symbol: 'กระป๋องอลูมิเนียม', category: 'โลหะ', price: 45, change: 4.20, week: 44, month: 43.2, year: '280,000', icon: '🥫', color: '#607D8B' },
+                { name: 'PET', symbol: 'ขวดน้ำใส', category: 'พลาสติก', price: 8, change: 3.50, week: 7.80, month: 7.73, year: '50,000', icon: '♻️', color: '#4CAF50' },
+                { name: 'Cardboard', symbol: 'กล่องกระดาษ', category: 'กระดาษ', price: 2.50, change: 3.10, week: 2.45, month: 2.43, year: '18,000', icon: '📦', color: '#795548' },
+                { name: 'A4', symbol: 'กระดาษขาว-ดำ', category: 'กระดาษ', price: 3.60, change: 2.80, week: 3.65, month: 3.50, year: '25,000', icon: '📄', color: '#FF9800' },
+                { name: 'Steel', symbol: 'เหล็ก', category: 'โลหะ', price: 12, change: 1.20, week: 12.20, month: 11.86, year: '85,000', icon: '⚙️', color: '#455A64' },
+                { name: 'PVC', symbol: 'ท่อสีฟ้า', category: 'พลาสติก', price: 1.50, change: -2.50, week: 1.52, month: 1.54, year: '12,000', icon: '🔌', color: '#9C27B0' },
+                { name: 'Glass', symbol: 'ขวดแก้ว', category: 'แก้ว', price: 1, change: 0, week: 1, month: 1, year: '8,000', icon: '🍾', color: '#2196F3' },
+            ],
+            year: [
+                { name: 'Copper', symbol: 'ทองแดง', category: 'โลหะ', price: 260, change: 25.50, week: 258, month: 256, year: '1,500,000', icon: '🔩', color: '#FF6B35' },
+                { name: 'Aluminum', symbol: 'กระป๋องอลูมิเนียม', category: 'โลหะ', price: 45, change: 18.20, week: 44, month: 43, year: '280,000', icon: '🥫', color: '#607D8B' },
+                { name: 'PET', symbol: 'ขวดน้ำใส', category: 'พลาสติก', price: 8, change: 15.80, week: 7.80, month: 7.50, year: '50,000', icon: '♻️', color: '#4CAF50' },
+                { name: 'Steel', symbol: 'เหล็ก', category: 'โลหะ', price: 12, change: 12.50, week: 12.20, month: 12.50, year: '85,000', icon: '⚙️', color: '#455A64' },
+                { name: 'Cardboard', symbol: 'กล่องกระดาษ', category: 'กระดาษ', price: 2.50, change: 10.20, week: 2.45, month: 2.40, year: '18,000', icon: '📦', color: '#795548' },
+                { name: 'A4', symbol: 'กระดาษขาว-ดำ', category: 'กระดาษ', price: 3.60, change: 8.50, week: 3.65, month: 3.70, year: '25,000', icon: '📄', color: '#FF9800' },
+                { name: 'PVC', symbol: 'ท่อสีฟ้า', category: 'พลาสติก', price: 1.50, change: -5.20, week: 1.52, month: 1.55, year: '12,000', icon: '🔌', color: '#9C27B0' },
+                { name: 'Glass', symbol: 'ขวดแก้ว', category: 'แก้ว', price: 1, change: 0, week: 1, month: 1, year: '8,000', icon: '🍾', color: '#2196F3' },
+            ]
+        };
+
+        let currentTab = 'today';
+
+        function renderTable() {
+            const container = document.getElementById('cardsContainer');
+            const data = rankingData[currentTab];
+            
+            const periodText = {
+                'today': 'วันนี้',
+                'week': 'สัปดาห์',
+                'month': 'เดือน',
+                'year': 'ปี'
+            };
+            
+            const rows = data.map((item, index) => {
+                const changeClass = item.change >= 0 ? 'positive' : 'negative';
+                const changeSymbol = item.change >= 0 ? '+' : '';
+                
+                return `
+                    <tr>
+                        <td>
+                            <div class="token-cell">
+                                <div class="token-icon" style="background: ${item.color};">${item.icon}</div>
+                                <div>
+                                    <div class="token-name">${item.symbol}</div>
+                                    <div class="token-symbol">${item.name}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${item.category}</td>
+                        <td class="price-value">${item.price.toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
+                        <td>${typeof item.week === 'number' ? item.week.toLocaleString('th-TH', {minimumFractionDigits: 2}) : item.week}</td>
+                        <td>${typeof item.month === 'number' ? item.month.toLocaleString('th-TH', {minimumFractionDigits: 2}) : item.month}</td>
+                        <td>${item.year}</td>
+                        <td class="change ${changeClass}">${changeSymbol}${item.change}%</td>
+                    </tr>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <div class="table-container">
+                    <div class="table-header-section">
+                        <span>🗂️ รายการขยะตามประเภท - ${periodText[currentTab]}</span>
+                        <div class="header-controls">
+                            <select class="dropdown" id="categoryFilter">
+                                <option value="all">ทุกหมวดหมู่</option>
+                                <option value="พลาสติก">พลาสติก</option>
+                                <option value="กระดาษ">กระดาษ</option>
+                                <option value="โลหะ">โลหะ</option>
+                                <option value="แก้ว">แก้ว</option>
+                            </select>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ชื่อ</th>
+                                <th>หมวดหมู่</th>
+                                <th>ราคา<div style="font-size: 10px;">/กก.</div></th>
+                                <th>สัปดาห์</th>
+                                <th>เดือน</th>
+                                <th>ปี</th>
+                                <th>การเปลี่ยนแปลง</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rows}
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn">...</button>
+                        <button class="page-btn">10</button>
+                    </div>
+                </div>
+            `;
+
+            // Pagination handlers
+            document.querySelectorAll('.page-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.textContent === '...') return;
+                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Category filter
+            document.getElementById('categoryFilter')?.addEventListener('change', function(e) {
+                // ในการใช้งานจริง จะกรองข้อมูลตามหมวดหมู่ที่เลือก
+                console.log('Filter by:', e.target.value);
+            });
+        }
+
+        // Sub-tab handlers
+        document.querySelectorAll('.sub-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                currentTab = this.dataset.period;
+                renderTable();
+            });
+        });
+
+        // Initial render
+        renderTable();
     </script>
 </body>
 </html>

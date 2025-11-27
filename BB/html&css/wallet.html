@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet - ECOBANK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0b0e11;
+            color: #eaecef;
+        }
+
+        .header {
+            background: #181a20;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            color: #b2ff59;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .nav a:hover {
+            color: #c0ee8c;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: #2b3139;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #b2ff59 0%, #0ecb81 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #eaecef;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 30px;
+        }
+
+        .wallet-header {
+            background: linear-gradient(135deg, #1e2329 0%, #2b3139 100%);
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .balance-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .total-balance {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            color: #848e9c;
+        }
+
+        .balance-amount {
+            font-size: 48px;
+            font-weight: 700;
+            color: #b2ff59;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .balance-currency {
+            font-size: 24px;
+            color: #848e9c;
+        }
+
+        .balance-change {
+            font-size: 16px;
+            color: #0ecb81;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #b2ff59;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #c0ee8c;
+        }
+
+        .btn-secondary {
+            background: #2b3139;
+            color: #eaecef;
+        }
+
+        .btn-secondary:hover {
+            background: #474d57;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: #0b0e11;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .stat-card-label {
+            font-size: 13px;
+            color: #848e9c;
+            margin-bottom: 8px;
+        }
+
+        .stat-card-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #eaecef;
+        }
+
+        .content-tabs {
+            display: flex;
+            gap: 30px;
+            margin: 30px 0 20px 0;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        .content-tab {
+            padding: 10px 0;
+            color: #848e9c;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+
+        .content-tab.active {
+            color: #eaecef;
+            border-bottom-color: #b2ff59;
+        }
+
+        .portfolio-section {
+            background: #1e2329;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .filter-dropdown {
+            padding: 8px 16px;
+            background: #2b3139;
+            border: 1px solid #474d57;
+            border-radius: 4px;
+            color: #eaecef;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px 10px;
+            color: #848e9c;
+            font-size: 12px;
+            font-weight: 500;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        th:last-child, td:last-child {
+            text-align: right;
+        }
+
+        td {
+            padding: 20px 10px;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        tr:hover {
+            background: #23262f;
+        }
+
+        .asset-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .asset-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .asset-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .asset-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .asset-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #eaecef;
+            margin-bottom: 2px;
+        }
+
+        .asset-symbol {
+            font-size: 12px;
+            color: #848e9c;
+        }
+
+        .amount-value {
+            font-size: 14px;
+            color: #eaecef;
+            font-weight: 500;
+        }
+
+        .price-value {
+            font-size: 14px;
+            color: #848e9c;
+        }
+
+        .positive {
+            color: #0ecb81;
+        }
+
+        .negative {
+            color: #f6465d;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .transaction-icon.buy {
+            background: rgba(14, 203, 129, 0.1);
+            color: #0ecb81;
+        }
+
+        .transaction-icon.sell {
+            background: rgba(246, 70, 93, 0.1);
+            color: #f6465d;
+        }
+
+        .transaction-details h4 {
+            font-size: 14px;
+            color: #eaecef;
+            margin-bottom: 4px;
+        }
+
+        .transaction-details p {
+            font-size: 12px;
+            color: #848e9c;
+        }
+
+        .transaction-right {
+            text-align: right;
+        }
+
+        .transaction-amount {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .transaction-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .status-success {
+            background: rgba(14, 203, 129, 0.1);
+            color: #0ecb81;
+        }
+
+        .status-pending {
+            background: rgba(240, 185, 11, 0.1);
+            color: #f0b90b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #848e9c;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state-subtext {
+            font-size: 14px;
+            color: #474d57;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">🌿 ECOBANK</div>
+            <div class="nav">
+                <a href="index.html"><h3>Home</h3></a>
+                <a href="trash_types.html" ><h3>Type</h3></a>
+                <a href="exchange.html" ><h3>Exchange </h3></a>
+                <a href="wallet.html" ><h3>wallet</h3></a>
+                <a href="#" ><h3>More</h3></a>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-profile">
+                <div class="user-avatar">S</div>
+                <span class="user-name">Somchai</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="wallet-header">
+            <div class="balance-section">
+                <div class="total-balance">
+                    <span class="balance-label">ยอดรวมในกระเป๋า</span>
+                    <div class="balance-amount">
+                        2,847.50
+                        <span class="balance-currency">THB</span>
+                        <span class="balance-change">+12.5%</span>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary">
+                        <span>💰</span>
+                        ฝากเงิน
+                    </button>
+                    <button class="btn btn-secondary">
+                        <span>📤</span>
+                        ถอนเงิน
+                    </button>
+                    <button class="btn btn-secondary">
+                        <span>📊</span>
+                        รายงาน
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-label">เงินสด (THB)</div>
+                    <div class="stat-card-value">1,250.00 ฿</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">มูลค่าขยะทั้งหมด</div>
+                    <div class="stat-card-value">1,597.50 ฿</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">กำไร/ขาดทุน</div>
+                    <div class="stat-card-value positive">+315.40 ฿</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">ธุรกรรมทั้งหมด</div>
+                    <div class="stat-card-value">24</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-tabs">
+            <div class="content-tab active" data-tab="portfolio">พอร์ตโฟลิโอ</div>
+            <div class="content-tab" data-tab="history">ประวัติการทำรายการ</div>
+        </div>
+
+        <div id="portfolioTab" class="tab-content">
+            <div class="portfolio-section">
+                <div class="section-header">
+                    <h2 class="section-title">ขยะที่ถือครอง</h2>
+                    <select class="filter-dropdown">
+                        <option>ทั้งหมด</option>
+                        <option>พลาสติก</option>
+                        <option>โลหะ</option>
+                        <option>กระดาษ</option>
+                        <option>แก้ว</option>
+                    </select>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>สินทรัพย์</th>
+                            <th>ปริมาณ</th>
+                            <th>ราคาเฉลี่ย</th>
+                            <th>ราคาตลาด</th>
+                            <th>กำไร/ขาดทุน</th>
+                            <th>มูลค่า</th>
+                        </tr>
+                    </thead>
+                    <tbody id="portfolioTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="historyTab" class="tab-content" style="display: none;">
+            <div class="portfolio-section">
+                <div class="section-header">
+                    <h2 class="section-title">ประวัติการทำรายการ</h2>
+                    <select class="filter-dropdown">
+                        <option>ทั้งหมด</option>
+                        <option>ซื้อ</option>
+                        <option>ขาย</option>
+                        <option>วันนี้</option>
+                        <option>สัปดาห์นี้</option>
+                    </select>
+                </div>
+
+                <div id="transactionList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const portfolioData = [
+            {
+                name: 'ทองแดง',
+                symbol: 'Copper',
+                amount: 2.5,
+                avgPrice: 235.00,
+                currentPrice: 250.00,
+                icon: '../image/ทองแดง.265.png'
+            },
+            {
+                name: 'ขวดน้ำใส',
+                symbol: 'PET',
+                amount: 45.3,
+                avgPrice: 7.50,
+                currentPrice: 8.00,
+                icon: '../image/ขวดพลาสติกPET.12.png'
+            },
+            {
+                name: 'อลูมิเนียม',
+                symbol: 'Aluminum',
+                amount: 8.2,
+                avgPrice: 32.00,
+                currentPrice: 34.00,
+                icon: '../image/กระป๋องอลูมิเนียม.38.png'
+            },
+            {
+                name: 'กระดาษ',
+                symbol: 'Paper',
+                amount: 62.5,
+                avgPrice: 4.50,
+                currentPrice: 4.30,
+                icon: '../image/กระดาษ.png'
+            },
+            {
+                name: 'สแตนเลส',
+                symbol: 'Stainless',
+                amount: 3.8,
+                avgPrice: 31.00,
+                currentPrice: 33.00,
+                icon: '../image/สแตนเลส.35.png'
+            }
+        ];
+
+        const transactions = [
+            {
+                type: 'buy',
+                name: 'ขวดน้ำใส (PET)',
+                amount: 15.5,
+                price: 8.00,
+                date: '2024-11-27 14:30',
+                status: 'success'
+            },
+            {
+                type: 'sell',
+                name: 'ทองแดง (Copper)',
+                amount: 1.2,
+                price: 250.00,
+                date: '2024-11-27 10:15',
+                status: 'success'
+            },
+            {
+                type: 'buy',
+                name: 'อลูมิเนียม (Aluminum)',
+                amount: 5.0,
+                price: 34.00,
+                date: '2024-11-26 16:45',
+                status: 'success'
+            },
+            {
+                type: 'buy',
+                name: 'กระดาษ (Paper)',
+                amount: 30.0,
+                price: 4.30,
+                date: '2024-11-26 09:20',
+                status: 'pending'
+            }
+        ];
+
+        // Render portfolio
+        const portfolioTable = document.getElementById('portfolioTable');
+        portfolioData.forEach(item => {
+            const profitLoss = (item.currentPrice - item.avgPrice) * item.amount;
+            const profitPercent = ((item.currentPrice - item.avgPrice) / item.avgPrice) * 100;
+            const totalValue = item.amount * item.currentPrice;
+            const isProfitable = profitLoss >= 0;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <div class="asset-cell">
+                        <div class="asset-icon">
+                            <img src="${item.icon}" alt="${item.name}">
+                        </div>
+                        <div class="asset-info">
+                            <span class="asset-name">${item.name}</span>
+                            <span class="asset-symbol">${item.symbol}</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="amount-value">${item.amount.toFixed(1)} kg</td>
+                <td class="price-value">${item.avgPrice.toFixed(2)} ฿</td>
+                <td class="amount-value">${item.currentPrice.toFixed(2)} ฿</td>
+                <td class="${isProfitable ? 'positive' : 'negative'}">
+                    ${isProfitable ? '+' : ''}${profitLoss.toFixed(2)} ฿ (${isProfitable ? '+' : ''}${profitPercent.toFixed(2)}%)
+                </td>
+                <td class="amount-value">${totalValue.toFixed(2)} ฿</td>
+            `;
+            portfolioTable.appendChild(row);
+        });
+
+        // Render transactions
+        const transactionList = document.getElementById('transactionList');
+        transactions.forEach(tx => {
+            const total = tx.amount * tx.price;
+            const typeLabel = tx.type === 'buy' ? 'ซื้อ' : 'ขาย';
+            const icon = tx.type === 'buy' ? '📥' : '📤';
+
+            const item = document.createElement('div');
+            item.className = 'transaction-item';
+            item.innerHTML = `
+                <div class="transaction-left">
+                    <div class="transaction-icon ${tx.type}">
+                        ${icon}
+                    </div>
+                    <div class="transaction-details">
+                        <h4>${typeLabel} ${tx.name}</h4>
+                        <p>${tx.date} • ${tx.amount} kg @ ${tx.price} ฿/kg</p>
+                    </div>
+                </div>
+                <div class="transaction-right">
+                    <div class="transaction-amount ${tx.type === 'buy' ? 'negative' : 'positive'}">
+                        ${tx.type === 'buy' ? '-' : '+'}${total.toFixed(2)} ฿
+                    </div>
+                    <span class="transaction-status ${tx.status === 'success' ? 'status-success' : 'status-pending'}">
+                        ${tx.status === 'success' ? 'สำเร็จ' : 'รอดำเนินการ'}
+                    </span>
+                </div>
+            `;
+            transactionList.appendChild(item);
+        });
+
+        // Tab switching
+        const tabs = document.querySelectorAll('.content-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const tabName = tab.dataset.tab;
+                document.getElementById('portfolioTab').style.display = tabName === 'portfolio' ? 'block' : 'none';
+                document.getElementById('historyTab').style.display = tabName === 'history' ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

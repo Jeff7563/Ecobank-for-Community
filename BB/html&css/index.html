@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ECOBANK for Community</title>
     <style>
-        * {
+                * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -33,7 +33,7 @@
         }
 
         .logo {
-            color: #f0b90b;
+            color: #b2ff59;
             font-size: 24px;
             font-weight: bold;
             display: flex;
@@ -57,7 +57,7 @@
         }
 
         .nav a:hover {
-            color: #f0b90b;
+            color: #c0ee8c;
         }
 
         
@@ -97,7 +97,7 @@
         }
 
         .btn-signup {
-            background: #f0b90b;
+            background: #b2ff59;
             color: #000;
             font-weight: 600;
         }
@@ -135,7 +135,11 @@
 
         .main-tab.active {
             color: #eaecef;
-            border-bottom-color: #f0b90b;
+            border-bottom-color: #b2ff59;
+        }
+
+        .main-tab.active:hover {
+            color: #f8d12f;
         }
         
 
@@ -178,24 +182,24 @@
             text-decoration: none;
         }
 
-        .coin-item {
+        .trash-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
         }
 
-        .coin-item:last-child {
+        .trash-item:last-child {
             margin-bottom: 0;
         }
 
-        .coin-info {
+        .trash-info {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .coin-icon {
+        .trash-icon {
             width: 24px;
             height: 24px;
             border-radius: 50%;
@@ -207,29 +211,29 @@
             overflow: hidden;
         }
 
-        .coin-icon img {  
+        .trash-icon img {  
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .coin-details {
+        .trash-details {
             display: flex;
             flex-direction: column;
         }
 
-        .coin-name {
+        .trash-name {
             font-weight: 600;
             font-size: 14px;
             color: #eaecef;
         }
 
-        .coin-price {
+        .trash-price {
             font-size: 13px;
             color: #848e9c;
         }
 
-        .coin-right {
+        .trash-right {
             text-align: right;
         }
 
@@ -266,8 +270,8 @@
         }
 
         .secondary-tab.active {
-            color: #f0b90b;
-            border-bottom-color: #f0b90b;
+            color: rgb(255, 255, 255);
+            border-bottom-color: #b2ff59;
         }
 
         .secondary-tab .badge {
@@ -360,13 +364,13 @@
             background: #23262f;
         }
 
-        .token-cell {
+        .trash-cell {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .token-icon {
+        .trash-icon {
             width: 32px;
             height: 32px;
             border-radius: 50%;
@@ -378,17 +382,17 @@
             overflow: hidden;
         }
 
-        .token-icon img {  
+        .trash-icon img {  
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .token-name {
+        .trash-name {
             font-weight: 600;
         }
 
-        .token-symbol {
+        .trash-symbol {
             color: #848e9c;
             font-size: 12px;
         }
@@ -420,7 +424,7 @@
         }
 
         .page-btn.active {
-            background: #f0b90b;
+            background: #b2ff59;
             color: #000;
         }
 
@@ -430,6 +434,7 @@
             align-items: center;
         }
     </style>
+    
 </head>
 <body>
     <div class="header">
@@ -437,66 +442,64 @@
             <div class="logo">ECOBANK</div>
             <div class="nav">
                 <a href="index.html"><h3>Home</h3></a>
-                <a href="types-of-waste-data.html" ><h3>Type</h3></a>
-                <a href="#" >More</a>
+                <a href="trash_types.html" ><h3>Type</h3></a>
+                <a href="#" ><h3>Exchange </h3></a>
+                <a href="#" ><h3>wallet</h3></a>
+                <a href="#" ><h3>More</h3></a>
             </div>
         </div>
         <div class="header-right">
-            <button class="icon-btn">🔍</button>
-            <button class="icon-btn">📱</button>
-            <button class="icon-btn">⚙️</button>
-            <button class="icon-btn">🌙</button>
-            <a href="login-page.html"><button class="btn btn-login">Log In</button></a>
-            <a href="register-page.html"><button class="btn btn-signup">Sign Up</button></a>
+            <a href="login.html"><button class="btn btn-login">Log In</button></a>
+            <a href="register.html"><button class="btn btn-signup">Sign Up</button></a>
         </div>
     </div>
 
     <div class="container">
         <div class="main-tabs">
-            <div class="main-tab active">Overview</div>
-            <a href="types-of-waste-data.html" class="main-tab" >Types of Waste</a>
+            <a href="index.html" class="main-tab active" >Overview</a>
+            <a href="trash_types.html" class="main-tab" >Types of Waste</a>
         </div>
 
         <div class="market-cards">
             <div class="market-card">
                 <div class="card-header">
                     <span>To day</span>
-                    <a href="" class="more-link">More ›</a>
+                    <a href="trash_types.html" class="more-link">More ›</a>
                 </div>
-                <div class="coin-item">
-                    <div class="coin-info">
-                        <div class="coin-icon"><img src="images/wiki.png"></div>
-                        <div class="coin-details">
-                            <div class="coin-name">ขวดน้ำใส</div>
-                            <div class="coin-price">8/บ.</div>
+                <div class="trash-item">
+                    <div class="trash-info">
+                        <div class="trash-icon"><img src="../image/ขวดพลาสติกPET.12.png"></div>
+                        <div class="trash-details">
+                            <div class="trash-name">ขวดน้ำใส</div>
+                            <div class="trash-price">PET</div>
                         </div>
                     </div>
-                    <div class="coin-right">
-                        <div class="change positive">8/บ.</div>
+                    <div class="trash-right">
+                        <div class="change positive">8 บ./kg</div>
                     </div>
                 </div>
-                <div class="coin-item">
-                    <div class="coin-info">
-                        <div class="coin-icon"><img src="images/wiki.png"></div>
-                        <div class="coin-details">
-                            <div class="coin-name">ขวดน้ำใส</div>
-                            <div class="coin-price">8/บ.</div>
+                <div class="trash-item">
+                    <div class="trash-info">
+                        <div class="trash-icon"><img src="../image/กระดาษ.png"></div>
+                        <div class="trash-details">
+                            <div class="trash-name">กระดาษ</div>
+                            <div class="trash-price">AAA</div>
                         </div>
                     </div>
-                    <div class="coin-right">
-                        <div class="change positive">8/บ.</div>
+                    <div class="trash-right">
+                        <div class="change positive">3 บ./kg</div>
                     </div>
                 </div>
-                <div class="coin-item">
-                    <div class="coin-info">
-                        <div class="coin-icon"><img src="images/wiki.png"></div>
-                        <div class="coin-details">
-                            <div class="coin-name">ขวดน้ำใส</div>
-                            <div class="coin-price">8/บ.</div>
+                <div class="trash-item">
+                    <div class="trash-info">
+                        <div class="trash-icon"><img src="../image/กระป๋ิองอลูมิเนียม.38.png"></div>
+                        <div class="trash-details">
+                            <div class="trash-name">อลูมิเนียม</div>
+                            <div class="trash-price"></div>
                         </div>
                     </div>
-                    <div class="coin-right">
-                        <div class="change positive">8/บ.</div>
+                    <div class="trash-right">
+                        <div class="change positive">3.4 บ./kg</div>
                     </div>
                 </div>
             </div>
@@ -504,42 +507,42 @@
             <div class="market-card">
                 <div class="card-header">
                     <span>Week</span>
-                    <a href="" class="more-link">More ›</a>
+                    <a href="trash_types.html" class="more-link">More ›</a>
                 </div>
-                <div class="coin-item">
-                    <div class="coin-info">
-                        <div class="coin-icon"><img src="images/wiki.png"></div>
-                        <div class="coin-details">
-                            <div class="coin-name">ขวดน้ำใส</div>
-                            <div class="coin-price">8/บ.</div>
+                <div class="trash-item">
+                    <div class="trash-info">
+                        <div class="trash-icon"><img src="../image/ขวดพลาสติกPET.12.png"></div>
+                        <div class="trash-details">
+                            <div class="trash-name">ขวดน้ำใส</div>
+                            <div class="trash-price">PET</div>
                         </div>
                     </div>
-                    <div class="coin-right">
-                        <div class="change positive">8/บ.</div>
+                    <div class="trash-right">
+                        <div class="change positive">8 บ./kg</div>
                     </div>
                 </div>
-                <div class="coin-item">
-                    <div class="coin-info">
-                        <div class="coin-icon"><img src="images/wiki.png"></div>
-                        <div class="coin-details">
-                            <div class="coin-name">ขวดน้ำใส</div>
-                            <div class="coin-price">8/บ.</div>
+                <div class="trash-item">
+                    <div class="trash-info">
+                        <div class="trash-icon"><img src="../image/กระดาษ.png"></div>
+                        <div class="trash-details">
+                            <div class="trash-name">กระดาษ</div>
+                            <div class="trash-price">AAA</div>
                         </div>
                     </div>
-                    <div class="coin-right">
-                        <div class="change positive">8/บ.</div>
+                    <div class="trash-right">
+                        <div class="change positive">3 บ./kg</div>
                     </div>
                 </div>
-                <div class="coin-item">
-                    <div class="coin-info">
-                        <div class="coin-icon"><img src="images/wiki.png"></div>
-                        <div class="coin-details">
-                            <div class="coin-name">ขวดน้ำใส</div>
-                            <div class="coin-price">8/บ.</div>
+                <div class="trash-item">
+                    <div class="trash-info">
+                        <div class="trash-icon"><img src="../image/กระป๋ิองอลูมิเนียม.38.png"></div>
+                        <div class="trash-details">
+                            <div class="trash-name">อลูมิเนียม</div>
+                            <div class="trash-price"></div>
                         </div>
                     </div>
-                    <div class="coin-right">
-                        <div class="change positive">8/บ.</div>
+                    <div class="trash-right">
+                        <div class="change positive">3.4 บ./kg</div>
                     </div>
                 </div>
             </div>
@@ -547,86 +550,85 @@
             <div class="market-card">
                 <div class="card-header">
                     <span>Month</span>
-                    <a href="" class="more-link">More ›</a>
+                    <a href="trash_types.html" class="more-link">More ›</a>
                 </div>
-                <div class="coin-item">
-                    <div class="coin-info">
-                        <div class="coin-icon"><img src="images/wiki.png"></div>
-                        <div class="coin-details">
-                            <div class="coin-name">ขวดน้ำใส</div>
-                            <div class="coin-price">8/บ.</div>
+                <div class="trash-item">
+                    <div class="trash-info">
+                        <div class="trash-icon"><img src="../image/ขวดพลาสติกPET.12.png"></div>
+                        <div class="trash-details">
+                            <div class="trash-name">ขวดน้ำใส</div>
+                            <div class="trash-price">PET</div>
                         </div>
                     </div>
-                    <div class="coin-right">
-                        <div class="change positive">8/บ.</div>
+                    <div class="trash-right">
+                        <div class="change positive">6 บ./kg</div>
                     </div>
                 </div>
-                <div class="coin-item">
-                    <div class="coin-info">
-                        <div class="coin-icon"><img src="images/wiki.png"></div>
-                        <div class="coin-details">
-                            <div class="coin-name">ขวดน้ำใส</div>
-                            <div class="coin-price">8/บ.</div>
+                <div class="trash-item">
+                    <div class="trash-info">
+                        <div class="trash-icon"><img src="../image/กระดาษ.png"></div>
+                        <div class="trash-details">
+                            <div class="trash-name">กระดาษ</div>
+                            <div class="trash-price">AAA</div>
                         </div>
                     </div>
-                    <div class="coin-right">
-                        <div class="change positive">8/บ.</div>
+                    <div class="trash-right">
+                        <div class="change positive">2.8 บ./kg</div>
                     </div>
                 </div>
-                <div class="coin-item">
-                    <div class="coin-info">
-                        <div class="coin-icon"><img src="images/wiki.png"></div>
-                        <div class="coin-details">
-                            <div class="coin-name">ขวดน้ำใส</div>
-                            <div class="coin-price">8/บ.</div>
+                <div class="trash-item">
+                    <div class="trash-info">
+                        <div class="trash-icon"><img src="../image/กระป๋ิองอลูมิเนียม.38.png"></div>
+                        <div class="trash-details">
+                            <div class="trash-name">อลูมิเนียม</div>
+                            <div class="trash-price"></div>
                         </div>
                     </div>
-                    <div class="coin-right">
-                        <div class="change positive">8/บ.</div>
+                    <div class="trash-right">
+                        <div class="change positive">3 บ./kg</div>
                     </div>
                 </div>
-                
             </div>
 
             <div class="market-card">
                 <div class="card-header">
                     <span>Year</span>
-                    <a href="" class="more-link">More ›</a>
+                    <a href="trash_types.html" class="more-link">More ›</a>
                 </div>
-                <div class="coin-item">
-                    <div class="coin-info">
-                        <div class="coin-icon"><img src="images/wiki.png"></div>
-                        <div class="coin-details">
-                            <div class="coin-name">ขวดน้ำใส</div>
-                            <div class="coin-price">8/บ.</div>
+                <div class="trash-item">
+                    <div class="trash-info">
+                        <div class="trash-icon"><img src="../image/ขวดพลาสติกPET.12.png"></div>
+                        <div class="trash-details">
+                            <div class="trash-name">ขวดน้ำใส</div>
+                            <div class="trash-price">PET</div>
                         </div>
                     </div>
-                    <div class="coin-right">
-                        <div class="change positive">8/บ.</div>
+                    <div class="trash-right">
+                        <div class="change positive">5.8 บ./kg</div>
                     </div>
                 </div>
-                <div class="coin-item">
-                    <div class="coin-info">
-                        <div class="coin-icon"><img src="images/wiki.png"></div>
-                        <div class="coin-details">
-                            <div class="coin-name">ขวดน้ำใส</div>
-                            <div class="coin-price">8/บ.</div>
+                <div class="trash-item">
+                    <div class="trash-info">
+                        <div class="trash-icon"><img src="../image/กระดาษ.png"></div>
+                        <div class="trash-details">
+                            <div class="trash-name">กระดาษ</div>
+                            <div class="trash-price">AAA</div>
                         </div>
                     </div>
-                    <div class="coin-right">
-                        <div class="change positive">8/บ.</div>
+                    <div class="trash-right">
+                        <div class="change positive">2.6 บ./kg</div>
                     </div>
                 </div>
-                <div class="coin-item">
-                    <div class="coin-info">
-                        <div class="coin-icon"><img src="images/wiki.png"></div>
-                        <div class="coin-details">
-                            <div class="coin-name">ขวดน้ำใส</div>
-                            <div class="coin-price">8/บ.</div>
+                <div class="trash-item">
+                    <div class="trash-info">
+                        <div class="trash-icon"><img src="../image/กระป๋ิองอลูมิเนียม.38.png"></div>
+                        <div class="trash-details">
+                            <div class="trash-name">อลูมิเนียม</div>
+                            <div class="trash-price"></div>
                         </div>
                     </div>
-                    <div class="coin-right">
-                        <div class="change positive">8/บ.</div>
+                    <div class="trash-right">
+                        <div class="change positive">3 บ./kg</div>
                     </div>
                 </div>
             </div>
@@ -647,12 +649,8 @@
         <div class="table-container">
             <div class="table-header">
                 Top Trash by Market Capitalization
-                <div class="search-notify" style="float: right; font-size: 14px;">
-                    <button class="icon-btn">🔍</button>
-                    <button class="icon-btn">🔔</button>
-                </div>
             </div>
-            <table id="cryptoTable">
+            <table id="trashTable">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -681,149 +679,137 @@
     </div>
 
     <script>
-        const cryptoData = [
-            { 
-                name: 'PET', 
-                symbol: 'ขวดน้ำใส', 
-                Category: 'Plastic',
-                price: '8', 
-                MKCap: -0.63, 
-                PWeek: '7.80', 
-                PMonth: '7.50', 
-                iconImage: 'images/wiki.png',
-            },
-            { 
-                name: 'A4', 
-                symbol: 'กระดาษขาว-ดำ', 
-                Category: 'Paper',
-                price: '3.60', 
-                MKCap: -0.63, 
-                PWeek: '3.60', 
-                PMonth: '3.50', 
-                iconImage: 'images/wiki.png', 
-            },
-            { 
-                name: 'PVC', 
-                symbol: 'ท่อสีฟ้า', 
-                Category: 'Plastic',
-                price: '1.50', 
-                MKCap: -0.63, 
-                PWeek: '1.50', 
-                PMonth: '1.40', 
-                iconImage: 'images/wiki.png',
-            },
+        const trashData = [
             { 
                 name: 'Copper', 
                 symbol: 'ทองแดง', 
                 Category: 'Metal',
-                price: '260', 
-                MKCap: -0.63, 
-                PWeek: '258', 
-                PMonth: '256', 
-                iconImage: 'images/wiki.png',
+                price: '250 บาท', 
+                PYear: '205 บาท', 
+                PWeek: '250 บาท', 
+                PMonth: '230 บาท', 
+                iconImage: '../image/ทองแดง.265.png',
             },
             { 
-                name: 'Glass Bottle', 
+                name: 'PET', 
+                symbol: 'ขวดน้ำ', 
+                Category: 'Plastic',
+                price: '8 บาท', 
+                PYear: '7.2 บาท', 
+                PWeek: '8 บาท', 
+                PMonth: '7.7 บาท', 
+                iconImage: '../image/ขวดพลาสติกPET.12.png',
+            },
+            { 
+                name: 'HDPE', 
+                symbol: 'ขวดน้ำขุ่น', 
+                Category: 'Plastic',
+                price: '6 บาท', 
+                PYear: '5.4 บาท', 
+                PWeek: '6 บาท', 
+                PMonth: '5.7 บาท', 
+                iconImage: '../image/ขวด HDPE.10.png',
+            },
+            { 
+                name: '', 
+                symbol: 'แสตนเลส', 
+                Category: 'Metal',
+                price: '33 บาท', 
+                PYear: '29 บาท', 
+                PWeek: '33 บาท', 
+                PMonth: '31.8 บาท', 
+                iconImage: '../image/สแตนเลส.35.png',
+            },
+            { 
+                name: 'Paper', 
+                symbol: 'กระดาษ ขาว-ดำ', 
+                Category: 'Paper',
+                price: '4.3 บาท', 
+                PYear: '3.8 บาท', 
+                PWeek: '4.3 บาท', 
+                PMonth: '4 บาท', 
+                iconImage: '../image/กระดาษ.png',
+            },
+            { 
+                name: '', 
+                symbol: 'อลูมิเนียม', 
+                Category: 'Metal',
+                price: '34 บาท', 
+                PYear: '30 บาท', 
+                PWeek: '34 บาท', 
+                PMonth: '30 บาท', 
+                iconImage: '../image/กระป๋ิองอลูมิเนียม.38.png',
+            },
+            { 
+                name: '', 
+                symbol: 'กล่องลัง', 
+                Category: 'Paper',
+                price: '3 บาท', 
+                PYear: '2.5 บาท', 
+                PWeek: '3 บาท', 
+                PMonth: '2.8 บาท', 
+                iconImage: '../image/กล่องกระดาษ3.320.png',
+            },
+            { 
+                name: 'PVC', 
+                symbol: 'ท่อฟ้า', 
+                Category: 'Plastic',
+                price: '2.8 บาท', 
+                PYear: '2.3 บาท', 
+                PWeek: '2.8 บาท', 
+                PMonth: '2.5 บาท', 
+                iconImage: '../image/ท่อ PVC.3.png',
+            },
+            { 
+                name: '', 
                 symbol: 'ขวดแก้ว', 
                 Category: 'Glass',
-                price: '1', 
-                MKCap: -0.63, 
-                PWeek: '1', 
-                PMonth: '1', 
-                iconImage: 'images/wiki.png',
-            },
-            { 
-                name: 'PET', 
-                symbol: 'ขวดน้ำใส', 
-                Category: 'Plastic',
-                price: '6', 
-                MKCap: -0.63, 
-                PWeek: '$50.55B', 
-                PMonth: '$2.02T', 
-                iconImage: 'images/wiki.png',
-            },
-            { 
-                name: 'PET', 
-                symbol: 'ขวดน้ำใส', 
-                Category: 'Plastic',
-                price: '6', 
-                MKCap: -0.63, 
-                PWeek: '$50.55B', 
-                PMonth: '$2.02T', 
-                iconImage: 'images/wiki.png',
-            },
-            { 
-                name: 'PET', 
-                symbol: 'ขวดน้ำใส', 
-                Category: 'Plastic',
-                price: '6', 
-                MKCap: -0.63, 
-                PWeek: '$50.55B', 
-                PMonth: '$2.02T', 
-                iconImage: 'images/wiki.png',
-            },
-            { 
-                name: 'PET', 
-                symbol: 'ขวดน้ำใส', 
-                Category: 'Plastic',
-                price: '6', 
-                MKCap: -0.63, 
-                PWeek: '$50.55B', 
-                PMonth: '$2.02T', 
-                iconImage: 'images/wiki.png',
-            },
-            { 
-                name: 'PET', 
-                symbol: 'ขวดน้ำใส', 
-                Category: 'Plastic',
-                price: '6', 
-                MKCap: -0.63, 
-                PWeek: '$50.55B', 
-                PMonth: '$2.02T', 
-                iconImage: 'images/wiki.png', 
+                price: '1 บาท', 
+                PYear: '1 บาท', 
+                PWeek: '1 บาท', 
+                PMonth: '1 บาท', 
+                iconImage: '../image/ขวดแก้ว.1.png',
             },
             
+                       
         ];
         
-        const tbody = document.querySelector('#cryptoTable tbody');
+        const tbody = document.querySelector('#trashTable tbody');
         
-        cryptoData.forEach(crypto => {
+        trashData.forEach(trash => {
             const row = document.createElement('tr');
-            const changeClass = crypto.change >= 0 ? 'positive' : 'negative';
-            const changeSymbol = crypto.change >= 0 ? '+' : '';
+            const changeClass = trash.change >= 0 ? 'positive' : 'negative';
+            const changeSymbol = trash.change >= 0 ? '+' : '';
             
-            // ตรวจสอบว่ามีรูปภาพหรือไม่  ← เพิ่มส่วนนี้ใหม่ทั้งหมด s
             let iconHTML;
-            if (crypto.iconImage) {
-                // ถ้ามีรูป
-                iconHTML = `<img src="${crypto.iconImage}" ...>`;
+            if (trash.iconImage) {
+                iconHTML = `<img src="${trash.iconImage}" ...>`;
             } else {
-                // ถ้าไม่มีรูป ใช้ตัวอักษร
-                iconHTML = crypto.icon;
+                iconHTML = trash.icon;
             }
 
             row.innerHTML = `
                 <td>
-                    <div class="token-cell">
-                        <div class="token-icon" style="background: ${crypto.color};">
+                    <div class="trash-cell">
+                        <div class="trash-icon" style="background: ${trash.color};">
                             ${iconHTML}  
                         </div>
                         <div>
-                            <div class="token-name">${crypto.symbol}</div>
-                            <div class="token-symbol">${crypto.name}</div>
+                            <div class="trash-name">${trash.symbol}</div>
+                            <div class="trash-symbol">${trash.name}</div>
                         </div>
                     </div>
                 </td>
-                <td>${crypto.Category}</td>
-                <td class="price-value">${crypto.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                <td>${crypto.PWeek}</td>
-                <td>${crypto.PMonth}</td>
-                <td class="change ${changeClass}">${changeSymbol}${crypto.MKCap}%</td>
+                <td>${trash.Category}</td>
+                <td class="price-value">${trash.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                <td>${trash.PWeek}</td>
+                <td>${trash.PMonth}</td>
+                <td>${trash.PYear}</td>
+
             `;
             tbody.appendChild(row);
         });
 
-        // Add click handlers for pagination
         document.querySelectorAll('.page-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
@@ -831,7 +817,6 @@
             });
         });
 
-        // Add click handlers for pagination
         document.querySelectorAll('.filter-tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));

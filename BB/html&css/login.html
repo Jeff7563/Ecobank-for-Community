@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - ECOBANK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e2329 0%, #2b3139 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #1e2329;
+            border-radius: 16px;
+            padding: 48px 40px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            justify-content: center;
+        }
+
+        .logo-text {
+            color: #b2ff59;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            color: #eaecef;
+            font-size: 32px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            color: #eaecef;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #2b3139;
+            border: 1px solid #474d57;
+            border-radius: 8px;
+            color: #eaecef;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #b2ff59;
+            background: #1e2329;
+        }
+
+        input::placeholder {
+            color: #848e9c;
+        }
+
+        .password-input {
+            position: relative;
+        }
+
+        .password-input input {
+            padding-right: 45px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #848e9c;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+            font-size: 18px;
+        }
+
+        .toggle-password:hover {
+            color: #eaecef;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #98f330;
+            color: #1e2329;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 16px;
+        }
+
+        .btn-primary:hover {
+            background: #b2ff59;
+        }
+
+        .create-account {
+            text-align: center;
+            margin-top: 32px;
+        }
+
+        .create-account a {
+            color: #b2ff59;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+
+        .create-account a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #474d57;
+            flex-wrap: wrap;
+        }
+
+        .footer a {
+            color: #848e9c;
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #eaecef;
+        }
+
+        .language-selector {
+            position: relative;
+            display: inline-block;
+        }
+
+        .language-btn {
+            background: transparent;
+            border: none;
+            color: #848e9c;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.3s;
+        }
+
+        .language-btn:hover {
+            color: #eaecef;
+        }
+
+        .language-dropdown {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: #2b3139;
+            border: 1px solid #474d57;
+            border-radius: 8px;
+            padding: 8px 0;
+            margin-bottom: 8px;
+            min-width: 150px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .language-dropdown.active {
+            display: block;
+        }
+
+        .language-option {
+            padding: 10px 16px;
+            color: #eaecef;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 13px;
+        }
+
+        .language-option:hover {
+            background: #1e2329;
+        }
+
+        .language-option.selected {
+            color: #b2ff59;
+            background: #1e2329;
+        }
+
+        .back-home {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .back-home a {
+            color: #848e9c;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s;
+        }
+
+        .back-home a:hover {
+            color: #b2ff59;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-home">
+            <a href="index.html">← กลับหน้าแรก</a>
+        </div>
+
+        <div class="logo">
+            <span style="font-size: 32px;">🌿</span>
+            <span class="logo-text">ECOBANK</span>
+        </div>
+
+        <div class="header">
+            <h1 id="pageTitle">เข้าสู่ระบบ</h1>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label id="emailLabel">อีเมล/ชื่อผู้ใช้</label>
+                <input type="text" placeholder="อีเมล/ชื่อผู้ใช้" id="emailInput" required>
+            </div>
+
+            <div class="form-group">
+                <label id="passwordLabel">รหัสผ่าน</label>
+                <div class="password-input">
+                    <input type="password" placeholder="รหัสผ่าน" id="passwordInput" required>
+                    <button type="button" class="toggle-password" id="togglePassword">
+                        👁️
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="continueBtn">ดำเนินการต่อ</button>
+        </form>
+
+        <div class="create-account">
+            <a href="register.html" id="createAccountLink">สร้างบัญชีใหม่</a>
+        </div>
+
+        <div class="footer">
+            <div class="language-selector">
+                <button type="button" class="language-btn" id="languageBtn">
+                    <span id="currentLanguage">ไทย</span>
+                    <span>▼</span>
+                </button>
+                <div class="language-dropdown" id="languageDropdown">
+                    <div class="language-option selected" data-lang="th">🇹🇭 ไทย (Thai)</div>
+                    <div class="language-option" data-lang="en">🇬🇧 English</div>
+                </div>
+            </div>
+            <a href="#">คุกกี้</a>
+            <a href="#">เงื่อนไข</a>
+            <a href="#">ความเป็นส่วนตัว</a>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('passwordInput');
+
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            togglePassword.textContent = type === 'text' ? '🙈' : '👁️';
+        });
+
+        // Language selector
+        const languageBtn = document.getElementById('languageBtn');
+        const languageDropdown = document.getElementById('languageDropdown');
+        const currentLanguage = document.getElementById('currentLanguage');
+        const languageOptions = document.querySelectorAll('.language-option');
+
+        languageBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            languageDropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', () => {
+            languageDropdown.classList.remove('active');
+        });
+
+        languageOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const lang = option.dataset.lang;
+                const langText = option.textContent;
+
+                currentLanguage.textContent = langText.split(' ')[1];
+                languageOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                languageDropdown.classList.remove('active');
+                
+                changeLanguage(lang);
+            });
+        });
+
+        function changeLanguage(lang) {
+            const translations = {
+                th: {
+                    title: 'เข้าสู่ระบบ',
+                    emailLabel: 'อีเมล/ชื่อผู้ใช้',
+                    emailPlaceholder: 'อีเมล/ชื่อผู้ใช้',
+                    passwordLabel: 'รหัสผ่าน',
+                    passwordPlaceholder: 'รหัสผ่าน',
+                    continueBtn: 'ดำเนินการต่อ',
+                    createAccount: 'สร้างบัญชีใหม่',
+                },
+                en: {
+                    title: 'Log in',
+                    emailLabel: 'Email/Username',
+                    emailPlaceholder: 'Email/Username',
+                    passwordLabel: 'Password',
+                    passwordPlaceholder: 'Password',
+                    continueBtn: 'Continue',
+                    createAccount: 'Create a Account',
+                }
+            };
+
+            const t = translations[lang] || translations.th;
+
+            document.getElementById('pageTitle').textContent = t.title;
+            document.getElementById('emailLabel').textContent = t.emailLabel;
+            document.getElementById('passwordLabel').textContent = t.passwordLabel;
+            document.getElementById('emailInput').placeholder = t.emailPlaceholder;
+            document.getElementById('passwordInput').placeholder = t.passwordPlaceholder;
+            document.getElementById('continueBtn').textContent = t.continueBtn;
+            document.getElementById('createAccountLink').textContent = t.createAccount;
+        }
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            // ในการใช้งานจริง จะส่งข้อมูลไปยังเซิร์ฟเวอร์
+            console.log('Login attempt:', { email, password });
+            alert('กำลังเข้าสู่ระบบ...\n(ในการใช้งานจริงจะเชื่อมต่อกับฐานข้อมูล)');
+        });
+
+        // Set Thai as default
+        changeLanguage('th');
+    </script>
+</body>
+</html>

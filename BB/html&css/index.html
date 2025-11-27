@@ -24,6 +24,9 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #2b3139;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header-left {
@@ -439,8 +442,8 @@
                 <a href="index.html"><h3>Home</h3></a>
                 <a href="trash_types.html" ><h3>Type</h3></a>
                 <a href="exchange.html" ><h3>Exchange </h3></a>
-                <a href="wallet.html" ><h3>wallet</h3></a>
-                <a href="#" ><h3>More</h3></a>
+                <a href="wallet.html" ><h3>Wallet</h3></a>
+                <a href="booths.html" ><h3>Booths</h3></a>
             </div>
         </div>
         <div class="header-right">
@@ -637,25 +640,26 @@
         </div>
 
         <div class="filter-tabs">
-            <div class="filter-tab active">All</div>
-            <div class="filter-tab">→</div>
+            <div class="filter-tab active" data-category="all">ทุกหมวดหมู่</div>
+            <div class="filter-tab" data-category="พลาสติก">พลาสติก</div>
+            <div class="filter-tab" data-category="กระดาษ">กระดาษ</div>
+            <div class="filter-tab" data-category="โลหะ">โลหะ</div>
+            <div class="filter-tab" data-category="แก้ว">แก้ว</div>
         </div>
 
         <div class="table-container">
             <div class="table-header">
-                Top Trash by Market Capitalization
+                <span>🗂️ Top Trash by Market Capitalization</span>
             </div>
             <table id="trashTable">
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th><select class="dropdown">
-                            <option>Category</option>
-                            <option>BB</option>
-                        </select></th>
-                        <th>Price <div style="font-size: 10px; ">/kg</div></th></th>
+                        <th>Category</th>
+                        <th>Price <div style="font-size: 10px; ">/kg</div></th>
                         <th>Week</th>
                         <th>Month</th>
+                        <th>Year</th>
                         <th>Market Cap <div style="font-size: 10px; ">/ Year</div></th>
                         </tr>
                 </thead>
@@ -676,133 +680,149 @@
     <script>
         const trashData = [
             { 
-                name: 'Copper', 
-                symbol: 'ทองแดง', 
-                Category: 'Metal',
-                price: '250 บาท', 
-                PYear: '205 บาท', 
-                PWeek: '250 บาท', 
-                PMonth: '230 บาท', 
-                iconImage: '../image/ทองแดง.265.png',
-            },
-            { 
-                name: 'PET', 
-                symbol: 'ขวดน้ำ', 
-                Category: 'Plastic',
-                price: '8 บาท', 
-                PYear: '7.2 บาท', 
-                PWeek: '8 บาท', 
-                PMonth: '7.7 บาท', 
+                name: 'PET',    
+                symbol: 'ขวดน้ำใส', 
+                category: 'พลาสติก', 
+                price: 8, 
+                change: 0.50, 
+                week: 7.80, 
+                month: 7.50, 
+                year: '960,000', 
                 iconImage: '../image/ขวดพลาสติกPET.12.png',
             },
             { 
-                name: 'HDPE', 
-                symbol: 'ขวดน้ำขุ่น', 
-                Category: 'Plastic',
-                price: '6 บาท', 
-                PYear: '5.4 บาท', 
-                PWeek: '6 บาท', 
-                PMonth: '5.7 บาท', 
-                iconImage: '../image/ขวด HDPE.10.png',
+                name: 'Copper', 
+                symbol: 'ทองแดง', 
+                category: 'โloหะ', 
+                price: 260, 
+                change: 1.20, 
+                week: 258, 
+                month: 256, 
+                year: '4,160,000', 
+                iconImage: '../image/ทองแดง.265.png',
             },
             { 
-                name: '', 
-                symbol: 'แสตนเลส', 
-                Category: 'Metal',
-                price: '33 บาท', 
-                PYear: '29 บาท', 
-                PWeek: '33 บาท', 
-                PMonth: '31.8 บาท', 
-                iconImage: '../image/สแตนเลส.35.png',
-            },
-            { 
-                name: 'Paper', 
-                symbol: 'กระดาษ ขาว-ดำ', 
-                Category: 'Paper',
-                price: '4.3 บาท', 
-                PYear: '3.8 บาท', 
-                PWeek: '4.3 บาท', 
-                PMonth: '4 บาท', 
+                name: 'A4', 
+                symbol: 'กระดาษขาว-ดำ', 
+                category: 'กระดาษ', 
+                price: 3.60, 
+                change: -0.30, 
+                week: 3.65, 
+                month: 3.70, 
+                year: '864,000', 
                 iconImage: '../image/กระดาษ.png',
             },
             { 
-                name: '', 
-                symbol: 'อลูมิเนียม', 
-                Category: 'Metal',
-                price: '34 บาท', 
-                PYear: '30 บาท', 
-                PWeek: '34 บาท', 
-                PMonth: '30 บาท', 
-                iconImage: '../image/กระป๋ิองอลูมิเนียม.38.png',
-            },
-            { 
-                name: '', 
-                symbol: 'กล่องลัง', 
-                Category: 'Paper',
-                price: '3 บาท', 
-                PYear: '2.5 บาท', 
-                PWeek: '3 บาท', 
-                PMonth: '2.8 บาท', 
-                iconImage: '../image/กล่องกระดาษ3.320.png',
+                name: 'Aluminum', 
+                symbol: 'กระป๋องอลูมิเนียม', 
+                category: 'โลหะ', 
+                price: 45, 
+                change: 2.15, 
+                week: 44, 
+                month: 43, 
+                year: '2,160,000', 
+                iconImage: '../image/กระป๋องอลูมิเนียม.38.png',
             },
             { 
                 name: 'PVC', 
-                symbol: 'ท่อฟ้า', 
-                Category: 'Plastic',
-                price: '2.8 บาท', 
-                PYear: '2.3 บาท', 
-                PWeek: '2.8 บาท', 
-                PMonth: '2.5 บาท', 
+                symbol: 'ท่อสีฟ้า', 
+                category: 'พลาสติก', 
+                price: 1.50, 
+                change: -0.80, 
+                week: 1.52, 
+                month: 1.55, 
+                year: '360,000', 
                 iconImage: '../image/ท่อ PVC.3.png',
             },
             { 
-                name: '', 
+                name: 'Glass', 
                 symbol: 'ขวดแก้ว', 
-                Category: 'Glass',
-                price: '1 บาท', 
-                PYear: '1 บาท', 
-                PWeek: '1 บาท', 
-                PMonth: '1 บาท', 
+                category: 'แก้ว', 
+                price: 1, 
+                change: 0, 
+                week: 1, 
+                month: 1, 
+                year: '240,000', 
                 iconImage: '../image/ขวดแก้ว.1.png',
             },
-            
-                       
+            { 
+                name: 'Cardboard', 
+                symbol: 'กล่องกระดาษ', 
+                category: 'กระดาษ', 
+                price: 2.50, 
+                change: 1.20, 
+                week: 2.45, 
+                month: 2.40, 
+                year: '720,000', 
+                iconImage: '../image/กล่องกระดาษ3.320.png',
+            },
+            { 
+                name: 'Steel', 
+                symbol: 'เหล็ก', 
+                category: 'โloหะ', 
+                price: 12, 
+                change: -1.50, 
+                week: 12.20, 
+                month: 12.50, 
+                year: '1,440,000', 
+                iconImage: '../image/สแตนเลส.35.png',
+            },
         ];
-        
-        const tbody = document.querySelector('#trashTable tbody');
-        
-        trashData.forEach(trash => {
-            const row = document.createElement('tr');
-            const changeClass = trash.change >= 0 ? 'positive' : 'negative';
-            const changeSymbol = trash.change >= 0 ? '+' : '';
-            
-            let iconHTML;
-            if (trash.iconImage) {
-                iconHTML = `<img src="${trash.iconImage}" ...>`;
-            } else {
-                iconHTML = trash.icon;
+
+        let currentCategory = 'all';
+
+        function renderTable() {
+            const tbody = document.querySelector('#trashTable tbody');
+            tbody.innerHTML = '';
+
+            let filteredData = trashData;
+            if (currentCategory !== 'all') {
+                filteredData = trashData.filter(item => item.category === currentCategory);
             }
 
-            row.innerHTML = `
-                <td>
-                    <div class="trash-cell">
-                        <div class="trash-icon" style="background: ${trash.color};">
-                            ${iconHTML}  
-                        </div>
-                        <div>
-                            <div class="trash-name">${trash.symbol}</div>
-                            <div class="trash-symbol">${trash.name}</div>
-                        </div>
-                    </div>
-                </td>
-                <td>${trash.Category}</td>
-                <td class="price-value">${trash.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                <td>${trash.PWeek}</td>
-                <td>${trash.PMonth}</td>
-                <td>${trash.PYear}</td>
+            filteredData.forEach(trash => {
+                const row = document.createElement('tr');
+                const changeClass = trash.change >= 0 ? 'positive' : 'negative';
+                const changeSymbol = trash.change >= 0 ? '+' : '';
+                
+                let iconHTML;
+                if (trash.iconImage) {
+                    iconHTML = `<img src="${trash.iconImage}" alt="${trash.name}">`;
+                } else {
+                    iconHTML = trash.icon;
+                }
 
-            `;
-            tbody.appendChild(row);
+                row.innerHTML = `
+                    <td>
+                        <div class="trash-cell">
+                            <div class="trash-icon">
+                                ${iconHTML}  
+                            </div>
+                            <div>
+                                <div class="trash-name">${trash.symbol}</div>
+                                <div class="trash-symbol">${trash.name}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${trash.category}</td>
+                    <td class="price-value">${trash.price.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td>${typeof trash.week === 'number' ? trash.week.toLocaleString('th-TH', {minimumFractionDigits: 2}) : trash.week}</td>
+                    <td>${typeof trash.month === 'number' ? trash.month.toLocaleString('th-TH', {minimumFractionDigits: 2}) : trash.month}</td>
+                    <td>${trash.year}</td>
+                    <td class="change ${changeClass}">${changeSymbol}${trash.change}%</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Category filter handler - filter-tab
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentCategory = this.dataset.category;
+                renderTable();
+            });
         });
 
         document.querySelectorAll('.page-btn').forEach(btn => {
@@ -812,12 +832,8 @@
             });
         });
 
-        document.querySelectorAll('.filter-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+        // Initial render
+        renderTable();
     </script>
 </body>
 </html>

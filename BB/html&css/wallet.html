@@ -24,6 +24,9 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #2b3139;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header-left {
@@ -159,6 +162,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            text-decoration: none;
         }
 
         .btn-primary {
@@ -167,7 +171,7 @@
         }
 
         .btn-primary:hover {
-            background: #c0ee8c;
+            background: #474d57;
         }
 
         .btn-secondary {
@@ -442,8 +446,8 @@
                 <a href="index.html"><h3>Home</h3></a>
                 <a href="trash_types.html" ><h3>Type</h3></a>
                 <a href="exchange.html" ><h3>Exchange </h3></a>
-                <a href="wallet.html" ><h3>wallet</h3></a>
-                <a href="#" ><h3>More</h3></a>
+                <a href="wallet.html" ><h3>Wallet</h3></a>
+                <a href="booths.html" ><h3>Booths</h3></a>
             </div>
         </div>
         <div class="header-right">
@@ -466,18 +470,18 @@
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <button class="btn btn-primary">
+                    <a href="deposit.html" class="btn btn-primary">
                         <span>💰</span>
                         ฝากเงิน
-                    </button>
-                    <button class="btn btn-secondary">
+                    </a>
+                    <a href="withdrawal.html" class="btn btn-primary">
                         <span>📤</span>
                         ถอนเงิน
-                    </button>
-                    <button class="btn btn-secondary">
+                    </a>
+                    <a href="report.html" class="btn btn-primary">
                         <span>📊</span>
                         รายงาน
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -561,6 +565,7 @@
                 amount: 2.5,
                 avgPrice: 235.00,
                 currentPrice: 250.00,
+                category: 'โลหะ',
                 icon: '../image/ทองแดง.265.png'
             },
             {
@@ -569,6 +574,7 @@
                 amount: 45.3,
                 avgPrice: 7.50,
                 currentPrice: 8.00,
+                category: 'พลาสติก',
                 icon: '../image/ขวดพลาสติกPET.12.png'
             },
             {
@@ -577,6 +583,7 @@
                 amount: 8.2,
                 avgPrice: 32.00,
                 currentPrice: 34.00,
+                category: 'โลหะ',
                 icon: '../image/กระป๋องอลูมิเนียม.38.png'
             },
             {
@@ -585,6 +592,7 @@
                 amount: 62.5,
                 avgPrice: 4.50,
                 currentPrice: 4.30,
+                category: 'กระดาษ',
                 icon: '../image/กระดาษ.png'
             },
             {
@@ -593,9 +601,12 @@
                 amount: 3.8,
                 avgPrice: 31.00,
                 currentPrice: 33.00,
+                category: 'โลหะ',
                 icon: '../image/สแตนเลส.35.png'
             }
         ];
+
+        let currentCategory = 'ทั้งหมด';
 
         const transactions = [
             {
@@ -633,36 +644,57 @@
         ];
 
         // Render portfolio
-        const portfolioTable = document.getElementById('portfolioTable');
-        portfolioData.forEach(item => {
-            const profitLoss = (item.currentPrice - item.avgPrice) * item.amount;
-            const profitPercent = ((item.currentPrice - item.avgPrice) / item.avgPrice) * 100;
-            const totalValue = item.amount * item.currentPrice;
-            const isProfitable = profitLoss >= 0;
+        function renderPortfolio() {
+            const portfolioTable = document.getElementById('portfolioTable');
+            portfolioTable.innerHTML = '';
 
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>
-                    <div class="asset-cell">
-                        <div class="asset-icon">
-                            <img src="${item.icon}" alt="${item.name}">
+            const filteredData = currentCategory === 'ทั้งหมด' 
+                ? portfolioData 
+                : portfolioData.filter(item => item.category === currentCategory);
+
+            filteredData.forEach(item => {
+                const profitLoss = (item.currentPrice - item.avgPrice) * item.amount;
+                const profitPercent = ((item.currentPrice - item.avgPrice) / item.avgPrice) * 100;
+                const totalValue = item.amount * item.currentPrice;
+                const isProfitable = profitLoss >= 0;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="asset-cell">
+                            <div class="asset-icon">
+                                <img src="${item.icon}" alt="${item.name}">
+                            </div>
+                            <div class="asset-info">
+                                <span class="asset-name">${item.name}</span>
+                                <span class="asset-symbol">${item.symbol}</span>
+                            </div>
                         </div>
-                        <div class="asset-info">
-                            <span class="asset-name">${item.name}</span>
-                            <span class="asset-symbol">${item.symbol}</span>
-                        </div>
-                    </div>
-                </td>
-                <td class="amount-value">${item.amount.toFixed(1)} kg</td>
-                <td class="price-value">${item.avgPrice.toFixed(2)} ฿</td>
-                <td class="amount-value">${item.currentPrice.toFixed(2)} ฿</td>
-                <td class="${isProfitable ? 'positive' : 'negative'}">
-                    ${isProfitable ? '+' : ''}${profitLoss.toFixed(2)} ฿ (${isProfitable ? '+' : ''}${profitPercent.toFixed(2)}%)
-                </td>
-                <td class="amount-value">${totalValue.toFixed(2)} ฿</td>
-            `;
-            portfolioTable.appendChild(row);
-        });
+                    </td>
+                    <td class="amount-value">${item.amount.toFixed(1)} kg</td>
+                    <td class="price-value">${item.avgPrice.toFixed(2)} ฿</td>
+                    <td class="amount-value">${item.currentPrice.toFixed(2)} ฿</td>
+                    <td class="${isProfitable ? 'positive' : 'negative'}">
+                        ${isProfitable ? '+' : ''}${profitLoss.toFixed(2)} ฿ (${isProfitable ? '+' : ''}${profitPercent.toFixed(2)}%)
+                    </td>
+                    <td class="amount-value">${totalValue.toFixed(2)} ฿</td>
+                `;
+                portfolioTable.appendChild(row);
+            });
+
+            if (filteredData.length === 0) {
+                portfolioTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px;">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📦</div>
+                                <div class="empty-state-text">ไม่มีสินทรัพย์ในหมวดหมู่นี้</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
 
         // Render transactions
         const transactionList = document.getElementById('transactionList');
@@ -707,6 +739,16 @@
                 document.getElementById('historyTab').style.display = tabName === 'history' ? 'block' : 'none';
             });
         });
+
+        // Category filter
+        const filterDropdown = document.querySelector('.filter-dropdown');
+        filterDropdown.addEventListener('change', (e) => {
+            currentCategory = e.target.value;
+            renderPortfolio();
+        });
+
+        // Initial render
+        renderPortfolio();
     </script>
 </body>
 </html>

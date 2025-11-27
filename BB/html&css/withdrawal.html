@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdrawal - ECOBANK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0b0e11;
+            color: #eaecef;
+        }
+
+        .header {
+            background: #181a20;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2b3139;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            color: #b2ff59;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .nav a:hover {
+            color: #c0ee8c;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: #2b3139;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #b2ff59 0%, #0ecb81 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #eaecef;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #eaecef;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #848e9c;
+            margin-bottom: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .page-title-section {
+            flex: 1;
+        }
+
+        .btn-back {
+            padding: 8px 16px;
+            background: #2b3139;
+            color: #eaecef;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background: #474d57;
+        }
+
+        .form-section {
+            background: #1e2329;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #eaecef;
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0b0e11;
+            border: 1px solid #2b3139;
+            border-radius: 8px;
+            color: #eaecef;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #b2ff59;
+        }
+
+        .form-input::placeholder {
+            color: #474d57;
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: #848e9c;
+            margin-top: 4px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .balance-info {
+            background: #0b0e11;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #b2ff59;
+            margin-bottom: 15px;
+        }
+
+        .balance-info-label {
+            font-size: 12px;
+            color: #848e9c;
+            margin-bottom: 4px;
+        }
+
+        .balance-info-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #b2ff59;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #b2ff59;
+            color: #000;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            background: #c0ee8c;
+        }
+
+        .btn-primary:disabled {
+            background: #474d57;
+            color: #848e9c;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #2b3139;
+            color: #eaecef;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-secondary:hover {
+            background: #474d57;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .withdrawal-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .method-card {
+            padding: 15px;
+            background: #0b0e11;
+            border: 2px solid #2b3139;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .method-card:hover {
+            border-color: #b2ff59;
+            background: #181a20;
+        }
+
+        .method-card.active {
+            border-color: #b2ff59;
+            background: rgba(178, 255, 89, 0.1);
+        }
+
+        .method-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .method-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #eaecef;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-info {
+            background: rgba(14, 203, 129, 0.1);
+            color: #0ecb81;
+            border-left: 3px solid #0ecb81;
+        }
+
+        .alert-warning {
+            background: rgba(240, 185, 11, 0.1);
+            color: #f0b90b;
+            border-left: 3px solid #f0b90b;
+        }
+
+        .alert-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .transaction-history {
+            background: #1e2329;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #eaecef;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(14, 203, 129, 0.1);
+            color: #0ecb81;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .history-details h4 {
+            font-size: 14px;
+            color: #eaecef;
+            margin-bottom: 4px;
+        }
+
+        .history-details p {
+            font-size: 12px;
+            color: #848e9c;
+        }
+
+        .history-right {
+            text-align: right;
+        }
+
+        .history-amount {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0ecb81;
+            margin-bottom: 4px;
+        }
+
+        .history-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            background: rgba(14, 203, 129, 0.1);
+            color: #0ecb81;
+        }
+
+        .fee-breakdown {
+            background: #0b0e11;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .fee-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #848e9c;
+        }
+
+        .fee-row:last-child {
+            margin-bottom: 0;
+            border-top: 1px solid #2b3139;
+            padding-top: 10px;
+            color: #eaecef;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">🌿 ECOBANK</div>
+            <div class="nav">
+                <a href="index.html"><h3>Home</h3></a>
+                <a href="trash_types.html"><h3>Type</h3></a>
+                <a href="exchange.html"><h3>Exchange</h3></a>
+                <a href="wallet.html"><h3>Wallet</h3></a>
+                <a href="booths.html"><h3>Booths</h3></a>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-profile">
+                <div class="user-avatar">S</div>
+                <span class="user-name">Somchai</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <div class="page-title-section">
+                <div class="page-title">📤 ถอนเงิน</div>
+                <div class="page-subtitle">ถอนเงินจากกระเป๋า ECOBANK ของคุณ</div>
+            </div>
+            <a href="wallet.html" class="btn-back">🔙 ย้อนกลับ</a>
+        </div>
+
+        <div class="form-section">
+            <div class="balance-info">
+                <div class="balance-info-label">ยอดเงินสดที่สามารถถอนได้</div>
+                <div class="balance-info-value">1,250.00 ฿</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">เลือกวิธีการถอนเงิน</label>
+                <div class="withdrawal-methods">
+                    <div class="method-card active" data-method="bank">
+                        <div class="method-icon">🏦</div>
+                        <div class="method-name">โอนไปบัญชีธนาคาร</div>
+                    </div>
+                    <div class="method-card" data-method="prompt">
+                        <div class="method-icon">💳</div>
+                        <div class="method-name">บัตร PromptPay</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="bankForm" class="withdrawal-form">
+                <div class="form-group">
+                    <label class="form-label">ชื่อธนาคาร</label>
+                    <select class="form-select" id="bankSelect">
+                        <option>เลือกธนาคาร</option>
+                        <option>ธนาคารไทยพาณิชย์</option>
+                        <option>ธนาคารกรุงไทย</option>
+                        <option>ธนาคารกสิกรไทย</option>
+                        <option>ธนาคารกรุงเทพ</option>
+                        <option>ธนาคารเกียรตินาคินภัย</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">เลขที่บัญชี</label>
+                        <input type="text" class="form-input" id="accountNumber" placeholder="เช่น 1234567890">
+                        <div class="input-hint">กรอกเลขที่บัญชีตามประเภท (ออมทรัพย์/กระแสรายวัน)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ชื่อเจ้าของบัญชี</label>
+                        <input type="text" class="form-input" id="accountName" placeholder="เช่น สมชาย ใจดี">
+                    </div>
+                </div>
+            </div>
+
+            <div id="promptForm" class="withdrawal-form" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label">หมายเลข PromptPay (เบอร์โทร/เลขประชาชน)</label>
+                    <input type="text" class="form-input" id="promptNumber" placeholder="เช่น 0812345678 หรือ 1234567890123">
+                    <div class="input-hint">ใช้เบอร์โทรศัพท์หรือเลขประจำตัวประชาชน</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ชื่อเจ้าของบัญชี</label>
+                    <input type="text" class="form-input" id="promptName" placeholder="เช่น สมชาย ใจดี">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">จำนวนเงินที่ต้องการถอน</label>
+                <input type="number" class="form-input" id="withdrawAmount" placeholder="กรอกจำนวนเงิน" min="100" max="1250">
+                <div class="input-hint">จำนวนขั้นต่ำ 100 บาท</div>
+            </div>
+
+            <div class="fee-breakdown">
+                <div class="fee-row">
+                    <span>จำนวนเงินที่ถอน</span>
+                    <span id="displayAmount">0.00 ฿</span>
+                </div>
+                <div class="fee-row">
+                    <span>ค่าธรรมชาติ (1%)</span>
+                    <span id="displayFee">0.00 ฿</span>
+                </div>
+                <div class="fee-row">
+                    <span>รวมทั้งสิ้น</span>
+                    <span id="displayTotal">0.00 ฿</span>
+                </div>
+            </div>
+
+            <div class="alert alert-info" style="margin-top: 20px;">
+                <div class="alert-icon">ℹ️</div>
+                <div>ธุรกรรมจะได้รับการตรวจสอบและประมวลผลภายใน 24 ชั่วโมง</div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary">ยกเลิก</button>
+                <button class="btn btn-primary" id="confirmBtn" disabled>ยืนยันการถอนเงิน</button>
+            </div>
+        </div>
+
+        <div class="transaction-history">
+            <h2 class="section-title">📝 ประวัติการถอนเงิน</h2>
+            
+            <div class="history-item">
+                <div class="history-left">
+                    <div class="history-icon">📤</div>
+                    <div class="history-details">
+                        <h4>ถอนเงินไปธนาคารไทยพาณิชย์</h4>
+                        <p>2024-11-25 10:30 • สมชาย ใจดี</p>
+                    </div>
+                </div>
+                <div class="history-right">
+                    <div class="history-amount">-500.00 ฿</div>
+                    <div class="history-status">สำเร็จ</div>
+                </div>
+            </div>
+
+            <div class="history-item">
+                <div class="history-left">
+                    <div class="history-icon">📤</div>
+                    <div class="history-details">
+                        <h4>ถอนเงินไป PromptPay</h4>
+                        <p>2024-11-23 15:45 • 0812345678</p>
+                    </div>
+                </div>
+                <div class="history-right">
+                    <div class="history-amount">-1,000.00 ฿</div>
+                    <div class="history-status">สำเร็จ</div>
+                </div>
+            </div>
+
+            <div class="history-item">
+                <div class="history-left">
+                    <div class="history-icon">📤</div>
+                    <div class="history-details">
+                        <h4>ถอนเงินไปธนาคารกรุงไทย</h4>
+                        <p>2024-11-20 08:15 • อารีณ ใจกว้าง</p>
+                    </div>
+                </div>
+                <div class="history-right">
+                    <div class="history-amount">-750.00 ฿</div>
+                    <div class="history-status">สำเร็จ</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const methodCards = document.querySelectorAll('.method-card');
+        const bankForm = document.getElementById('bankForm');
+        const promptForm = document.getElementById('promptForm');
+        const withdrawAmount = document.getElementById('withdrawAmount');
+        const displayAmount = document.getElementById('displayAmount');
+        const displayFee = document.getElementById('displayFee');
+        const displayTotal = document.getElementById('displayTotal');
+        const confirmBtn = document.getElementById('confirmBtn');
+
+        let selectedMethod = 'bank';
+
+        // Method selection
+        methodCards.forEach(card => {
+            card.addEventListener('click', () => {
+                methodCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                selectedMethod = card.dataset.method;
+
+                if (selectedMethod === 'bank') {
+                    bankForm.style.display = 'block';
+                    promptForm.style.display = 'none';
+                } else {
+                    bankForm.style.display = 'none';
+                    promptForm.style.display = 'block';
+                }
+            });
+        });
+
+        // Amount calculation
+        withdrawAmount.addEventListener('input', () => {
+            const amount = parseFloat(withdrawAmount.value) || 0;
+            const fee = amount * 0.01;
+            const total = amount + fee;
+
+            displayAmount.textContent = amount.toFixed(2) + ' ฿';
+            displayFee.textContent = fee.toFixed(2) + ' ฿';
+            displayTotal.textContent = total.toFixed(2) + ' ฿';
+
+            // Enable/disable confirm button
+            if (amount >= 100 && amount <= 1250) {
+                confirmBtn.disabled = false;
+            } else {
+                confirmBtn.disabled = true;
+            }
+        });
+
+        // Confirm withdrawal
+        confirmBtn.addEventListener('click', () => {
+            const amount = parseFloat(withdrawAmount.value) || 0;
+            
+            if (selectedMethod === 'bank') {
+                const bank = document.getElementById('bankSelect').value;
+                const account = document.getElementById('accountNumber').value;
+                const name = document.getElementById('accountName').value;
+
+                if (bank === 'เลือกธนาคาร' || !account || !name) {
+                    alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                    return;
+                }
+            } else {
+                const prompt = document.getElementById('promptNumber').value;
+                const name = document.getElementById('promptName').value;
+
+                if (!prompt || !name) {
+                    alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                    return;
+                }
+            }
+
+            alert('ลงทะเบียนการถอนเงิน ' + amount.toFixed(2) + ' บาท สำเร็จ\nธุรกรรมจะได้รับการประมวลผลภายใน 24 ชั่วโมง');
+            withdrawAmount.value = '';
+            displayAmount.textContent = '0.00 ฿';
+            displayFee.textContent = '0.00 ฿';
+            displayTotal.textContent = '0.00 ฿';
+            confirmBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>

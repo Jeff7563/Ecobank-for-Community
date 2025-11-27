@@ -24,6 +24,9 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #2b3139;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header-left {
@@ -307,9 +310,9 @@
             <div class="nav">
                 <a href="index.html"><h3>Home</h3></a>
                 <a href="trash_types.html" ><h3>Type</h3></a>
-                <a href="exchange.html" ><h3>Exchange </h3></a>
-                <a href="wallet.html" ><h3>wallet</h3></a>
-                <a href="#" ><h3>More</h3></a>
+                <a href="exchange.html" ><h3>Exchange</h3></a>
+                <a href="wallet.html" ><h3>Wallet</h3></a>
+                <a href="booths.html" ><h3>Booths</h3></a>
             </div>
         </div>
         <div class="header-right">
@@ -379,7 +382,7 @@
                     week: 44, 
                     month: 43, 
                     year: '2,160,000', 
-                    iconImage: '../image/กระป๋ิองอลูมิเนียม.38.png',
+                    iconImage: '../image/กระป๋องอลูมิเนียม.38.png',
                 },
                 { 
                     name: 'PVC', 
@@ -400,7 +403,7 @@
                     change: 0, 
                     week: 1, 
                     month: 1, 
-                    year: '8,000', 
+                    year: '240,000', 
                     iconImage: '../image/ขวดแก้ว.1.png',
                 },
                 { 
@@ -436,7 +439,7 @@
                     week: 43.5, 
                     month: 42, 
                     year: '2,160,000', 
-                    iconImage: '../image/กระป๋ิองอลูมิเนียม.38.png',
+                    iconImage: '../image/กระป๋องอลูมิเนียม.38.png',
                 },
                 { 
                     name: 'Copper', 
@@ -535,7 +538,97 @@
                     week: 44, 
                     month: 43.2, 
                     year: '2,160,000', 
-                    iconImage: '../image/กระป๋ิองอลูมิเนียม.38.png',
+                    iconImage: '../image/กระป๋องอลูมิเนียม.38.png',
+                },
+                { 
+                    name: 'PET', 
+                    symbol: 'ขวดน้ำใส', 
+                    category: 'พลาสติก', 
+                    price: 8, 
+                    change: 3.50, 
+                    week: 7.80, 
+                    month: 7.73, 
+                    year: '960,000', 
+                    iconImage: '../image/ขวดพลาสติกPET.12.png',
+                },
+                { 
+                    name: 'Cardboard', 
+                    symbol: 'กล่องกระดาษ', 
+                    category: 'กระดาษ', 
+                    price: 2.50, 
+                    change: 3.10, 
+                    week: 2.45, 
+                    month: 2.43, 
+                    year: '720,000', 
+                    iconImage: '../image/กล่องกระดาษ3.320.png',
+                },
+                { 
+                    name: 'A4', 
+                    symbol: 'กระดาษขาว-ดำ', 
+                    category: 'กระดาษ', 
+                    price: 3.60, 
+                    change: 2.80, 
+                    week: 3.65, 
+                    month: 3.50, 
+                    year: '864,000', 
+                    iconImage: '../image/กระดาษ.png',
+                },
+                { 
+                    name: 'Steel', 
+                    symbol: 'เหล็ก', 
+                    category: 'โลหะ', 
+                    price: 12, 
+                    change: 1.20, 
+                    week: 12.20, 
+                    month: 11.86, 
+                    year: '1,440,000', 
+                    iconImage: '../image/สแตนเลส.35.png',
+                },
+                { 
+                    name: 'PVC', 
+                    symbol: 'ท่อสีฟ้า', 
+                    category: 'พลาสติก', 
+                    price: 1.50, 
+                    change: -2.50, 
+                    week: 1.52, 
+                    month: 1.54, 
+                    year: '360,000', 
+                    iconImage: '../image/ท่อ PVC.3.png',
+                },
+                { 
+                    name: 'Glass', 
+                    symbol: 'ขวดแก้ว', 
+                    category: 'แก้ว', 
+                    price: 1, 
+                    change: 0, 
+                    week: 1, 
+                    month: 1, 
+                    year: '240,000', 
+                    iconImage: '../image/ขวดแก้ว.1.png',
+                    },
+            ],
+            month: [
+                { 
+                    name: 'Copper', 
+                    symbol: 'ทองแดง', 
+                    category: 'โลหะ', 
+                    price: 260, 
+                    change: 4.50, 
+                    week: 258, 
+                    month: 248, 
+                    year: '4,160,000', 
+                    iconImage: '../image/ทองแดง.265.png',
+                },
+                { 
+                    name: 'Aluminum', 
+                    symbol: 'กระป๋องอลูมิเนียม', 
+                    category: 'โลหะ', 
+                    price: 45, 
+                    change: 4.20, 
+                    week: 44, 
+                    month: 43.2, 
+                    year: '2,160,000', 
+                    iconImage: '../image/กระป๋องอลูมิเนียม.38.png',
                 },
                 { 
                     name: 'PET', 
@@ -608,7 +701,7 @@
             { 
                 name: 'Copper', 
                 symbol: 'ทองแดง', 
-                category: 'โลหะ', 
+                category: 'โloหะ',
                 price: 260, 
                 change: 25.50, 
                 week: 258, 
@@ -625,7 +718,7 @@
                 week: 44, 
                 month: 43, 
                 year: '2,160,000', 
-                iconImage: '../image/กระป๋ิองอลูมิเนียม.38.png',
+                iconImage: '../image/กระป๋องอลูมิเนียม.38.png',
             },
             { 
                 name: 'PET', 

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report - ECOBANK</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0b0e11;
+            color: #eaecef;
+        }
+
+        .header {
+            background: #181a20;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2b3139;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            color: #b2ff59;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .nav a:hover {
+            color: #c0ee8c;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: #2b3139;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #b2ff59 0%, #0ecb81 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #eaecef;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #eaecef;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #848e9c;
+            margin-bottom: 30px;
+        }
+
+        .filter-section {
+            background: #1e2329;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            color: #848e9c;
+            font-weight: 600;
+        }
+
+        .filter-input,
+        .filter-select {
+            padding: 8px 12px;
+            background: #0b0e11;
+            border: 1px solid #2b3139;
+            border-radius: 6px;
+            color: #eaecef;
+            font-size: 13px;
+            min-width: 150px;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: #b2ff59;
+        }
+
+        .btn-export {
+            padding: 8px 16px;
+            background: #b2ff59;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-export:hover {
+            background: #c0ee8c;
+        }
+
+        .btn-back {
+            padding: 8px 16px;
+            background: #2b3139;
+            color: #eaecef;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .page-title-section {
+            flex: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #1e2329;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 3px solid #b2ff59;
+        }
+
+        .stat-card.income {
+            border-left-color: #0ecb81;
+        }
+
+        .stat-card.expense {
+            border-left-color: #f6465d;
+        }
+
+        .stat-card.total {
+            border-left-color: #b2ff59;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #848e9c;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #eaecef;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            color: #848e9c;
+            margin-top: 8px;
+        }
+
+        .stat-change.positive {
+            color: #0ecb81;
+        }
+
+        .stat-change.negative {
+            color: #f6465d;
+        }
+
+        .chart-section {
+            background: #1e2329;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #eaecef;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .table-section {
+            background: #1e2329;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px 10px;
+            color: #848e9c;
+            font-size: 12px;
+            font-weight: 600;
+            border-bottom: 1px solid #2b3139;
+        }
+
+        th:last-child {
+            text-align: right;
+        }
+
+        td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #2b3139;
+            font-size: 14px;
+        }
+
+        td:last-child {
+            text-align: right;
+        }
+
+        tr:hover {
+            background: #23262f;
+        }
+
+        .waste-type-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .waste-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .waste-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .waste-name {
+            font-weight: 600;
+            color: #eaecef;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-buy {
+            background: rgba(14, 203, 129, 0.1);
+            color: #0ecb81;
+        }
+
+        .status-sell {
+            background: rgba(246, 70, 93, 0.1);
+            color: #f6465d;
+        }
+
+        .positive {
+            color: #0ecb81;
+        }
+
+        .negative {
+            color: #f6465d;
+        }
+
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                flex-direction: column;
+            }
+
+            .filter-input,
+            .filter-select {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">🌿 ECOBANK</div>
+            <div class="nav">
+                <a href="index.html"><h3>Home</h3></a>
+                <a href="trash_types.html"><h3>Type</h3></a>
+                <a href="exchange.html"><h3>Exchange</h3></a>
+                <a href="wallet.html"><h3>Wallet</h3></a>
+                <a href="booths.html"><h3>Booths</h3></a>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-profile">
+                <div class="user-avatar">S</div>
+                <span class="user-name">Somchai</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <div class="page-title-section">
+                <div class="page-title">📊 รายงาน</div>
+                <div class="page-subtitle">ดูข้อมูลรายได้ และค่าใช้จ่ายของคุณ</div>
+            </div>
+            <a href="wallet.html" class="btn-back">🔙 ย้อนกลับ</a>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-group">
+                <label class="filter-label">ประเภท</label>
+                <select class="filter-select" id="typeFilter">
+                    <option>ทั้งหมด</option>
+                    <option>ขยะทั้งหมด</option>
+                    <option>พลาสติก</option>
+                    <option>กระดาษ</option>
+                    <option>โลหะ</option>
+                    <option>แก้ว</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">ช่วงเวลา</label>
+                <select class="filter-select" id="periodFilter">
+                    <option>เดือนนี้</option>
+                    <option>3 เดือนที่ผ่านมา</option>
+                    <option>6 เดือนที่ผ่านมา</option>
+                    <option>ปีนี้</option>
+                    <option>ตั้งแต่เริ่มต้น</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">จากวันที่</label>
+                <input type="date" class="filter-input" id="dateFrom">
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">ถึงวันที่</label>
+                <input type="date" class="filter-input" id="dateTo">
+            </div>
+
+            <button class="btn-export">
+                <span>📥</span>
+                ส่งออก CSV
+            </button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <div class="stat-label">รายได้รวม</div>
+                <div class="stat-value">24,850.00 ฿</div>
+                <div class="stat-change positive">+15.2% จากเดือนที่แล้ว</div>
+            </div>
+
+            <div class="stat-card income">
+                <div class="stat-label">รายได้จากการขาย</div>
+                <div class="stat-value">18,500.00 ฿</div>
+                <div class="stat-change positive">+12.8%</div>
+            </div>
+
+            <div class="stat-card expense">
+                <div class="stat-label">ค่าใช้จ่ายทั้งหมด</div>
+                <div class="stat-value">2,150.50 ฿</div>
+                <div class="stat-change negative">+8.3%</div>
+            </div>
+
+            <div class="stat-card total">
+                <div class="stat-label">กำไรสุทธิ</div>
+                <div class="stat-value">22,699.50 ฿</div>
+                <div class="stat-change positive">+16.5%</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-section">
+                <div class="chart-title">รายได้รายวัน (30 วัน)</div>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-title">ประเภทขยะที่ขายได้มากที่สุด</div>
+                <div class="chart-container">
+                    <canvas id="wasteTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <div class="chart-title">ประวัติการทำรายการล่าสุด</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>วันที่</th>
+                        <th>ประเภทขยะ</th>
+                        <th>ประเภท</th>
+                        <th>ปริมาณ</th>
+                        <th>ราคาต่อหน่วย</th>
+                        <th>มูลค่า</th>
+                        <th>ค่าธรรมชาติ</th>
+                        <th>สุทธิ</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionTable">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const transactions = [
+            {
+                date: '2024-11-27',
+                type: 'ขวดน้ำใส',
+                icon: '../image/ขวดพลาสติกPET.12.png',
+                action: 'ขาย',
+                amount: 15.5,
+                price: 8.00,
+                total: 124.00,
+                fee: 3.72,
+                net: 120.28
+            },
+            {
+                date: '2024-11-27',
+                type: 'ทองแดง',
+                icon: '../image/ทองแดง.265.png',
+                action: 'ขาย',
+                amount: 1.2,
+                price: 250.00,
+                total: 300.00,
+                fee: 9.00,
+                net: 291.00
+            },
+            {
+                date: '2024-11-26',
+                type: 'อลูมิเนียม',
+                icon: '../image/กระป๋องอลูมิเนียม.38.png',
+                action: 'ขาย',
+                amount: 5.0,
+                price: 34.00,
+                total: 170.00,
+                fee: 5.10,
+                net: 164.90
+            },
+            {
+                date: '2024-11-26',
+                type: 'กระดาษ',
+                icon: '../image/กระดาษ.png',
+                action: 'ซื้อ',
+                amount: 30.0,
+                price: 4.30,
+                total: 129.00,
+                fee: 0,
+                net: 129.00
+            },
+            {
+                date: '2024-11-25',
+                type: 'สแตนเลส',
+                icon: '../image/สแตนเลส.35.png',
+                action: 'ขาย',
+                amount: 3.8,
+                price: 33.00,
+                total: 125.40,
+                fee: 3.76,
+                net: 121.64
+            }
+        ];
+
+        // Render transaction table
+        const transactionTable = document.getElementById('transactionTable');
+        transactions.forEach(tx => {
+            const row = document.createElement('tr');
+            const actionClass = tx.action === 'ขาย' ? 'status-sell' : 'status-buy';
+            row.innerHTML = `
+                <td>${tx.date}</td>
+                <td>
+                    <div class="waste-type-cell">
+                        <div class="waste-icon">
+                            <img src="${tx.icon}" alt="${tx.type}">
+                        </div>
+                        <span class="waste-name">${tx.type}</span>
+                    </div>
+                </td>
+                <td><span class="status-badge ${actionClass}">${tx.action}</span></td>
+                <td>${tx.amount.toFixed(1)} kg</td>
+                <td>${tx.price.toFixed(2)} ฿/kg</td>
+                <td>${tx.total.toFixed(2)} ฿</td>
+                <td>${tx.fee.toFixed(2)} ฿</td>
+                <td class="positive">${tx.net.toFixed(2)} ฿</td>
+            `;
+            transactionTable.appendChild(row);
+        });
+
+        // Revenue chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['วันที่ 1', 'วันที่ 2', 'วันที่ 3', 'วันที่ 4', 'วันที่ 5', 'วันที่ 6', 'วันที่ 7', 'วันที่ 8', 'วันที่ 9', 'วันที่ 10', 'วันที่ 11', 'วันที่ 12', 'วันที่ 13', 'วันที่ 14', 'วันที่ 15', 'วันที่ 16', 'วันที่ 17', 'วันที่ 18', 'วันที่ 19', 'วันที่ 20', 'วันที่ 21', 'วันที่ 22', 'วันที่ 23', 'วันที่ 24', 'วันที่ 25', 'วันที่ 26', 'วันที่ 27', 'วันที่ 28', 'วันที่ 29', 'วันที่ 30'],
+                datasets: [{
+                    label: 'รายได้ (฿)',
+                    data: [450, 620, 580, 720, 850, 750, 920, 1050, 890, 1120, 1250, 980, 1350, 1480, 1200, 1600, 1750, 1550, 1850, 1920, 2050, 1800, 2150, 2300, 2100, 2450, 2600, 2750, 2500, 2850],
+                    borderColor: '#b2ff59',
+                    backgroundColor: 'rgba(178, 255, 89, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#b2ff59',
+                    pointBorderColor: '#0b0e11',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: {
+                            color: '#848e9c'
+                        },
+                        grid: {
+                            color: '#2b3139'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#848e9c',
+                            maxRotation: 45,
+                            minRotation: 0
+                        },
+                        grid: {
+                            color: '#2b3139'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Waste type chart
+        const wasteTypeCtx = document.getElementById('wasteTypeChart').getContext('2d');
+        new Chart(wasteTypeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['ขวดน้ำใส', 'ทองแดง', 'อลูมิเนียม', 'กระดาษ', 'สแตนเลส'],
+                datasets: [{
+                    data: [4850, 6200, 3450, 5200, 5150],
+                    backgroundColor: [
+                        '#b2ff59',
+                        '#0ecb81',
+                        '#00d4ff',
+                        '#f0b90b',
+                        '#f6465d'
+                    ],
+                    borderColor: '#0b0e11',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#eaecef',
+                            padding: 15
+                        }
+                    }
+                }
+            }
+        });
+
+        // Set default date range
+        const today = new Date();
+        const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+        
+        document.getElementById('dateTo').valueAsDate = today;
+        document.getElementById('dateFrom').valueAsDate = firstDay;
+    </script>
+</body>
+</html>

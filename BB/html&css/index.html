@@ -946,6 +946,24 @@
             
             // Initialize table
             renderTrashTable();
+            
+            // Setup category filter listeners
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentCategory = this.dataset.category;
+                    renderTrashTable();
+                });
+            });
+
+            // Setup pagination listeners
+            document.querySelectorAll('.page-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
         });
 
         // Trash table data and rendering
@@ -1086,23 +1104,9 @@
             });
         }
 
-        // Category filter
-        document.querySelectorAll('.filter-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                currentCategory = this.dataset.category;
-                renderTrashTable();
-            });
-        });
+        // Category filter (moved inside DOMContentLoaded)
 
-        // Pagination
-        document.querySelectorAll('.page-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+        // Pagination (moved inside DOMContentLoaded)
     </script>
 </body>
 </html>

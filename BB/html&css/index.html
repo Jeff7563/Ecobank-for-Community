@@ -915,58 +915,7 @@
     </div>
 
     <script>
-        // Auth check on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const user = JSON.parse(localStorage.getItem('ecobank_user'));
-            
-            if (user) {
-                // User is logged in - show user profile in header
-                document.getElementById('loginButtons').style.display = 'none';
-                document.getElementById('userProfile').style.display = 'flex';
-                
-                // Display user info
-                document.getElementById('displayUserName').textContent = user.name || 'User';
-                const initials = (user.name || 'U').substring(0, 1).toUpperCase();
-                document.getElementById('userAvatar').textContent = initials;
-                
-                // Logout functionality
-                document.getElementById('logoutBtn').addEventListener('click', function() {
-                    localStorage.removeItem('ecobank_user');
-                    location.reload();
-                });
-            } else {
-                // User NOT logged in - show login buttons
-                document.getElementById('loginButtons').style.display = 'flex';
-                document.getElementById('userProfile').style.display = 'none';
-            }
-            
-            // Always show authenticated content (market data is public)
-            document.getElementById('authenticatedContent').style.display = 'block';
-            document.getElementById('loginRequiredContent').style.display = 'none';
-            
-            // Initialize table
-            renderTrashTable();
-            
-            // Setup category filter listeners
-            document.querySelectorAll('.filter-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    currentCategory = this.dataset.category;
-                    renderTrashTable();
-                });
-            });
-
-            // Setup pagination listeners
-            document.querySelectorAll('.page-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-        });
-
-        // Trash table data and rendering
+        // Trash table data and rendering - Define BEFORE DOMContentLoaded
         const trashData = [
             { 
                 name: 'PET',    
@@ -1104,9 +1053,58 @@
             });
         }
 
-        // Category filter (moved inside DOMContentLoaded)
+        // Auth check on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('ecobank_user'));
+            
+            if (user) {
+                // User is logged in - show user profile in header
+                document.getElementById('loginButtons').style.display = 'none';
+                document.getElementById('userProfile').style.display = 'flex';
+                
+                // Display user info
+                document.getElementById('displayUserName').textContent = user.name || 'User';
+                const initials = (user.name || 'U').substring(0, 1).toUpperCase();
+                document.getElementById('userAvatar').textContent = initials;
+                
+                // Logout functionality
+                document.getElementById('logoutBtn').addEventListener('click', function() {
+                    localStorage.removeItem('ecobank_user');
+                    location.reload();
+                });
+            } else {
+                // User NOT logged in - show login buttons
+                document.getElementById('loginButtons').style.display = 'flex';
+                document.getElementById('userProfile').style.display = 'none';
+            }
+            
+            // Always show authenticated content (market data is public)
+            document.getElementById('authenticatedContent').style.display = 'block';
+            document.getElementById('loginRequiredContent').style.display = 'none';
+            
+            // Initialize table
+            renderTrashTable();
+            
+            // Setup category filter listeners
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentCategory = this.dataset.category;
+                    renderTrashTable();
+                });
+            });
 
-        // Pagination (moved inside DOMContentLoaded)
+            // Setup pagination listeners
+            document.querySelectorAll('.page-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+
+        // Category filter and pagination listeners are now inside DOMContentLoaded above
     </script>
 </body>
 </html>

@@ -40,9 +40,6 @@
             color: #b2ff59;
             font-size: 24px;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
             transition: transform 0.2s;
         }
 
@@ -60,12 +57,15 @@
             text-decoration: none;
             font-size: 14px;
             transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 3px;
             padding: 6px 10px;
             border-radius: 4px;
             position: relative;
+        }
+
+        .nav a h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
         }
 
         .nav a:hover {
@@ -87,6 +87,12 @@
 
         .nav a:hover::after {
             transform: scaleX(1);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .icon-btn {
@@ -112,6 +118,8 @@
             cursor: pointer;
             font-size: 14px;
             transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-login {

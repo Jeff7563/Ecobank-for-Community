@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>นำเข้าข้อมูล - ECOBANK</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0b0e11;
+            color: #eaecef;
+            padding: 40px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #1e2329;
+            padding: 40px;
+            border-radius: 12px;
+        }
+        h1 { color: #b2ff59; }
+        .btn {
+            padding: 15px 30px;
+            background: #b2ff59;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .btn:hover { background: #c0ee8c; }
+        .btn:disabled {
+            background: #474d57;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2b3139;
+            border-radius: 8px;
+            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success { color: #0ecb81; }
+        .error { color: #f6465d; }
+        .login-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #2b3139;
+            border-radius: 8px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #0b0e11;
+            border: 1px solid #474d57;
+            border-radius: 6px;
+            color: #eaecef;
+            font-size: 14px;
+        }
+        input:focus {
+            outline: none;
+            border-color: #b2ff59;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 นำเข้าข้อมูลตัวอย่าง</h1>
+        
+        <!-- ส่วน Login -->
+        <div class="login-section" id="loginSection">
+            <h3>เข้าสู่ระบบก่อนเพิ่มข้อมูล</h3>
+            <input type="email" id="emailInput" placeholder="Email">
+            <input type="password" id="passwordInput" placeholder="Password">
+            <button class="btn" onclick="loginUser()">เข้าสู่ระบบ</button>
+            <p style="font-size: 12px; color: #848e9c; margin-top: 15px;">
+                💡 ถ้ายังไม่มีบัญชี ให้ไปสมัครที่ <a href="register.html" style="color: #b2ff59;">register.html</a> ก่อน
+            </p>
+        </div>
+
+        <!-- ส่วนเพิ่มข้อมูล -->
+        <div id="dataSection" class="hidden">
+            <p style="color: #0ecb81; margin-bottom: 20px;">✅ เข้าสู่ระบบสำเร็จ</p>
+            <button class="btn" onclick="seedWasteTypes()">เพิ่มข้อมูลประเภทขยะ</button>
+            <button class="btn" onclick="seedEvents()">เพิ่มข้อมูล Events</button>
+        </div>
+        
+        <div class="status" id="status">
+            <strong>สถานะ:</strong><br>
+            กรุณาเข้าสู่ระบบก่อน...
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // 👇 ใส่ Firebase Config ของคุณ
+        const firebaseConfig = {
+            apiKey: "AIzaSyAroaPsY3v1oY-qJvsaaReCUe6y9DRD99w",
+            authDomain: "ecobank-3ccfe.firebaseapp.com",
+            projectId: "ecobank-3ccfe",
+            storageBucket: "ecobank-3ccfe.firebasestorage.app",
+            messagingSenderId: "19205702154",
+            appId: "1:19205702154:web:fb792d20286c02d28955f3",
+            measurementId: "G-HVJR07ZHYZ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // ข้อมูลประเภทขยะ
+        const wasteTypes = [
+            {
+                name: 'ขวดน้ำใส',
+                symbol: 'PET',
+                category: 'พลาสติก',
+                price: 8.00,
+                priceHistory: { today: 8.00, week: 7.80, month: 7.50, year: 5.80 },
+                change: 0.50,
+                marketCap: '960,000',
+                iconImage: '../image/ขวดพลาสติกPET.12.png'
+            },
+            {
+                name: 'ทองแดง',
+                symbol: 'Copper',
+                category: 'โลหะ',
+                price: 260.00,
+                priceHistory: { today: 260, week: 258, month: 256, year: 240 },
+                change: 1.20,
+                marketCap: '4,160,000',
+                iconImage: '../image/ทองแดง.265.png'
+            },
+            {
+                name: 'กระดาษ',
+                symbol: 'Paper',
+                category: 'กระดาษ',
+                price: 3.60,
+                priceHistory: { today: 3.60, week: 3.65, month: 3.70, year: 3.20 },
+                change: -0.30,
+                marketCap: '864,000',
+                iconImage: '../image/กระดาษ.png'
+            },
+            {
+                name: 'อลูมิเนียม',
+                symbol: 'Aluminum',
+                category: 'โลหะ',
+                price: 45.00,
+                priceHistory: { today: 45, week: 44, month: 43, year: 38 },
+                change: 2.15,
+                marketCap: '2,160,000',
+                iconImage: '../image/กระป๋องอลูมิเนียม.38.png'
+            },
+            {
+                name: 'PVC',
+                symbol: 'PVC',
+                category: 'พลาสติก',
+                price: 1.50,
+                priceHistory: { today: 1.50, week: 1.52, month: 1.55, year: 1.40 },
+                change: -0.80,
+                marketCap: '360,000',
+                iconImage: '../image/ท่อ PVC.3.png'
+            },
+            {
+                name: 'แก้ว',
+                symbol: 'Glass',
+                category: 'แก้ว',
+                price: 1.00,
+                priceHistory: { today: 1, week: 1, month: 1, year: 1 },
+                change: 0,
+                marketCap: '240,000',
+                iconImage: '../image/ขวดแก้ว.1.png'
+            },
+            {
+                name: 'กล่องกระดาษ',
+                symbol: 'Cardboard',
+                category: 'กระดาษ',
+                price: 2.50,
+                priceHistory: { today: 2.50, week: 2.45, month: 2.40, year: 2.20 },
+                change: 1.20,
+                marketCap: '720,000',
+                iconImage: '../image/กล่องกระดาษ3.320.png'
+            },
+            {
+                name: 'เหล็ก',
+                symbol: 'Steel',
+                category: 'โลหะ',
+                price: 12.00,
+                priceHistory: { today: 12, week: 12.20, month: 12.50, year: 11 },
+                change: -1.50,
+                marketCap: '1,440,000',
+                iconImage: '../image/สแตนเลส.35.png'
+            }
+        ];
+
+        // ข้อมูล Events
+        const events = [
+            {
+                date: '2024-11-29',
+                day: '29 พ.ย.',
+                title: 'Silom Recycling Hub',
+                location: 'ถ. สีลม, สีลม, บางรัก',
+                time: '09:00 - 17:00',
+                wasteTypes: ['ทองแดง', 'อลูมิเนียม', 'สแตนเลส'],
+                description: 'ศูนย์รับซื้อขยะโลหะหลักของเรา มีราคาเสนอที่ดีที่สุด',
+                price: 'ราคาดีที่สุด',
+                special: false
+            },
+            {
+                date: '2024-11-29',
+                day: '29 พ.ย.',
+                title: 'Chidlom Plastic Collection',
+                location: 'ถ. เพชรบุรี, ราชเทวี, ปทุมวัน',
+                time: '10:00 - 18:00',
+                wasteTypes: ['ขวดพลาสติก PET', 'พลาสติกนวม'],
+                description: 'รับซื้อพลาสติกคุณภาพสูง มีโบนัสเพิ่มเติมสำหรับปริมาณมาก',
+                price: 'เพิ่มโบนัส +5%',
+                special: true
+            },
+            {
+                date: '2024-11-30',
+                day: '30 พ.ย.',
+                title: 'Ecobank Weekend Festival 🎉',
+                location: 'สวนลุมพินี, พระราม 4, บางรัก',
+                time: '10:00 - 20:00',
+                wasteTypes: ['ทั้งหมด'],
+                description: 'งานสุดสัปดาห์พิเศษ! ราคาพิเศษ + กิจกรรมหมุนวงล้อ + ของรางวัล',
+                price: 'ราคา x 1.5 เท่า!',
+                special: true
+            }
+        ];
+
+        // ฟังก์ชัน Login
+        window.loginUser = async function() {
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            const statusDiv = document.getElementById('status');
+
+            if (!email || !password) {
+                statusDiv.innerHTML = '<span class="error">❌ กรุณากรอก Email และ Password</span>';
+                return;
+            }
+
+            try {
+                statusDiv.innerHTML = '<strong>กำลังเข้าสู่ระบบ...</strong>';
+                await signInWithEmailAndPassword(auth, email, password);
+                
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('dataSection').classList.remove('hidden');
+                statusDiv.innerHTML = '<span class="success">✅ เข้าสู่ระบบสำเร็จ! พร้อมเพิ่มข้อมูล</span>';
+            } catch (error) {
+                statusDiv.innerHTML = `<span class="error">❌ เข้าสู่ระบบไม่สำเร็จ: ${error.message}<br><br>💡 ถ้ายังไม่มีบัญชี ให้ไปสมัครที่ register.html ก่อน</span>`;
+            }
+        };
+
+        // ฟังก์ชันเพิ่มข้อมูลประเภทขยะ
+        window.seedWasteTypes = async function() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = '<strong>กำลังเพิ่มข้อมูลประเภทขยะ...</strong><br>';
+            
+            try {
+                let count = 0;
+                for (const waste of wasteTypes) {
+                    await addDoc(collection(db, 'wasteTypes'), waste);
+                    count++;
+                    statusDiv.innerHTML += `<span class="success">✅ เพิ่ม ${waste.name} สำเร็จ (${count}/${wasteTypes.length})</span><br>`;
+                }
+                statusDiv.innerHTML += `<br><strong class="success">🎉 เพิ่มข้อมูลครบทั้งหมด ${count} รายการ!</strong>`;
+            } catch (error) {
+                statusDiv.innerHTML += `<span class="error">❌ เกิดข้อผิดพลาด: ${error.message}</span>`;
+            }
+        };
+
+        // ฟังก์ชันเพิ่มข้อมูล Events
+        window.seedEvents = async function() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = '<strong>กำลังเพิ่มข้อมูล Events...</strong><br>';
+            
+            try {
+                let count = 0;
+                for (const event of events) {
+                    await addDoc(collection(db, 'events'), event);
+                    count++;
+                    statusDiv.innerHTML += `<span class="success">✅ เพิ่ม ${event.title} สำเร็จ (${count}/${events.length})</span><br>`;
+                }
+                statusDiv.innerHTML += `<br><strong class="success">🎉 เพิ่มข้อมูลครบทั้งหมด ${count} รายการ!</strong>`;
+            } catch (error) {
+                statusDiv.innerHTML += `<span class="error">❌ เกิดข้อผิดพลาด: ${error.message}</span>`;
+            }
+        };
+    </script>
+</body>
+</html>

@@ -110,6 +110,7 @@
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
+            margin-right: 15px;
         }
 
         .user-profile:hover {
@@ -217,9 +218,9 @@
             color: #eaecef;
         }
 
-        /* Hidden by default */
+        /* Authenticated Content - Always shown (market data is public) */
         #authenticatedContent {
-            display: none;
+            display: block;
         }
 
         /* Login Required Section - REMOVED (market data is public) */
@@ -1077,10 +1078,6 @@
                 document.getElementById('loginButtons').style.display = 'flex';
                 document.getElementById('userProfile').style.display = 'none';
             }
-            
-            // Always show authenticated content (market data is public)
-            document.getElementById('authenticatedContent').style.display = 'block';
-            document.getElementById('loginRequiredContent').style.display = 'none';
             
             // Initialize table
             renderTrashTable();

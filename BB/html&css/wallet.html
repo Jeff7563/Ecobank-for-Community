@@ -27,6 +27,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .header-left {
@@ -42,6 +43,11 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            transition: transform 0.2s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .nav {
@@ -53,14 +59,34 @@
             color: #ffffff;
             text-decoration: none;
             font-size: 14px;
-            transition: color 0.2s;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 3px;
+            padding: 6px 10px;
+            border-radius: 4px;
+            position: relative;
         }
 
         .nav a:hover {
-            color: #c0ee8c;
+            color: #b2ff59;
+            background-color: rgba(178, 255, 89, 0.1);
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: #b2ff59;
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+
+        .nav a:hover::after {
+            transform: scaleX(1);
         }
 
         .header-right {
@@ -436,6 +462,367 @@
             font-size: 14px;
             color: #474d57;
         }
+
+        /* Mobile Responsive Design */
+        @media (max-width: 1200px) {
+            .wallet-header {
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 12px;
+                flex-direction: row;
+                gap: 0;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .header-left {
+                width: auto;
+                gap: 12px;
+                flex: 1;
+            }
+
+            .logo {
+                font-size: 18px;
+                white-space: nowrap;
+            }
+
+            .nav {
+                gap: 8px;
+                flex: 1;
+                justify-content: flex-start;
+            }
+
+            .nav a {
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+
+            .nav a h3 {
+                margin: 0;
+                font-size: 11px;
+            }
+
+            .header-right {
+                width: auto;
+                justify-content: flex-end;
+                gap: 8px;
+                display: flex;
+            }
+
+            .user-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+
+            .user-name {
+                font-size: 13px;
+            }
+
+            .container {
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            .wallet-header {
+                flex-direction: column;
+                gap: 20px;
+                padding-bottom: 20px;
+            }
+
+            .balance-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .total-balance {
+                flex-direction: column;
+            }
+
+            .balance-label {
+                font-size: 13px;
+            }
+
+            .balance-amount {
+                font-size: 24px;
+            }
+
+            .balance-currency {
+                font-size: 14px;
+            }
+
+            .balance-change {
+                font-size: 13px;
+            }
+
+            .action-buttons {
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .btn span {
+                font-size: 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            .stat-label {
+                font-size: 11px;
+            }
+
+            .stat-value {
+                font-size: 20px;
+            }
+
+            .stat-change {
+                font-size: 11px;
+            }
+
+            .transaction-tabs {
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+
+            .transaction-tab {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th {
+                padding: 12px 10px;
+                font-size: 11px;
+            }
+
+            td {
+                padding: 12px 10px;
+                font-size: 12px;
+            }
+
+            .transaction-amount {
+                font-size: 13px;
+            }
+
+            .pagination {
+                gap: 5px;
+                padding: 15px;
+            }
+
+            .page-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 8px 10px;
+                flex-direction: row;
+                gap: 0;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .header-left {
+                flex-direction: row;
+                gap: 8px;
+                width: auto;
+                align-items: center;
+                min-width: 0;
+            }
+
+            .logo {
+                font-size: 16px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            .nav {
+                gap: 6px;
+                width: auto;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                flex-shrink: 1;
+                min-width: 0;
+            }
+
+            .nav a {
+                font-size: 10px;
+                flex: 0 0 auto;
+                padding: 3px 4px;
+                white-space: nowrap;
+            }
+
+            .nav a h3 {
+                margin: 0;
+                font-size: 10px;
+            }
+
+            .header-right {
+                width: auto;
+                gap: 6px;
+                flex-wrap: nowrap;
+                flex-shrink: 0;
+            }
+
+            .user-profile {
+                gap: 8px;
+            }
+
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+
+            .user-name {
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .wallet-header {
+                flex-direction: column;
+                gap: 15px;
+                padding-bottom: 15px;
+            }
+
+            .balance-section {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .total-balance {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .balance-label {
+                font-size: 12px;
+            }
+
+            .balance-amount {
+                font-size: 20px;
+            }
+
+            .balance-currency {
+                font-size: 12px;
+            }
+
+            .balance-change {
+                font-size: 12px;
+            }
+
+            .action-buttons {
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+
+            .btn span {
+                font-size: 14px;
+                margin-right: 4px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 12px;
+                border-radius: 6px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+
+            .stat-change {
+                font-size: 10px;
+            }
+
+            .transaction-tabs {
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+
+            .transaction-tab {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+
+            table {
+                font-size: 11px;
+            }
+
+            th {
+                padding: 10px 5px;
+                font-size: 10px;
+            }
+
+            td {
+                padding: 10px 5px;
+                font-size: 11px;
+            }
+
+            .transaction-amount {
+                font-size: 12px;
+            }
+
+            .pagination {
+                gap: 3px;
+                padding: 10px;
+            }
+
+            .page-btn {
+                padding: 5px 8px;
+                font-size: 10px;
+            }
+
+            .empty-state-text {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+
+            .empty-state-subtext {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -470,15 +857,15 @@
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <a href="deposit.html" class="btn btn-primary">
+                    <a href="w-deposit.html" class="btn btn-primary">
                         <span>💰</span>
                         ฝากเงิน
                     </a>
-                    <a href="withdrawal.html" class="btn btn-primary">
+                    <a href="w-withdrawal.html" class="btn btn-primary">
                         <span>📤</span>
                         ถอนเงิน
                     </a>
-                    <a href="report.html" class="btn btn-primary">
+                    <a href="w-report.html" class="btn btn-primary">
                         <span>📊</span>
                         รายงาน
                     </a>

@@ -28,6 +28,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .header-left {
@@ -43,6 +44,11 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            transition: transform 0.2s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .nav {
@@ -54,14 +60,34 @@
             color: #ffffff;
             text-decoration: none;
             font-size: 14px;
-            transition: color 0.2s;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 3px;
+            padding: 6px 10px;
+            border-radius: 4px;
+            position: relative;
         }
 
         .nav a:hover {
-            color: #c0ee8c;
+            color: #b2ff59;
+            background-color: rgba(178, 255, 89, 0.1);
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: #b2ff59;
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+
+        .nav a:hover::after {
+            transform: scaleX(1);
         }
 
         .header-right {
@@ -82,6 +108,13 @@
         .btn-login {
             background: transparent;
             color: #eaecef;
+            border: 1px solid #2b3139;
+        }
+
+        .btn-login:hover {
+            background-color: rgba(178, 255, 89, 0.1);
+            border-color: #b2ff59;
+            color: #b2ff59;
         }
 
         .btn-signup {
@@ -91,7 +124,9 @@
         }
 
         .btn-signup:hover {
-            background: #c0ee8c;
+            background: #c8ff6a;
+            box-shadow: 0 4px 12px rgba(178, 255, 89, 0.3);
+            transform: translateY(-2px);
         }
 
         .container {
@@ -466,6 +501,474 @@
         .card-change.negative {
             color: #f6465d;
         }
+
+        /* Modal Popup Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #1e2329;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2b3139;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #eaecef;
+            margin-bottom: 15px;
+        }
+
+        .modal-details {
+            background: #0b0e11;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .detail-row:last-child {
+            margin-bottom: 0;
+            padding-top: 12px;
+            border-top: 1px solid #2b3139;
+            font-weight: 600;
+            color: #b2ff59;
+        }
+
+        .detail-label {
+            color: #848e9c;
+        }
+
+        .detail-value {
+            color: #eaecef;
+            font-weight: 500;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 120px;
+        }
+
+        .modal-btn-confirm {
+            background: #0ecb81;
+            color: #fff;
+        }
+
+        .modal-btn-confirm:hover {
+            background: #0bb572;
+            transform: translateY(-2px);
+        }
+
+        .modal-btn-cancel {
+            background: #2b3139;
+            color: #eaecef;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #3a4149;
+        }
+
+        .modal-btn-sell {
+            background: #f6465d;
+            color: #fff;
+        }
+
+        .modal-btn-sell:hover {
+            background: #e03d52;
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Responsive Design */
+        @media (max-width: 1200px) {
+            .exchange-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .chart-section {
+                grid-column: 1;
+            }
+
+            .currency-selector {
+                grid-column: 1;
+                grid-row: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 12px;
+                flex-direction: row;
+                gap: 0;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .header-left {
+                width: auto;
+                gap: 12px;
+                flex: 1;
+            }
+
+            .logo {
+                font-size: 18px;
+                white-space: nowrap;
+            }
+
+            .nav {
+                gap: 8px;
+                flex: 1;
+                justify-content: flex-start;
+            }
+
+            .nav a {
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+
+            .nav a h3 {
+                margin: 0;
+                font-size: 11px;
+            }
+
+            .header-right {
+                width: auto;
+                justify-content: flex-end;
+                gap: 8px;
+                display: flex;
+            }
+
+            .btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            .exchange-layout {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .chart-section {
+                padding: 15px;
+            }
+
+            .pair-header {
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+
+            .pair-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .pair-icon img {
+                width: 100%;
+                height: 100%;
+            }
+
+            .pair-info h2 {
+                font-size: 18px;
+            }
+
+            .pair-info p {
+                font-size: 12px;
+            }
+
+            .price-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+
+            .stat-item {
+                padding: 10px;
+            }
+
+            .stat-label {
+                font-size: 11px;
+            }
+
+            .stat-value {
+                font-size: 16px;
+            }
+
+            canvas {
+                max-height: 300px;
+            }
+
+            .currency-selector {
+                padding: 15px;
+            }
+
+            .selector-title {
+                font-size: 16px;
+            }
+
+            .selector-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .selector-card {
+                padding: 12px;
+            }
+
+            .selector-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 18px;
+            }
+
+            .selector-name {
+                font-size: 12px;
+            }
+
+            .selector-price {
+                font-size: 12px;
+            }
+
+            .card-change {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 8px 10px;
+                flex-direction: row;
+                gap: 0;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .header-left {
+                flex-direction: row;
+                gap: 8px;
+                width: auto;
+                align-items: center;
+                min-width: 0;
+            }
+
+            .logo {
+                font-size: 16px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            .nav {
+                gap: 6px;
+                width: auto;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                flex-shrink: 1;
+                min-width: 0;
+            }
+
+            .nav a {
+                font-size: 10px;
+                flex: 0 0 auto;
+                padding: 3px 4px;
+                white-space: nowrap;
+            }
+
+            .nav a h3 {
+                margin: 0;
+                font-size: 10px;
+            }
+
+            .header-right {
+                width: auto;
+                gap: 6px;
+                flex-wrap: nowrap;
+                flex-shrink: 0;
+            }
+
+            .btn {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .exchange-layout {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .chart-section {
+                padding: 12px;
+                border-radius: 6px;
+            }
+
+            .pair-header {
+                gap: 8px;
+                margin-bottom: 10px;
+                align-items: center;
+            }
+
+            .pair-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .pair-icon img {
+                width: 100%;
+                height: 100%;
+            }
+
+            .pair-info {
+                min-width: 0;
+            }
+
+            .pair-info h2 {
+                font-size: 16px;
+            }
+
+            .pair-info p {
+                font-size: 11px;
+            }
+
+            .price-stats {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+
+            .stat-item {
+                padding: 8px;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .stat-value {
+                font-size: 14px;
+            }
+
+            canvas {
+                max-height: 250px;
+            }
+
+            .currency-selector {
+                padding: 12px;
+                border-radius: 6px;
+            }
+
+            .selector-title {
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+
+            .selector-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .selector-card {
+                padding: 10px;
+                border-radius: 6px;
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .selector-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 16px;
+                flex-shrink: 0;
+            }
+
+            .selector-name {
+                font-size: 11px;
+            }
+
+            .selector-price {
+                font-size: 11px;
+                margin-left: auto;
+            }
+
+            .card-change {
+                font-size: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -595,6 +1098,48 @@
         <div class="market-section">
             <h2 class="section-title">ประเภทขยะยอดนิยม</h2>
             <div class="market-grid" id="marketGrid"></div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon">✓</div>
+            <div class="modal-title" id="modalTitle">ยืนยันการซื้อ</div>
+            <div class="modal-details">
+                <div class="detail-row">
+                    <span class="detail-label">สินค้า</span>
+                    <span class="detail-value" id="modalItemName">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">ปริมาณ</span>
+                    <span class="detail-value" id="modalAmount">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">ราคาต่อหน่วย</span>
+                    <span class="detail-value" id="modalPrice">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">ยอดรวม</span>
+                    <span class="detail-value" id="modalTotal">-</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-confirm" id="modalConfirmBtn" onclick="confirmTransaction()">ยืนยัน</button>
+                <button class="modal-btn modal-btn-cancel" onclick="closeModal()">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal" id="errorModal">
+        <div class="modal-content">
+            <div class="modal-icon" style="color: #f6465d; font-size: 48px;">⚠️</div>
+            <div class="modal-title" id="errorTitle">เตือน</div>
+            <div style="color: #eaecef; font-size: 14px; line-height: 1.6; margin-bottom: 25px;" id="errorMessage">-</div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="closeErrorModal()" style="width: 100%;">ตกลง</button>
+            </div>
         </div>
     </div>
 
@@ -898,14 +1443,102 @@
         // Trade button action
         tradeButton.addEventListener('click', () => {
             const isBuy = tradeButton.classList.contains('buy');
-            const action = isBuy ? 'ซื้อ' : 'ขาย';
             const amount = parseFloat(amountInput.value) || 0;
-            const total = parseFloat(summaryTotal.textContent);
 
             if (amount > 0) {
-                alert(`คำสั่ง${action} ${amount.toFixed(2)} kg สำเร็จ\nยอดรวม: ${total.toFixed(2)} ฿`);
+                showConfirmationModal(isBuy);
             } else {
-                alert('กรุณาระบุปริมาณที่ต้องการ');
+                showErrorModal('กรุณาระบุปริมาณที่ต้องการ');
+            }
+        });
+
+        // Show error modal
+        function showErrorModal(message) {
+            const modal = document.getElementById('errorModal');
+            document.getElementById('errorMessage').textContent = message;
+            modal.classList.add('show');
+        }
+
+        // Close error modal
+        function closeErrorModal() {
+            const modal = document.getElementById('errorModal');
+            modal.classList.remove('show');
+        }
+
+        // Show confirmation modal
+        function showConfirmationModal(isBuy) {
+            const price = parseFloat(priceInput.value) || 0;
+            const amount = parseFloat(amountInput.value) || 0;
+            const total = price * amount;
+            const action = isBuy ? 'ซื้อ' : 'ขาย';
+
+            // Update modal content
+            const modal = document.getElementById('confirmModal');
+            document.getElementById('modalIcon').textContent = isBuy ? '✓' : '📦';
+            document.getElementById('modalTitle').textContent = `ยืนยันการ${action}`;
+            document.getElementById('modalItemName').textContent = currentTradeItem.name;
+            document.getElementById('modalAmount').textContent = `${amount.toFixed(2)} kg`;
+            document.getElementById('modalPrice').textContent = `${price.toFixed(2)} ฿/kg`;
+            document.getElementById('modalTotal').textContent = `${total.toFixed(2)} ฿`;
+
+            // Update button style and text
+            const confirmBtn = document.getElementById('modalConfirmBtn');
+            if (isBuy) {
+                confirmBtn.className = 'modal-btn modal-btn-confirm';
+                confirmBtn.textContent = 'ยืนยันการซื้อ';
+            } else {
+                confirmBtn.className = 'modal-btn modal-btn-sell';
+                confirmBtn.textContent = 'ยืนยันการขาย';
+            }
+
+            // Store transaction data
+            window.pendingTransaction = {
+                isBuy,
+                itemName: currentTradeItem.name,
+                amount,
+                price,
+                total
+            };
+
+            // Show modal
+            modal.classList.add('show');
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('confirmModal');
+            modal.classList.remove('show');
+            window.pendingTransaction = null;
+        }
+
+        // Confirm transaction
+        function confirmTransaction() {
+            if (!window.pendingTransaction) return;
+
+            const { isBuy, itemName, amount, total } = window.pendingTransaction;
+            const action = isBuy ? 'ซื้อ' : 'ขาย';
+
+            // Close modal first
+            closeModal();
+
+            // Show success message
+            setTimeout(() => {
+                alert(`คำสั่ง${action} ${amount.toFixed(2)} kg สำเร็จ\n${itemName}\nยอดรวม: ${total.toFixed(2)} ฿`);
+                // Reset form
+                amountInput.value = '0';
+                updateSummary();
+            }, 300);
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            const confirmModal = document.getElementById('confirmModal');
+            const errorModal = document.getElementById('errorModal');
+            if (e.target === confirmModal) {
+                closeModal();
+            }
+            if (e.target === errorModal) {
+                closeErrorModal();
             }
         });
 

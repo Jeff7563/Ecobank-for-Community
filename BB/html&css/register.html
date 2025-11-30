@@ -330,6 +330,146 @@
         .password-match.success {
             color: #0ecb81;
         }
+
+        /* Mobile Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                max-width: 100%;
+            }
+
+            .logo {
+                margin-bottom: 20px;
+            }
+
+            .logo span:first-child {
+                font-size: 28px;
+            }
+
+            .logo-text {
+                font-size: 24px;
+            }
+
+            .header {
+                margin-bottom: 30px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            label {
+                font-size: 13px;
+            }
+
+            input {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+
+            .password-match {
+                font-size: 12px;
+                margin-top: 4px;
+            }
+
+            .btn-register {
+                padding: 10px;
+                font-size: 14px;
+                margin-top: 15px;
+            }
+
+            .form-footer {
+                font-size: 13px;
+                margin-top: 15px;
+            }
+
+            .form-footer a {
+                font-size: 13px;
+            }
+
+            .back-home {
+                margin-bottom: 20px;
+            }
+
+            .back-home a {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+                gap: 5px;
+            }
+
+            .logo span:first-child {
+                font-size: 24px;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+
+            .header {
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            label {
+                font-size: 12px;
+                margin-bottom: 4px;
+            }
+
+            input {
+                padding: 6px 10px;
+                font-size: 12px;
+                border-radius: 4px;
+            }
+
+            .password-match {
+                font-size: 11px;
+                margin-top: 3px;
+            }
+
+            .btn-register {
+                padding: 8px 12px;
+                font-size: 13px;
+                margin-top: 12px;
+            }
+
+            .form-footer {
+                font-size: 12px;
+                margin-top: 12px;
+            }
+
+            .form-footer a {
+                font-size: 12px;
+            }
+
+            .back-home {
+                margin-bottom: 15px;
+            }
+
+            .back-home a {
+                font-size: 11px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -356,6 +496,11 @@
             <div class="form-group">
                 <label id="phoneLabel">หมายเลขโทรศัพท์</label>
                 <input type="tel" placeholder="หมายเลขโทรศัพท์" id="phoneInput" required>
+            </div>
+
+            <div class="form-group">
+                <label id="locationLabel">ที่อยู่</label>
+                <input type="text" placeholder="เช่น กรุงเทพ, ชั้น 5 อาคาร ABC" id="locationInput" required>
             </div>
 
             <div class="form-group">
@@ -481,12 +626,13 @@
         function checkFormValidity() {
             const email = document.getElementById('emailInput').value;
             const phone = document.getElementById('phoneInput').value;
+            const location = document.getElementById('locationInput').value;
             const password = passwordInput.value;
             const confirmPassword = confirmPasswordInput.value;
             const terms = document.getElementById('terms').checked;
             const continueBtn = document.getElementById('continueBtn');
             
-            const isValid = email && phone && password && confirmPassword && 
+            const isValid = email && phone && location && password && confirmPassword && 
                           password === confirmPassword && password.length >= 6 && terms;
             
             continueBtn.disabled = !isValid;
@@ -494,6 +640,7 @@
 
         document.getElementById('emailInput').addEventListener('input', checkFormValidity);
         document.getElementById('phoneInput').addEventListener('input', checkFormValidity);
+        document.getElementById('locationInput').addEventListener('input', checkFormValidity);
         document.getElementById('terms').addEventListener('change', checkFormValidity);
 
         // Language selector
@@ -533,6 +680,8 @@
                     emailPlaceholder: 'อีเมล/ชื่อผู้ใช้',
                     phoneLabel: 'หมายเลขโทรศัพท์',
                     phonePlaceholder: 'หมายเลขโทรศัพท์',
+                    locationLabel: 'ที่อยู่',
+                    locationPlaceholder: 'เช่น กรุงเทพ, ชั้น 5 อาคาร ABC',
                     passwordLabel: 'รหัสผ่าน',
                     passwordPlaceholder: 'รหัสผ่าน',
                     confirmPasswordLabel: 'ยืนยันรหัสผ่าน',
@@ -549,6 +698,8 @@
                     emailPlaceholder: 'Email/Username',
                     phoneLabel: 'Phone Number',
                     phonePlaceholder: 'Phone Number',
+                    locationLabel: 'Location',
+                    locationPlaceholder: 'e.g., Bangkok, Floor 5 Building ABC',
                     passwordLabel: 'Password',
                     passwordPlaceholder: 'Password',
                     confirmPasswordLabel: 'Confirm Password',
@@ -566,10 +717,12 @@
             document.getElementById('pageTitle').textContent = t.title;
             document.getElementById('emailLabel').textContent = t.emailLabel;
             document.getElementById('phoneLabel').textContent = t.phoneLabel;
+            document.getElementById('locationLabel').textContent = t.locationLabel;
             document.getElementById('passwordLabel').textContent = t.passwordLabel;
             document.getElementById('confirmPasswordLabel').textContent = t.confirmPasswordLabel;
             document.getElementById('emailInput').placeholder = t.emailPlaceholder;
             document.getElementById('phoneInput').placeholder = t.phonePlaceholder;
+            document.getElementById('locationInput').placeholder = t.locationPlaceholder;
             document.getElementById('passwordInput').placeholder = t.passwordPlaceholder;
             document.getElementById('confirmPasswordInput').placeholder = t.confirmPasswordPlaceholder;
             document.getElementById('continueBtn').textContent = t.continueBtn;
@@ -584,10 +737,11 @@
             e.preventDefault();
             const email = document.getElementById('emailInput').value;
             const phone = document.getElementById('phoneInput').value;
+            const location = document.getElementById('locationInput').value;
             const password = passwordInput.value;
             
             // ในการใช้งานจริง จะส่งข้อมูลไปยังเซิร์ฟเวอร์
-            console.log('Register attempt:', { email, phone, password });
+            console.log('Register attempt:', { email, phone, location, password });
             alert('กำลังสร้างบัญชี...\n(ในการใช้งานจริงจะเชื่อมต่อกับฐานข้อมูล)');
         });
 

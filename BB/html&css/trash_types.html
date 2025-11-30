@@ -27,6 +27,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .header-left {
@@ -39,6 +40,11 @@
             color: #b2ff59;
             font-size: 24px;
             font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .nav {
@@ -50,11 +56,37 @@
             color: #ffffff;
             text-decoration: none;
             font-size: 14px;
-            transition: color 0.2s;
+            transition: all 0.2s;
+            padding: 6px 10px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .nav a h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
         }
 
         .nav a:hover {
-            color: #c0ee8c;
+            color: #b2ff59;
+            background-color: rgba(178, 255, 89, 0.1);
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: #b2ff59;
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+
+        .nav a:hover::after {
+            transform: scaleX(1);
         }
 
         .header-right {
@@ -69,12 +101,14 @@
             color: #848e9c;
             font-size: 18px;
             cursor: pointer;
-            padding: 5px;
-            transition: color 0.2s;
+            padding: 6px 8px;
+            transition: all 0.2s;
+            border-radius: 4px;
         }
 
         .icon-btn:hover {
-            color: #eaecef;
+            color: #b2ff59;
+            background-color: rgba(178, 255, 89, 0.1);
         }
 
         .btn {
@@ -91,6 +125,14 @@
         .btn-login {
             background: transparent;
             color: #eaecef;
+            border: 1px solid #2b3139;
+            padding: 8px 14px;
+        }
+
+        .btn-login:hover {
+            background-color: rgba(178, 255, 89, 0.1);
+            border-color: #b2ff59;
+            color: #b2ff59;
         }
 
         .btn-signup {
@@ -100,7 +142,9 @@
         }
 
         .btn-signup:hover {
-            background: #f8d12f;
+            background: #c8ff6a;
+            box-shadow: 0 4px 12px rgba(178, 255, 89, 0.3);
+            transform: translateY(-2px);
         }
 
         .container {
@@ -300,6 +344,252 @@
         .page-btn.active {
             background: #b2ff59;
             color: #000;
+        }
+
+        /* Mobile Responsive Design */
+        @media (max-width: 1200px) {
+            table {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 12px;
+                flex-direction: row;
+                gap: 0;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .header-left {
+                width: auto;
+                gap: 12px;
+                flex: 1;
+            }
+
+            .logo {
+                font-size: 18px;
+                white-space: nowrap;
+            }
+
+            .nav {
+                gap: 8px;
+                flex-wrap: wrap;
+                flex: 1;
+                justify-content: flex-start;
+            }
+
+            .nav a {
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+
+            .nav a h3 {
+                margin: 0;
+                font-size: 11px;
+            }
+
+            .header-right {
+                width: auto;
+                justify-content: flex-end;
+                gap: 8px;
+                display: flex;
+            }
+
+            .btn {
+                padding: 5px 10px;
+                font-size: 11px;
+                white-space: nowrap;
+            }
+
+            .container {
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            .main-tabs {
+                gap: 15px;
+                margin: 15px 0 20px 0;
+                overflow-x: auto;
+            }
+
+            .main-tab {
+                font-size: 13px;
+                white-space: nowrap;
+            }
+
+            .sub-tabs {
+                gap: 10px;
+                margin-bottom: 15px;
+                overflow-x: auto;
+            }
+
+            .sub-tab {
+                padding: 8px 12px;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+
+            .cards-grid {
+                margin-top: 15px;
+            }
+
+            .ranking-card {
+                padding: 15px;
+            }
+
+            .card-header {
+                font-size: 11px;
+                margin-bottom: 10px;
+            }
+
+            th {
+                padding: 12px 10px;
+                font-size: 11px;
+            }
+
+            td {
+                padding: 12px 10px;
+                font-size: 12px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            .pagination {
+                gap: 5px;
+                padding: 15px;
+            }
+
+            .page-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 8px 10px;
+                flex-direction: row;
+                gap: 0;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .header-left {
+                flex-direction: row;
+                gap: 8px;
+                width: auto;
+                align-items: center;
+                min-width: 0;
+            }
+
+            .logo {
+                font-size: 16px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            .nav {
+                gap: 6px;
+                width: auto;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                flex-shrink: 1;
+                min-width: 0;
+            }
+
+            .nav a {
+                font-size: 10px;
+                flex: 0 0 auto;
+                padding: 3px 4px;
+                white-space: nowrap;
+            }
+
+            .nav a h3 {
+                margin: 0;
+                font-size: 10px;
+            }
+
+            .header-right {
+                width: auto;
+                gap: 6px;
+                flex-wrap: nowrap;
+                flex-shrink: 0;
+            }
+
+            .btn {
+                padding: 4px 8px;
+                font-size: 10px;
+                white-space: nowrap;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .main-tabs {
+                gap: 10px;
+                margin: 10px 0 15px 0;
+            }
+
+            .main-tab {
+                font-size: 12px;
+                padding: 8px 0;
+                white-space: nowrap;
+            }
+
+            .sub-tabs {
+                gap: 8px;
+                margin-bottom: 10px;
+                overflow-x: auto;
+            }
+
+            .sub-tab {
+                padding: 6px 10px;
+                font-size: 11px;
+                white-space: nowrap;
+            }
+
+            .cards-grid {
+                margin-top: 10px;
+            }
+
+            .ranking-card {
+                padding: 12px;
+                border-radius: 6px;
+            }
+
+            .card-header {
+                font-size: 10px;
+                margin-bottom: 8px;
+            }
+
+            th {
+                padding: 10px 5px;
+                font-size: 10px;
+            }
+
+            td {
+                padding: 10px 5px;
+                font-size: 11px;
+            }
+
+            table {
+                font-size: 11px;
+            }
+
+            .pagination {
+                gap: 3px;
+                padding: 10px;
+            }
+
+            .page-btn {
+                padding: 5px 8px;
+                font-size: 10px;
+            }
         }
     </style>
 </head>

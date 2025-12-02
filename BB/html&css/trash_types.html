@@ -28,12 +28,6 @@
             top: 0;
             z-index: 100;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            animation: slideDown 0.3s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
         }
 
         .header-left {
@@ -46,13 +40,12 @@
             color: #b2ff59;
             font-size: 24px;
             font-weight: bold;
-            transition: all 0.3s ease;
+            transition: transform 0.2s;
             cursor: pointer;
         }
 
         .logo:hover {
-            transform: scale(1.1);
-            text-shadow: 0 0 20px rgba(178, 255, 89, 0.5);
+            transform: scale(1.05);
         }
 
         .nav {
@@ -61,12 +54,19 @@
         }
 
         .nav a {
-            color: #eaecef;
+            color: #ffffff;
             text-decoration: none;
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             padding: 6px 10px;
             border-radius: 4px;
+            position: relative;
+        }
+
+        .nav a h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
         }
 
         .nav a:hover {
@@ -74,10 +74,32 @@
             background-color: rgba(178, 255, 89, 0.1);
         }
 
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: #b2ff59;
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+
+        
+        .nav a:hover::after {
+            transform: scaleX(1);
+        }
+
         .header-right {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
+        }
+
+        #loginButtons {
+            display: flex;
+            gap: 15px;
         }
 
         .user-profile {
@@ -86,41 +108,53 @@
             gap: 10px;
             padding: 8px 12px;
             background: #2b3139;
-            border-radius: 8px;
-            animation: fadeIn 0.5s ease;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 15px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .user-profile:hover {
+            background: #3a4149;
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #b2ff59, #0ecb81);
+            background: linear-gradient(135deg, #b2ff59, #7ac943);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             color: #000;
+            font-size: 12px;
+        }
+
+        .user-name {
+            font-size: 13px;
+            color: #eaecef;
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .logout-btn {
-            background: #f6465d;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
+            background: transparent;
+            border: 1px solid #2b3139;
+            color: #f6465d;
+            padding: 6px 12px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s ease;
+            font-size: 13px;
+            transition: all 0.2s;
         }
 
         .logout-btn:hover {
-            background: #e03545;
-            transform: translateY(-2px);
+            background: #f6465d;
+            color: #fff;
+            border-color: #f6465d;
         }
 
         .container {
@@ -339,6 +373,168 @@
                 height: 25px;
             }
         }
+
+        /* Mobile Responsive Design */
+        @media (max-width: 1200px) {
+            .market-cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 12px;
+                flex-wrap: wrap;
+                gap: 10px;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .header-left {
+                gap: 10px;
+                flex: 0 0 auto;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .nav {
+                gap: 8px;
+                display: none;
+            }
+
+            .nav.show {
+                display: flex;
+            }
+
+            .nav a {
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+
+            .nav a h3 {
+                font-size: 11px;
+            }
+
+            .header-right {
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+
+            .user-profile {
+                padding: 6px 10px;
+            }
+
+            .user-name {
+                max-width: 80px;
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .market-cards {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .login-required-section {
+                padding: 40px 20px;
+            }
+
+            .login-required-title {
+                font-size: 24px;
+            }
+
+            .features-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 8px 10px;
+                gap: 5px;
+            }
+
+            .header-left {
+                gap: 8px;
+            }
+
+            .logo {
+                font-size: 16px;
+            }
+
+            .nav {
+                display: none;
+            }
+
+            .header-right {
+                gap: 5px;
+            }
+
+            .btn {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+
+            .user-profile {
+                padding: 5px 8px;
+                gap: 5px;
+            }
+
+            .user-avatar {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .market-cards {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .login-required-section {
+                padding: 30px 15px;
+                border-radius: 8px;
+            }
+
+            .lock-icon {
+                font-size: 48px;
+            }
+
+            .login-required-title {
+                font-size: 20px;
+            }
+
+            .features-list {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-action {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -347,11 +543,11 @@
         <div class="header-left">
             <div class="logo">🌿 ECOBANK</div>
             <div class="nav">
-                <a href="index.html">Home</a>
-                <a href="trash_types.html" style="color: #b2ff59;">Type</a>
-                <a href="exchange.html">Exchange</a>
-                <a href="wallet.html">Wallet</a>
-                <a href="booths.html">Booths</a>
+                <a href="index.html"><h3>Home</h3></a>
+                <a href="trash_types.html"><h3>Type</h3></a>
+                <a href="exchange.html"><h3>Exchange</h3></a>
+                <a href="wallet.html"><h3>Wallet</h3></a>
+                <a href="booths.html"><h3>Booths</h3></a>
             </div>
         </div>
         <div class="header-right" id="headerRight"></div>

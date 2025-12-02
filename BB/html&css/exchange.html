@@ -28,12 +28,6 @@
             top: 0;
             z-index: 100;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            animation: slideDown 0.3s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
         }
 
         .header-left {
@@ -46,13 +40,12 @@
             color: #b2ff59;
             font-size: 24px;
             font-weight: bold;
-            transition: all 0.3s ease;
+            transition: transform 0.2s;
             cursor: pointer;
         }
 
         .logo:hover {
-            transform: scale(1.1);
-            text-shadow: 0 0 20px rgba(178, 255, 89, 0.5);
+            transform: scale(1.05);
         }
 
         .nav {
@@ -61,18 +54,40 @@
         }
 
         .nav a {
-            color: #eaecef;
+            color: #ffffff;
             text-decoration: none;
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             padding: 6px 10px;
             border-radius: 4px;
             position: relative;
         }
 
+        .nav a h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
         .nav a:hover {
             color: #b2ff59;
             background-color: rgba(178, 255, 89, 0.1);
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: #b2ff59;
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+
+        .nav a:hover::after {
+            transform: scaleX(1);
         }
 
         .header-right {
@@ -97,10 +112,10 @@
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #b2ff59, #0ecb81);
+            background: linear-gradient(135deg, #b2ff59, #7ac943);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -115,19 +130,20 @@
         }
 
         .logout-btn {
-            background: #f6465d;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
+            background: transparent;
+            border: 1px solid #2b3139;
+            color: #f6465d;
+            padding: 6px 12px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s ease;
+            font-size: 13px;
+            transition: all 0.2s;
         }
 
         .logout-btn:hover {
-            background: #e03545;
-            transform: translateY(-2px);
+            background: #f6465d;
+            color: #fff;
+            border-color: #f6465d;
         }
 
         .container {
@@ -521,11 +537,11 @@
         <div class="header-left">
             <div class="logo">🌿 ECOBANK</div>
             <div class="nav">
-                <a href="index.html">Home</a>
-                <a href="trash_types.html">Type</a>
-                <a href="exchange.html" style="color: #b2ff59;">Exchange</a>
-                <a href="wallet.html">Wallet</a>
-                <a href="booths.html">Booths</a>
+                <a href="index.html"><h3>Home</h3></a>
+                <a href="trash_types.html"><h3>Type</h3></a>
+                <a href="exchange.html"><h3>Exchange</h3></a>
+                <a href="wallet.html"><h3>Wallet</h3></a>
+                <a href="booths.html"><h3>Booths</h3></a>
             </div>
         </div>
         <div class="header-right" id="headerRight"></div>

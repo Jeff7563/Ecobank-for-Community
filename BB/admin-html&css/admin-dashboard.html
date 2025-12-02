@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ECOBANK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0b0e11;
+            color: #eaecef;
+        }
+
+        .header {
+            background: #181a20;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #b2ff59;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            color: #b2ff59;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .admin-badge {
+            background: #b2ff59;
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+
+        .logout-btn {
+            background: #f6465d;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #e03545;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #b2ff59;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-card {
+            background: #1e2329;
+            border: 1px solid #2b3139;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            border-color: #b2ff59;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(178, 255, 89, 0.1);
+        }
+
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #eaecef;
+        }
+
+        .card-description {
+            font-size: 12px;
+            color: #848e9c;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .card-btn {
+            background: #b2ff59;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .card-btn:hover {
+            background: #c0ee8c;
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #1e2329;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #2b3139;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #eaecef;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            color: #b2ff59;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            background: #0b0e11;
+            border: 1px solid #2b3139;
+            border-radius: 6px;
+            color: #eaecef;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #b2ff59;
+            box-shadow: 0 0 8px rgba(178, 255, 89, 0.2);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            background: #0ecb81;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #0bb572;
+            transform: translateY(-2px);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: transparent;
+            color: #eaecef;
+            border: 1px solid #2b3139;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #2b3139;
+            border-color: #b2ff59;
+            color: #b2ff59;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #b2ff59;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #2b3139;
+            border-top-color: #b2ff59;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: rgba(14, 203, 129, 0.1);
+            border: 1px solid #0ecb81;
+            color: #0ecb81;
+        }
+
+        .alert-error {
+            background: rgba(246, 70, 93, 0.1);
+            border: 1px solid #f6465d;
+            color: #f6465d;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div style="display: flex; align-items: center;">
+            <div class="logo">🌿 ECOBANK <span class="admin-badge">👨‍💼 ADMIN</span></div>
+        </div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-title">📊 Admin Dashboard</div>
+
+        <div id="successAlert" class="alert alert-success"></div>
+        <div id="errorAlert" class="alert alert-error"></div>
+
+        <div class="dashboard-grid">
+            <!-- Trash Types Management -->
+            <div class="dashboard-card" onclick="openTrashModal()">
+                <div class="card-icon">📦</div>
+                <div class="card-title">Manage Trash Types</div>
+                <div class="card-description">เพิ่ม แก้ไข และลบ ประเภทขยะ</div>
+                <button class="card-btn">จัดการ</button>
+            </div>
+
+            <!-- Events/Booths Management -->
+            <div class="dashboard-card" onclick="openEventModal()">
+                <div class="card-icon">🏪</div>
+                <div class="card-title">Manage Events/Booths</div>
+                <div class="card-description">จัดการสาขาและイベント ECOBANK</div>
+                <button class="card-btn">จัดการ</button>
+            </div>
+
+            <!-- Users Management -->
+            <div class="dashboard-card" onclick="viewUsers()">
+                <div class="card-icon">👥</div>
+                <div class="card-title">View Users</div>
+                <div class="card-description">ดูข้อมูลสมาชิกทั้งหมด</div>
+                <button class="card-btn">ดู</button>
+            </div>
+
+            <!-- Seed Data -->
+            <div class="dashboard-card" onclick="seedData()">
+                <div class="card-icon">🌱</div>
+                <div class="card-title">Seed Initial Data</div>
+                <div class="card-description">โหลดข้อมูลเริ่มต้น</div>
+                <button class="card-btn">โหลด</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trash Types Modal -->
+    <div class="modal" id="trashModal">
+        <div class="modal-content">
+            <div class="modal-title">📦 Manage Trash Types</div>
+            <div id="trashAlert" class="alert"></div>
+            
+            <div id="trashList"></div>
+
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #2b3139;">
+                <button class="btn-submit" onclick="openAddTrashForm()" style="background: #b2ff59; color: #000;">➕ Add New Trash Type</button>
+            </div>
+
+            <!-- Add/Edit Form -->
+            <div id="trashForm" style="display: none; margin-top: 20px;">
+                <form onsubmit="saveTrash(event)">
+                    <div class="form-group">
+                        <label class="form-label">Trash Name (TH)</label>
+                        <input type="text" class="form-input" id="trashName" placeholder="ชื่อขยะ" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-input" id="trashCategory" required>
+                            <option value="พลาสติก">พลาสติก</option>
+                            <option value="กระดาษ">กระดาษ</option>
+                            <option value="โลหะ">โลหะ</option>
+                            <option value="แก้ว">แก้ว</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Price per Unit (฿/kg)</label>
+                        <input type="number" class="form-input" id="trashPrice" placeholder="0.00" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Icon/Emoji</label>
+                        <input type="text" class="form-input" id="trashIcon" placeholder="📦" maxlength="2">
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="submit" class="btn-submit">Save</button>
+                        <button type="button" class="btn-cancel" onclick="closeTrashForm()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-buttons" style="margin-top: 20px;">
+                <button class="btn-cancel" onclick="closeTrashModal()" style="flex: 1;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events Modal -->
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <div class="modal-title">🏪 Manage Events/Booths</div>
+            <div id="eventAlert" class="alert"></div>
+            
+            <div id="eventList"></div>
+
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #2b3139;">
+                <button class="btn-submit" onclick="openAddEventForm()" style="background: #b2ff59; color: #000;">➕ Add New Event</button>
+            </div>
+
+            <!-- Add/Edit Form -->
+            <div id="eventForm" style="display: none; margin-top: 20px;">
+                <form onsubmit="saveEvent(event)">
+                    <div class="form-group">
+                        <label class="form-label">Event Name</label>
+                        <input type="text" class="form-input" id="eventName" placeholder="ชื่อสาขา" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">District</label>
+                        <input type="text" class="form-input" id="eventDistrict" placeholder="เขต" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <textarea class="form-textarea" id="eventAddress" placeholder="ที่อยู่" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hours</label>
+                        <input type="text" class="form-input" id="eventHours" placeholder="เช่น 09:00-17:00" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-input" id="eventPhone" placeholder="089-xxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-input" id="eventStatus" required>
+                            <option value="open">Open</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="submit" class="btn-submit">Save</button>
+                        <button type="button" class="btn-cancel" onclick="closeEventForm()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-buttons" style="margin-top: 20px;">
+                <button class="btn-cancel" onclick="closeEventModal()" style="flex: 1;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { 
+            getTrashTypes,
+            addTrashType,
+            updateTrashType,
+            deleteTrashType,
+            getEvents,
+            addEvent,
+            updateEvent,
+            deleteEvent,
+            seedInitialData
+        } from "../js/firebase-service.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const auth = getAuth();
+        let editingTrashId = null;
+        let editingEventId = null;
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                localStorage.removeItem('ecobank_user');
+                window.location.href = '../html&css/login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        });
+
+        // Trash Types Functions
+        window.openTrashModal = async function() {
+            document.getElementById('trashModal').classList.add('show');
+            await loadTrashList();
+        };
+
+        window.closeTrashModal = function() {
+            document.getElementById('trashModal').classList.remove('show');
+            editingTrashId = null;
+            closeTrashForm();
+        };
+
+        window.openAddTrashForm = function() {
+            editingTrashId = null;
+            document.getElementById('trashName').value = '';
+            document.getElementById('trashCategory').value = 'พลาสติก';
+            document.getElementById('trashPrice').value = '';
+            document.getElementById('trashIcon').value = '📦';
+            document.getElementById('trashForm').style.display = 'block';
+        };
+
+        window.closeTrashForm = function() {
+            document.getElementById('trashForm').style.display = 'none';
+        };
+
+        async function loadTrashList() {
+            try {
+                const trashTypes = await getTrashTypes();
+                const list = document.getElementById('trashList');
+
+                list.innerHTML = trashTypes.map(trash => `
+                    <div style="background: #0b0e11; padding: 12px; border-radius: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600;">${trash.icon || '📦'} ${trash.name}</div>
+                            <div style="font-size: 12px; color: #848e9c;">${trash.category} - ${trash.price_per_unit} ฿/kg</div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="editTrash('${trash.id}')" style="background: #f0b90b; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">Edit</button>
+                            <button onclick="deleteTrash('${trash.id}')" style="background: #f6465d; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; color: white; font-size: 12px;">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                showAlert('trashAlert', error.message, 'error');
+            }
+        }
+
+        window.editTrash = async function(trashId) {
+            const trashTypes = await getTrashTypes();
+            const trash = trashTypes.find(t => t.id === trashId);
+            
+            if (trash) {
+                editingTrashId = trashId;
+                document.getElementById('trashName').value = trash.name;
+                document.getElementById('trashCategory').value = trash.category;
+                document.getElementById('trashPrice').value = trash.price_per_unit;
+                document.getElementById('trashIcon').value = trash.icon || '📦';
+                document.getElementById('trashForm').style.display = 'block';
+            }
+        };
+
+        window.saveTrash = async function(e) {
+            e.preventDefault();
+            
+            const trashData = {
+                name: document.getElementById('trashName').value,
+                category: document.getElementById('trashCategory').value,
+                price_per_unit: parseFloat(document.getElementById('trashPrice').value),
+                icon: document.getElementById('trashIcon').value
+            };
+
+            try {
+                if (editingTrashId) {
+                    await updateTrashType(editingTrashId, trashData);
+                    showAlert('trashAlert', 'Trash type updated successfully!', 'success');
+                } else {
+                    await addTrashType(trashData);
+                    showAlert('trashAlert', 'Trash type added successfully!', 'success');
+                }
+                closeTrashForm();
+                await loadTrashList();
+            } catch (error) {
+                showAlert('trashAlert', error.message, 'error');
+            }
+        };
+
+        window.deleteTrash = async function(trashId) {
+            if (confirm('Are you sure?')) {
+                try {
+                    await deleteTrashType(trashId);
+                    showAlert('trashAlert', 'Trash type deleted!', 'success');
+                    await loadTrashList();
+                } catch (error) {
+                    showAlert('trashAlert', error.message, 'error');
+                }
+            }
+        };
+
+        // Events Functions
+        window.openEventModal = async function() {
+            document.getElementById('eventModal').classList.add('show');
+            await loadEventList();
+        };
+
+        window.closeEventModal = function() {
+            document.getElementById('eventModal').classList.remove('show');
+            editingEventId = null;
+            closeEventForm();
+        };
+
+        window.openAddEventForm = function() {
+            editingEventId = null;
+            document.getElementById('eventName').value = '';
+            document.getElementById('eventDistrict').value = '';
+            document.getElementById('eventAddress').value = '';
+            document.getElementById('eventHours').value = '09:00-17:00';
+            document.getElementById('eventPhone').value = '';
+            document.getElementById('eventStatus').value = 'open';
+            document.getElementById('eventForm').style.display = 'block';
+        };
+
+        window.closeEventForm = function() {
+            document.getElementById('eventForm').style.display = 'none';
+        };
+
+        async function loadEventList() {
+            try {
+                const events = await getEvents();
+                const list = document.getElementById('eventList');
+
+                list.innerHTML = events.map(event => `
+                    <div style="background: #0b0e11; padding: 12px; border-radius: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600;">🏪 ${event.name}</div>
+                            <div style="font-size: 12px; color: #848e9c;">${event.district} - ${event.hours}</div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="editEvent('${event.id}')" style="background: #f0b90b; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">Edit</button>
+                            <button onclick="deleteEvent('${event.id}')" style="background: #f6465d; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; color: white; font-size: 12px;">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                showAlert('eventAlert', error.message, 'error');
+            }
+        }
+
+        window.editEvent = async function(eventId) {
+            const events = await getEvents();
+            const event = events.find(e => e.id === eventId);
+            
+            if (event) {
+                editingEventId = eventId;
+                document.getElementById('eventName').value = event.name;
+                document.getElementById('eventDistrict').value = event.district;
+                document.getElementById('eventAddress').value = event.address;
+                document.getElementById('eventHours').value = event.hours;
+                document.getElementById('eventPhone').value = event.phone;
+                document.getElementById('eventStatus').value = event.status;
+                document.getElementById('eventForm').style.display = 'block';
+            }
+        };
+
+        window.saveEvent = async function(e) {
+            e.preventDefault();
+            
+            const eventData = {
+                name: document.getElementById('eventName').value,
+                district: document.getElementById('eventDistrict').value,
+                address: document.getElementById('eventAddress').value,
+                hours: document.getElementById('eventHours').value,
+                phone: document.getElementById('eventPhone').value,
+                status: document.getElementById('eventStatus').value,
+                icon: '🏪'
+            };
+
+            try {
+                if (editingEventId) {
+                    await updateEvent(editingEventId, eventData);
+                    showAlert('eventAlert', 'Event updated successfully!', 'success');
+                } else {
+                    await addEvent(eventData);
+                    showAlert('eventAlert', 'Event added successfully!', 'success');
+                }
+                closeEventForm();
+                await loadEventList();
+            } catch (error) {
+                showAlert('eventAlert', error.message, 'error');
+            }
+        };
+
+        window.deleteEvent = async function(eventId) {
+            if (confirm('Are you sure?')) {
+                try {
+                    await deleteEvent(eventId);
+                    showAlert('eventAlert', 'Event deleted!', 'success');
+                    await loadEventList();
+                } catch (error) {
+                    showAlert('eventAlert', error.message, 'error');
+                }
+            }
+        };
+
+        // Other Functions
+        window.viewUsers = function() {
+            alert('Users management coming soon!');
+        };
+
+        window.seedData = async function() {
+            try {
+                await seedInitialData();
+                showAlert('successAlert', 'Initial data seeded successfully! ✨', 'success');
+            } catch (error) {
+                showAlert('errorAlert', error.message, 'error');
+            }
+        };
+
+        function showAlert(elementId, message, type) {
+            const alert = document.getElementById(elementId);
+            alert.textContent = message;
+            alert.className = `alert show alert-${type}`;
+            setTimeout(() => alert.classList.remove('show'), 3000);
+        }
+
+        // Expose to global
+        window.editTrash = editTrash;
+        window.deleteTrash = deleteTrash;
+        window.saveTrash = saveTrash;
+        window.editEvent = editEvent;
+        window.deleteEvent = deleteEvent;
+        window.saveEvent = saveEvent;
+    </script>
+</body>
+</html>

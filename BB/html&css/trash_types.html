@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ประเภทขยะ - ECOBANK</title>
+    <title>Trash Types - ECOBANK</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0b0e11;
             color: #eaecef;
         }
@@ -28,6 +28,12 @@
             top: 0;
             z-index: 100;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .header-left {
@@ -40,11 +46,13 @@
             color: #b2ff59;
             font-size: 24px;
             font-weight: bold;
-            transition: transform 0.2s;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .logo:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
+            text-shadow: 0 0 20px rgba(178, 255, 89, 0.5);
         }
 
         .nav {
@@ -53,19 +61,12 @@
         }
 
         .nav a {
-            color: #ffffff;
+            color: #eaecef;
             text-decoration: none;
             font-size: 14px;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             padding: 6px 10px;
             border-radius: 4px;
-            position: relative;
-        }
-
-        .nav a h3 {
-            margin: 0;
-            display: flex;
-            align-items: center;
         }
 
         .nav a:hover {
@@ -73,1159 +74,493 @@
             background-color: rgba(178, 255, 89, 0.1);
         }
 
-        .nav a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 10px;
-            right: 10px;
-            height: 2px;
-            background: #b2ff59;
-            transform: scaleX(0);
-            transition: transform 0.2s;
-        }
-
-        .nav a:hover::after {
-            transform: scaleX(1);
-        }
-
         .header-right {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
-        .icon-btn {
-            background: transparent;
-            border: none;
-            color: #848e9c;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 6px 8px;
-            transition: all 0.2s;
-            border-radius: 4px;
-        }
-
-        .icon-btn:hover {
-            color: #b2ff59;
-            background-color: rgba(178, 255, 89, 0.1);
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-login {
-            background: transparent;
-            color: #eaecef;
-            border: 1px solid #2b3139;
-            padding: 8px 14px;
-        }
-
-        .btn-login:hover {
-            background-color: rgba(178, 255, 89, 0.1);
-            border-color: #b2ff59;
-            color: #b2ff59;
-        }
-
-        .btn-signup {
-            background: #b2ff59;
-            color: #000;
-            font-weight: 600;
-        }
-
-        .btn-signup:hover {
-            background: #c8ff6a;
-            box-shadow: 0 4px 12px rgba(178, 255, 89, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px 30px;
-        }
-
-        .main-tabs {
-            display: flex;
-            gap: 30px;
-            margin: 20px 0 30px 0;
-            border-bottom: 1px solid #2b3139;
-        }
-
-        .main-tab {
-            padding: 10px 0;
-            color: #848e9c;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-            font-size: 15px;
-            text-decoration: none;
-        }
-
-        .main-tab.active {
-            color: #eaecef;
-            border-bottom-color: #b2ff59;
-        }
-
-        .main-tab:hover {
-            color: #eaecef;
-        }
-
-        .sub-tabs {
-            display: flex;
-            gap: 25px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .sub-tab {
-            padding: 8px 16px;
-            background: #2b3139;
-            color: #848e9c;
-            cursor: pointer;
-            border: 1px solid #2b3139;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .sub-tab.active {
-            background: #b2ff59;
-            color: #000;
-            border-color: #b2ff59;
-        }
-
-        .sub-tab:hover {
-            border-color: #b2ff59;
-            color: #eaecef;
-        }
-
-        .table-container {
-            background: #1e2329;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 30px;
-        }
-
-        .table-header-section {
-            padding: 20px;
-            font-size: 18px;
-            font-weight: 600;
-            border-bottom: 1px solid #2b3139;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .dropdown {
-            background: #2b3139;
-            color: #eaecef;
-            border: 1px solid #474d57;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            text-align: center;
-            padding: 15px 20px;
-            color: #848e9c;
-            font-size: 12px;
-            font-weight: 500;
-            border-bottom: 1px solid #2b3139;
-        }
-
-        th:first-child {
-            text-align: left;
-        }
-
-        td {
-            text-align: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid #2b3139;
-        }
-
-        td:first-child {
-            text-align: left;
-        }
-
-        tr:hover {
-            background: #23262f;
-        }
-
-        .trash-cell {
+        .user-profile {
             display: flex;
             align-items: center;
             gap: 10px;
+            padding: 8px 12px;
+            background: #2b3139;
+            border-radius: 8px;
+            animation: fadeIn 0.5s ease;
         }
 
-        .trash-icon {
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-avatar {
             width: 32px;
             height: 32px;
             border-radius: 50%;
+            background: linear-gradient(135deg, #b2ff59, #0ecb81);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 14px;
-            overflow: hidden;
-        }
-
-        .trash-icon img {  
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .trash-symbol {
-            color: #848e9c;
-            font-size: 12px;
-        }
-
-        .price-value {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .change {
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .positive {
-            color: #0ecb81;
-        }
-
-        .negative {
-            color: #f6465d;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 20px;
-        }
-
-        .page-btn {
-            padding: 8px 12px;
-            background: #2b3139;
-            border: none;
-            color: #eaecef;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .page-btn:hover {
-            background: #3a4149;
-        }
-
-        .page-btn.active {
-            background: #b2ff59;
             color: #000;
         }
 
-        /* Mobile Responsive Design */
-        @media (max-width: 1200px) {
-            table {
-                font-size: 13px;
+        .logout-btn {
+            background: #f6465d;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #e03545;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            animation: slideUp 0.5s ease-out 0.2s both;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #848e9c;
+            margin-bottom: 30px;
+            animation: slideUp 0.5s ease-out 0.3s both;
+        }
+
+        .sorting-section {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            animation: slideUp 0.5s ease-out 0.4s both;
+            flex-wrap: wrap;
+        }
+
+        .sort-btn {
+            padding: 8px 14px;
+            background: transparent;
+            border: 1px solid #2b3139;
+            color: #eaecef;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .sort-btn:hover,
+        .sort-btn.active {
+            border-color: #b2ff59;
+            background: rgba(178, 255, 89, 0.1);
+            color: #b2ff59;
+        }
+
+        .trash-table {
+            width: 100%;
+            border-collapse: collapse;
+            animation: slideUp 0.5s ease-out 0.5s both;
+        }
+
+        .trash-table thead {
+            background: #1e2329;
+            border-bottom: 2px solid #2b3139;
+        }
+
+        .trash-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #b2ff59;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .trash-table td {
+            padding: 15px;
+            border-bottom: 1px solid #2b3139;
+            font-size: 13px;
+        }
+
+        .trash-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .trash-table tbody tr:hover {
+            background: rgba(178, 255, 89, 0.05);
+        }
+
+        .trash-icon {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+
+        .trash-name {
+            font-weight: 600;
+            color: #eaecef;
+            display: flex;
+            align-items: center;
+        }
+
+        .trash-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(178, 255, 89, 0.1);
+            color: #b2ff59;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .price-cell {
+            font-weight: 700;
+            color: #b2ff59;
+        }
+
+        .change-cell {
+            font-weight: 600;
+        }
+
+        .change-cell.positive {
+            color: #0ecb81;
+        }
+
+        .change-cell.negative {
+            color: #f6465d;
+        }
+
+        .chart-mini {
+            display: inline-block;
+            width: 100px;
+            height: 30px;
+            background: #0b0e11;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #b2ff59;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #2b3139;
+            border-top-color: #b2ff59;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #848e9c;
+        }
+
+        .table-wrapper {
+            background: #1e2329;
+            border-radius: 12px;
+            border: 1px solid #2b3139;
+            overflow: hidden;
+        }
+
+        @media (max-width: 1024px) {
+            .trash-table {
+                font-size: 12px;
+            }
+
+            .trash-table th,
+            .trash-table td {
+                padding: 12px;
+            }
+
+            .trash-icon {
+                font-size: 20px;
             }
         }
 
         @media (max-width: 768px) {
-            .header {
-                padding: 10px 12px;
-                flex-direction: row;
-                gap: 0;
-                align-items: center;
-                justify-content: space-between;
+            .container {
+                padding: 15px;
             }
 
-            .header-left {
-                width: auto;
-                gap: 12px;
-                flex: 1;
+            .page-title {
+                font-size: 24px;
             }
 
-            .logo {
+            .sorting-section {
+                gap: 8px;
+            }
+
+            .sort-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+
+            .trash-table th,
+            .trash-table td {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .trash-icon {
                 font-size: 18px;
-                white-space: nowrap;
             }
 
-            .nav {
-                gap: 8px;
-                flex-wrap: wrap;
-                flex: 1;
-                justify-content: flex-start;
-            }
-
-            .nav a {
-                font-size: 12px;
-                padding: 4px 6px;
-            }
-
-            .nav a h3 {
-                margin: 0;
-                font-size: 11px;
-            }
-
-            .header-right {
-                width: auto;
-                justify-content: flex-end;
-                gap: 8px;
-                display: flex;
-            }
-
-            .btn {
-                padding: 5px 10px;
-                font-size: 11px;
-                white-space: nowrap;
-            }
-
-            .container {
-                padding: 15px;
-                max-width: 100%;
-            }
-
-            .main-tabs {
-                gap: 15px;
-                margin: 15px 0 20px 0;
-                overflow-x: auto;
-            }
-
-            .main-tab {
-                font-size: 13px;
-                white-space: nowrap;
-            }
-
-            .sub-tabs {
-                gap: 10px;
-                margin-bottom: 15px;
-                overflow-x: auto;
-            }
-
-            .sub-tab {
-                padding: 8px 12px;
-                font-size: 12px;
-                white-space: nowrap;
-            }
-
-            .cards-grid {
-                margin-top: 15px;
-            }
-
-            .ranking-card {
-                padding: 15px;
-            }
-
-            .card-header {
-                font-size: 11px;
-                margin-bottom: 10px;
-            }
-
-            th {
-                padding: 12px 10px;
-                font-size: 11px;
-            }
-
-            td {
-                padding: 12px 10px;
-                font-size: 12px;
-            }
-
-            table {
-                font-size: 12px;
-            }
-
-            .pagination {
-                gap: 5px;
-                padding: 15px;
-            }
-
-            .page-btn {
-                padding: 6px 10px;
-                font-size: 11px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header {
-                padding: 8px 10px;
-                flex-direction: row;
-                gap: 0;
-                align-items: center;
-                justify-content: space-between;
-            }
-
-            .header-left {
-                flex-direction: row;
-                gap: 8px;
-                width: auto;
-                align-items: center;
-                min-width: 0;
-            }
-
-            .logo {
-                font-size: 16px;
-                white-space: nowrap;
-                flex-shrink: 0;
-            }
-
-            .nav {
-                gap: 6px;
-                width: auto;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                flex-shrink: 1;
-                min-width: 0;
-            }
-
-            .nav a {
-                font-size: 10px;
-                flex: 0 0 auto;
-                padding: 3px 4px;
-                white-space: nowrap;
-            }
-
-            .nav a h3 {
-                margin: 0;
-                font-size: 10px;
-            }
-
-            .header-right {
-                width: auto;
-                gap: 6px;
-                flex-wrap: nowrap;
-                flex-shrink: 0;
-            }
-
-            .btn {
-                padding: 4px 8px;
-                font-size: 10px;
-                white-space: nowrap;
-            }
-
-            .container {
-                padding: 10px;
-            }
-
-            .main-tabs {
-                gap: 10px;
-                margin: 10px 0 15px 0;
-            }
-
-            .main-tab {
-                font-size: 12px;
-                padding: 8px 0;
-                white-space: nowrap;
-            }
-
-            .sub-tabs {
-                gap: 8px;
-                margin-bottom: 10px;
-                overflow-x: auto;
-            }
-
-            .sub-tab {
-                padding: 6px 10px;
-                font-size: 11px;
-                white-space: nowrap;
-            }
-
-            .cards-grid {
-                margin-top: 10px;
-            }
-
-            .ranking-card {
-                padding: 12px;
-                border-radius: 6px;
-            }
-
-            .card-header {
-                font-size: 10px;
-                margin-bottom: 8px;
-            }
-
-            th {
-                padding: 10px 5px;
-                font-size: 10px;
-            }
-
-            td {
-                padding: 10px 5px;
-                font-size: 11px;
-            }
-
-            table {
-                font-size: 11px;
-            }
-
-            .pagination {
-                gap: 3px;
-                padding: 10px;
-            }
-
-            .page-btn {
-                padding: 5px 8px;
-                font-size: 10px;
+            .chart-mini {
+                width: 80px;
+                height: 25px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <div class="header">
         <div class="header-left">
             <div class="logo">🌿 ECOBANK</div>
             <div class="nav">
-                <a href="index.html"><h3>Home</h3></a>
-                <a href="trash_types.html" ><h3>Type</h3></a>
-                <a href="exchange.html" ><h3>Exchange</h3></a>
-                <a href="wallet.html" ><h3>Wallet</h3></a>
-                <a href="booths.html" ><h3>Booths</h3></a>
+                <a href="index.html">Home</a>
+                <a href="trash_types.html" style="color: #b2ff59;">Type</a>
+                <a href="exchange.html">Exchange</a>
+                <a href="wallet.html">Wallet</a>
+                <a href="booths.html">Booths</a>
             </div>
         </div>
-        <div class="header-right">
-            <a href="login.html"><button class="btn btn-login">Log In</button></a>
-            <a href="register.html"><button class="btn btn-signup">Sign Up</button></a>
-        </div>
+        <div class="header-right" id="headerRight"></div>
     </div>
 
+    <!-- Main Content -->
     <div class="container">
-        <div class="main-tabs">
-            <a href="index.html" class="main-tab" >Overview</a>
-            <a href="trash_types.html" class="main-tab active" >Types of Waste</a>
+        <div class="page-title">📊 Trash Types & Prices</div>
+        <div class="page-subtitle">ราคาปัจจุบันและแนวโน้มของเศษขยะทั้งหมด</div>
+
+        <!-- Sorting Options -->
+        <div class="sorting-section">
+            <button class="sort-btn active" onclick="sortBy('price-desc')">📈 ราคาสูงสุด</button>
+            <button class="sort-btn" onclick="sortBy('price-asc')">📉 ราคาต่ำสุด</button>
+            <button class="sort-btn" onclick="sortBy('change-positive')">🟢 เพิ่มขึ้น</button>
+            <button class="sort-btn" onclick="sortBy('change-negative')">🔴 ลดลง</button>
         </div>
 
-        <div class="sub-tabs">
-            <div class="sub-tab active" data-period="today">📅 วันนี้</div>
-            <div class="sub-tab" data-period="week">📊 สัปดาห์</div>
-            <div class="sub-tab" data-period="month">📈 เดือน</div>
-            <div class="sub-tab" data-period="year">🏆 ปี</div>
+        <!-- Table -->
+        <div class="table-wrapper">
+            <table class="trash-table">
+                <thead>
+                    <tr>
+                        <th style="width: 35%;">ชื่อขยะ</th>
+                        <th style="width: 15%;">ราคาปัจจุบัน</th>
+                        <th style="width: 15%;">การเปลี่ยนแปลง</th>
+                        <th style="width: 15%;">หมวดหมู่</th>
+                        <th style="width: 20%;">แนวโน้ม</th>
+                    </tr>
+                </thead>
+                <tbody id="trashTableBody">
+                    <tr>
+                        <td colspan="5" class="loading">
+                            <span class="spinner"></span>
+                            <span>กำลังโหลดข้อมูล...</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-
-        <div id="cardsContainer"></div>
     </div>
 
-    <script>
-        const rankingData = {
-            today: [
-                { 
-                    name: 'PET',    
-                    symbol: 'ขวดน้ำใส', 
-                    category: 'พลาสติก', 
-                    price: 8, 
-                    change: 0.50, 
-                    week: 7.80, 
-                    month: 7.50, 
-                    year: '960,000', 
-                    iconImage: '../image/ขวดพลาสติกPET.12.png',
-                },
-                { 
-                    name: 'Copper', 
-                    symbol: 'ทองแดง', 
-                    category: 'โลหะ', 
-                    price: 260, 
-                    change: 1.20, 
-                    week: 258, 
-                    month: 256, 
-                    year: '4,160,000', 
-                    iconImage: '../image/ทองแดง.265.png',
-                },
-                { 
-                    name: 'A4', 
-                    symbol: 'กระดาษขาว-ดำ', 
-                    category: 'กระดาษ', 
-                    price: 3.60, 
-                    change: -0.30, 
-                    week: 3.65, 
-                    month: 3.70, 
-                    year: '864,000', 
-                    iconImage: '../image/กระดาษ.png',
-                    },
-                { 
-                    name: 'Aluminum', 
-                    symbol: 'กระป๋องอลูมิเนียม', 
-                    category: 'โลหะ', 
-                    price: 45, 
-                    change: 2.15, 
-                    week: 44, 
-                    month: 43, 
-                    year: '2,160,000', 
-                    iconImage: '../image/กระป๋องอลูมิเนียม.38.png',
-                },
-                { 
-                    name: 'PVC', 
-                    symbol: 'ท่อสีฟ้า', 
-                    category: 'พลาสติก', 
-                    price: 1.50, 
-                    change: -0.80, 
-                    week: 1.52, 
-                    month: 1.55, 
-                    year: '360,000', 
-                    iconImage: '../image/ท่อ PVC.3.png',
-                },
-                { 
-                    name: 'Glass', 
-                    symbol: 'ขวดแก้ว', 
-                    category: 'แก้ว', 
-                    price: 1, 
-                    change: 0, 
-                    week: 1, 
-                    month: 1, 
-                    year: '240,000', 
-                    iconImage: '../image/ขวดแก้ว.1.png',
-                },
-                { 
-                    name: 'Cardboard', 
-                    symbol: 'กล่องกระดาษ', 
-                    category: 'กระดาษ', 
-                    price: 2.50, 
-                    change: 1.20, 
-                    week: 2.45, 
-                    month: 2.40, 
-                    year: '720,000', 
-                    iconImage: '../image/กล่องกระดาษ3.320.png',
-                },
-                { 
-                    name: 'Steel', 
-                    symbol: 'เหล็ก', 
-                    category: 'โลหะ', 
-                    price: 12, 
-                    change: -1.50, 
-                    week: 12.20, 
-                    month: 12.50, 
-                    year: '1,440,000', 
-                    iconImage: '../image/สแตนเลส.35.png',
-                },
-            ],
-            week: [
-                { 
-                    name: 'Aluminum', 
-                    symbol: 'กระป๋องอลูมิเนียม', 
-                    category: 'โลหะ', 
-                    price: 45, 
-                    change: 3.20, 
-                    week: 43.5, 
-                    month: 42, 
-                    year: '2,160,000', 
-                    iconImage: '../image/กระป๋องอลูมิเนียม.38.png',
-                },
-                { 
-                    name: 'Copper', 
-                    symbol: 'ทองแดง', 
-                    category: 'โลหะ', 
-                    price: 260, 
-                    change: 2.50, 
-                    week: 254, 
-                    month: 250, 
-                    year: '4,160,000', 
-                    iconImage: '../image/ทองแดง.265.png',
-                },
-                { 
-                    name: 'Cardboard', 
-                    symbol: 'กล่องกระดาษ', 
-                    category: 'กระดาษ', 
-                    price: 2.50, 
-                    change: 2.00, 
-                    week: 2.45, 
-                    month: 2.35, 
-                    year: '720,000', 
-                    iconImage: '../image/กล่องกระดาษ3.320.png',
-                },
-                { 
-                    name: 'PET', 
-                    symbol: 'ขวดน้ำใส', 
-                    category: 'พลาสติก', 
-                    price: 8, 
-                    change: 1.50, 
-                    week: 7.88, 
-                    month: 7.75, 
-                    year: '960,000', 
-                    iconImage: '../image/ขวดพลาสติกPET.12.png',
-                },
-                { 
-                    name: 'A4', 
-                    symbol: 'กระดาษขาว-ดำ', 
-                    category: 'กระดาษ', 
-                    price: 3.60, 
-                    change: 0.80, 
-                    week: 3.57, 
-                    month: 3.50, 
-                    year: '864,000', 
-                    iconImage: '../image/กระดาษ.png',
-                },
-                { 
-                    name: 'Steel', 
-                    symbol: 'เหล็ก', 
-                    category: 'โลหะ', 
-                    price: 12, 
-                    change: -0.50, 
-                    week: 12.06, 
-                    month: 12.20, 
-                    year: '1,440,000', 
-                    iconImage: '../image/สแตนเลส.35.png',
-                },
-                { 
-                    name: 'PVC', 
-                    symbol: 'ท่อสีฟ้า', 
-                    category: 'พลาสติก', 
-                    price: 1.50, 
-                    change: -1.20, 
-                    week: 1.52, 
-                    month: 1.60, 
-                    year: '360,000', 
-                    iconImage: '../image/ท่อ PVC.3.png',
-                },
-                { 
-                    name: 'Glass', 
-                    symbol: 'ขวดแก้ว', 
-                    category: 'แก้ว', 
-                    price: 1, 
-                    change: 0, 
-                    week: 1, 
-                    month: 1, 
-                    year: '240,000', 
-                    iconImage: '../image/ขวดแก้ว.1.png',
-                },
-                { 
-                    name: 'Copper', 
-                    symbol: 'ทองแดง', 
-                    category: 'โลหะ', 
-                    price: 260, 
-                    change: 4.50, 
-                    week: 258, 
-                    month: 248, 
-                    year: '4,160,000', 
-                    iconImage: '../image/ทองแดง.265.png',
-                },
-                { 
-                    name: 'Aluminum', 
-                    symbol: 'กระป๋องอลูมิเนียม', 
-                    category: 'โลหะ', 
-                    price: 45, 
-                    change: 4.20, 
-                    week: 44, 
-                    month: 43.2, 
-                    year: '2,160,000', 
-                    iconImage: '../image/กระป๋องอลูมิเนียม.38.png',
-                },
-                { 
-                    name: 'PET', 
-                    symbol: 'ขวดน้ำใส', 
-                    category: 'พลาสติก', 
-                    price: 8, 
-                    change: 3.50, 
-                    week: 7.80, 
-                    month: 7.73, 
-                    year: '960,000', 
-                    iconImage: '../image/ขวดพลาสติกPET.12.png',
-                },
-                { 
-                    name: 'Cardboard', 
-                    symbol: 'กล่องกระดาษ', 
-                    category: 'กระดาษ', 
-                    price: 2.50, 
-                    change: 3.10, 
-                    week: 2.45, 
-                    month: 2.43, 
-                    year: '720,000', 
-                    iconImage: '../image/กล่องกระดาษ3.320.png',
-                },
-                { 
-                    name: 'A4', 
-                    symbol: 'กระดาษขาว-ดำ', 
-                    category: 'กระดาษ', 
-                    price: 3.60, 
-                    change: 2.80, 
-                    week: 3.65, 
-                    month: 3.50, 
-                    year: '864,000', 
-                    iconImage: '../image/กระดาษ.png',
-                },
-                { 
-                    name: 'Steel', 
-                    symbol: 'เหล็ก', 
-                    category: 'โลหะ', 
-                    price: 12, 
-                    change: 1.20, 
-                    week: 12.20, 
-                    month: 11.86, 
-                    year: '1,440,000', 
-                    iconImage: '../image/สแตนเลส.35.png',
-                },
-                { 
-                    name: 'PVC', 
-                    symbol: 'ท่อสีฟ้า', 
-                    category: 'พลาสติก', 
-                    price: 1.50, 
-                    change: -2.50, 
-                    week: 1.52, 
-                    month: 1.54, 
-                    year: '360,000', 
-                    iconImage: '../image/ท่อ PVC.3.png',
-                },
-                { 
-                    name: 'Glass', 
-                    symbol: 'ขวดแก้ว', 
-                    category: 'แก้ว', 
-                    price: 1, 
-                    change: 0, 
-                    week: 1, 
-                    month: 1, 
-                    year: '240,000', 
-                    iconImage: '../image/ขวดแก้ว.1.png',
-                    },
-            ],
-            month: [
-                { 
-                    name: 'Copper', 
-                    symbol: 'ทองแดง', 
-                    category: 'โลหะ', 
-                    price: 260, 
-                    change: 4.50, 
-                    week: 258, 
-                    month: 248, 
-                    year: '4,160,000', 
-                    iconImage: '../image/ทองแดง.265.png',
-                },
-                { 
-                    name: 'Aluminum', 
-                    symbol: 'กระป๋องอลูมิเนียม', 
-                    category: 'โลหะ', 
-                    price: 45, 
-                    change: 4.20, 
-                    week: 44, 
-                    month: 43.2, 
-                    year: '2,160,000', 
-                    iconImage: '../image/กระป๋องอลูมิเนียม.38.png',
-                },
-                { 
-                    name: 'PET', 
-                    symbol: 'ขวดน้ำใส', 
-                    category: 'พลาสติก', 
-                    price: 8, 
-                    change: 3.50, 
-                    week: 7.80, 
-                    month: 7.73, 
-                    year: '960,000', 
-                    iconImage: '../image/ขวดพลาสติกPET.12.png',
-                },
-                { 
-                    name: 'Cardboard', 
-                    symbol: 'กล่องกระดาษ', 
-                    category: 'กระดาษ', 
-                    price: 2.50, 
-                    change: 3.10, 
-                    week: 2.45, 
-                    month: 2.43, 
-                    year: '720,000', 
-                    iconImage: '../image/กล่องกระดาษ3.320.png',
-                },
-                { 
-                    name: 'A4', 
-                    symbol: 'กระดาษขาว-ดำ', 
-                    category: 'กระดาษ', 
-                    price: 3.60, 
-                    change: 2.80, 
-                    week: 3.65, 
-                    month: 3.50, 
-                    year: '864,000', 
-                    iconImage: '../image/กระดาษ.png',
-                },
-                { 
-                    name: 'Steel', 
-                    symbol: 'เหล็ก', 
-                    category: 'โลหะ', 
-                    price: 12, 
-                    change: 1.20, 
-                    week: 12.20, 
-                    month: 11.86, 
-                    year: '1,440,000', 
-                    iconImage: '../image/สแตนเลส.35.png',
-                },
-                { 
-                    name: 'PVC', 
-                    symbol: 'ท่อสีฟ้า', 
-                    category: 'พลาสติก', 
-                    price: 1.50, 
-                    change: -2.50, 
-                    week: 1.52, 
-                    month: 1.54, 
-                    year: '360,000', 
-                    iconImage: '../image/ท่อ PVC.3.png',
-                },
-                { 
-                    name: 'Glass', 
-                    symbol: 'ขวดแก้ว', 
-                    category: 'แก้ว', 
-                    price: 1, 
-                    change: 0, 
-                    week: 1, 
-                    month: 1, 
-                    year: '240,000', 
-                    iconImage: '../image/ขวดแก้ว.1.png',
-                    },
-            ],
-            year: [
-            { 
-                name: 'Copper', 
-                symbol: 'ทองแดง', 
-                category: 'โloหะ',
-                price: 260, 
-                change: 25.50, 
-                week: 258, 
-                month: 256, 
-                year: '4,160,000', 
-                iconImage: '../image/ทองแดง.265.png',
-            },
-            { 
-                name: 'Aluminum', 
-                symbol: 'กระป๋องอลูมิเนียม', 
-                category: 'โลหะ', 
-                price: 45, 
-                change: 18.20, 
-                week: 44, 
-                month: 43, 
-                year: '2,160,000', 
-                iconImage: '../image/กระป๋องอลูมิเนียม.38.png',
-            },
-            { 
-                name: 'PET', 
-                symbol: 'ขวดน้ำใส', 
-                category: 'พลาสติก', 
-                price: 8, 
-                change: 15.80, 
-                week: 7.80, 
-                month: 7.50, 
-                year: '960,000', 
-                iconImage: '../image/ขวดพลาสติกPET.12.png',
-            },
-            { 
-                name: 'Steel', 
-                symbol: 'เหล็ก', 
-                category: 'โลหะ', 
-                price: 12, 
-                change: 12.50, 
-                week: 12.20, 
-                month: 12.50, 
-                year: '1,440,000', 
-                iconImage: '../image/สแตนเลส.35.png',
-            },
-            { 
-                name: 'Cardboard', 
-                symbol: 'กล่องกระดาษ', 
-                category: 'กระดาษ', 
-                price: 2.50, 
-                change: 10.20, 
-                week: 2.45, 
-                month: 2.40, 
-                year: '720,000', 
-                iconImage: '../image/กล่องกระดาษ3.320.png',
-            },
-            { 
-                name: 'A4', 
-                symbol: 'กระดาษขาว-ดำ', 
-                category: 'กระดาษ', 
-                price: 3.60, 
-                change: 8.50, 
-                week: 3.65, 
-                month: 3.70, 
-                year: '864,000', 
-                iconImage: '../image/กระดาษ.png',
-            },
-            { 
-                name: 'PVC', 
-                symbol: 'ท่อสีฟ้า', 
-                category: 'พลาสติก', 
-                price: 1.50, 
-                change: -5.20, 
-                week: 1.52, 
-                month: 1.55, 
-                year: '360,000', 
-                iconImage: '../image/ท่อ PVC.3.png',
-            },
-            { 
-                name: 'Glass', 
-                symbol: 'ขวดแก้ว', 
-                category: 'แก้ว', 
-                price: 1, 
-                change: 0, 
-                week: 1, 
-                month: 1, 
-                year: '240,000', 
-                iconImage: '../image/ขวดแก้ว.1.png',
-            },
-            ],
+    <script type="module">
+        import { 
+            getTrashTypes
+        } from "../js/firebase-service.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        let currentUser = null;
+        let allTrash = [];
+        let currentSort = 'price-desc';
+        const auth = getAuth();
+
+        onAuthStateChanged(auth, async (user) => {
+            // Trash types page accessible to guests
+            if (user) {
+                currentUser = user;
+                const userData = JSON.parse(localStorage.getItem('ecobank_user'));
+                setupHeader(userData);
+            } else {
+                setupGuestHeader();
+            }
+
+            await loadTrashTypes();
+        });
+
+        function setupHeader(userData) {
+            const headerRight = document.getElementById('headerRight');
+            headerRight.innerHTML = `
+                <div class="user-profile">
+                    <div class="user-avatar">${(userData?.name || 'U')[0].toUpperCase()}</div>
+                    <span>${userData?.name || 'User'}</span>
+                </div>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            `;
+
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    await signOut(auth);
+                    localStorage.removeItem('ecobank_user');
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+            });
+        }
+
+        function setupGuestHeader() {
+            // Guest view
+        }
+
+        async function loadTrashTypes() {
+            try {
+                allTrash = await getTrashTypes();
+                renderTable();
+            } catch (error) {
+                console.error('Error loading trash types:', error);
+                document.getElementById('trashTableBody').innerHTML = `
+                    <tr><td colspan="5" class="empty-state">เกิดข้อผิดพลาด: ${error.message}</td></tr>
+                `;
+            }
+        }
+
+        window.sortBy = function(sortType) {
+            currentSort = sortType;
+            document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTable();
         };
 
-        let currentTab = 'today';
-        let currentCategory = 'all';
+        function getSortedTrash() {
+            let sorted = [...allTrash];
+
+            switch (currentSort) {
+                case 'price-desc':
+                    sorted.sort((a, b) => (b.price_per_unit || 0) - (a.price_per_unit || 0));
+                    break;
+                case 'price-asc':
+                    sorted.sort((a, b) => (a.price_per_unit || 0) - (b.price_per_unit || 0));
+                    break;
+                case 'change-positive':
+                    sorted.sort((a, b) => (b.week_change || 0) - (a.week_change || 0));
+                    break;
+                case 'change-negative':
+                    sorted.sort((a, b) => (a.week_change || 0) - (b.week_change || 0));
+                    break;
+                default:
+                    break;
+            }
+
+            return sorted;
+        }
 
         function renderTable() {
-            const container = document.getElementById('cardsContainer');
-            let data = rankingData[currentTab];
-            
-            // Filter by category if not 'all'
-            if (currentCategory !== 'all') {
-                data = data.filter(item => item.category === currentCategory);
+            const tbody = document.getElementById('trashTableBody');
+            const sorted = getSortedTrash();
+
+            if (sorted.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">ไม่มีข้อมูลขยะ</td></tr>';
+                return;
             }
-            
-            const periodText = {
-                'today': 'วันนี้',
-                'week': 'สัปดาห์',
-                'month': 'เดือน',
-                'year': 'ปี'
-            };
-            
-            const rows = data.map((item, index) => {
-                const changeClass = item.change >= 0 ? 'positive' : 'negative';
-                const changeSymbol = item.change >= 0 ? '+' : '';
-                
+
+            tbody.innerHTML = sorted.map(trash => {
+                const price = trash.price_per_unit || 0;
+                const weekChange = trash.week_change || 0;
+                const changePercent = trash.change_percent || 0;
+                const changeClass = weekChange >= 0 ? 'positive' : 'negative';
+                const changeIcon = weekChange >= 0 ? '📈' : '📉';
+
                 return `
                     <tr>
                         <td>
-                            <div class="trash-cell">
-                                <div class="trash-icon">
-                                    <img src="${item.iconImage}" alt="${item.name}">
-                                </div>
+                            <div class="trash-name">
+                                <span class="trash-icon">${trash.icon || '📦'}</span>
                                 <div>
-                                    <div class="trash-name">${item.symbol}</div>
-                                    <div class="trash-symbol">${item.name}</div>
+                                    <div>${trash.name}</div>
                                 </div>
                             </div>
                         </td>
-                        <td>${item.category}</td>
-                        <td class="price-value">${item.price.toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
-                        <td>${typeof item.week === 'number' ? item.week.toLocaleString('th-TH', {minimumFractionDigits: 2}) : item.week}</td>
-                        <td>${typeof item.month === 'number' ? item.month.toLocaleString('th-TH', {minimumFractionDigits: 2}) : item.month}</td>
-                        <td>${item.year}</td>
-                        <td class="change ${changeClass}">${changeSymbol}${item.change}%</td>
+                        <td class="price-cell">${price.toFixed(2)} ฿/kg</td>
+                        <td class="change-cell ${changeClass}">
+                            ${changeIcon} ${weekChange > 0 ? '+' : ''}${weekChange.toFixed(2)} (${changePercent > 0 ? '+' : ''}${changePercent.toFixed(1)}%)
+                        </td>
+                        <td>
+                            <span class="trash-category">${trash.category}</span>
+                        </td>
+                        <td>
+                            <canvas class="chart-mini" data-price="${price}"></canvas>
+                        </td>
                     </tr>
                 `;
             }).join('');
 
-            container.innerHTML = `
-                <div class="table-container">
-                    <div class="table-header-section">
-                        <span>🗂️ รายการขยะตามประเภท - ${periodText[currentTab]}</span>
-                        <div class="header-controls">
-                            <select class="dropdown" id="categoryFilter" value="${currentCategory}">
-                                <option value="all" ${currentCategory === 'all' ? 'selected' : ''}>ทุกหมวดหมู่</option>
-                                <option value="พลาสติก" ${currentCategory === 'พลาสติก' ? 'selected' : ''}>พลาสติก</option>
-                                <option value="กระดาษ" ${currentCategory === 'กระดาษ' ? 'selected' : ''}>กระดาษ</option>
-                                <option value="โลหะ" ${currentCategory === 'โลหะ' ? 'selected' : ''}>โลหะ</option>  
-                                <option value="แก้ว" ${currentCategory === 'แก้ว' ? 'selected' : ''}>แก้ว</option>
-                            </select>
-                        </div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Category</th>
-                                <th>Price <div style="font-size: 10px; ">/kg</div></th></th>
-                                <th>Week</th>
-                                <th>Month</th>
-                                <th>Year</th>
-                                <th>Market Cap <div style="font-size: 10px; ">/ Year</div></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${rows}
-                        </tbody>
-                    </table>
-                    <div class="pagination">
-                        <button class="page-btn active">1</button>
-                        <button class="page-btn">2</button>
-                        <button class="page-btn">3</button>
-                        <button class="page-btn">...</button>
-                        <button class="page-btn">10</button>
-                    </div>
-                </div>
-            `;
-
-            // Pagination handlers
-            document.querySelectorAll('.page-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    if (this.textContent === '...') return;
-                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                });
+            // Draw mini charts
+            document.querySelectorAll('.chart-mini').forEach(canvas => {
+                drawMiniChart(canvas);
             });
         }
 
-        // Category filter handler - attach once outside renderTable
-        document.addEventListener('change', function(e) {
-            if (e.target.id === 'categoryFilter') {
-                currentCategory = e.target.value;
-                renderTable();
-            }
-        }, true);
-
-        // Sub-tab handlers
-        document.querySelectorAll('.sub-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                
-                currentTab = this.dataset.period;
-                currentCategory = 'all'; // Reset category filter when changing period
-                renderTable();
-            });
-        });
-
-        // Initial render
-        renderTable();
-
-        // Auth check
-        document.addEventListener('DOMContentLoaded', function() {
-            const user = JSON.parse(localStorage.getItem('ecobank_user'));
-            const headerRight = document.querySelector('.header-right');
+        function drawMiniChart(canvas) {
+            const ctx = canvas.getContext('2d');
+            const price = parseFloat(canvas.getAttribute('data-price'));
             
-            if (!user) {
-                // Show login buttons for non-authenticated users
-                // Already in HTML as default
-            } else {
-                // User is logged in - update header with logout button
-                headerRight.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #2b3139; border-radius: 6px;">
-                        <div style="width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #b2ff59, #7ac943); display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; font-size: 12px;">
-                            ${(user.name || 'U').substring(0, 1).toUpperCase()}
-                        </div>
-                        <div style="font-size: 13px; color: #eaecef; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            ${user.name || 'User'}
-                        </div>
-                    </div>
-                    <button style="background: transparent; border: 1px solid #2b3139; color: #f6465d; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; transition: all 0.2s;" id="logoutBtn">Logout</button>
-                `;
-                
-                document.getElementById('logoutBtn').addEventListener('click', function() {
-                    localStorage.removeItem('ecobank_user');
-                    location.reload();
-                });
-            }
-        });
+            // Simple trend visualization
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.fillStyle = '#0b0e11';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Draw trend line
+            ctx.strokeStyle = '#b2ff59';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, height * 0.6);
+            ctx.lineTo(width * 0.25, height * 0.5);
+            ctx.lineTo(width * 0.5, height * 0.55);
+            ctx.lineTo(width * 0.75, height * 0.4);
+            ctx.lineTo(width, height * 0.45);
+            ctx.stroke();
+            
+            // Fill area
+            ctx.fillStyle = 'rgba(178, 255, 89, 0.2)';
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
+            ctx.fill();
+        }
+
+        window.sortBy = sortBy;
     </script>
 </body>
 </html>

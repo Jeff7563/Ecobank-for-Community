@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events & Booths - ECOBANK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0b0e11;
+            color: #eaecef;
+        }
+
+        .header {
+            background: #181a20;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2b3139;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            color: #b2ff59;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.2s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            padding: 6px 10px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .nav a:hover {
+            color: #b2ff59;
+            background-color: rgba(178, 255, 89, 0.1);
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: #b2ff59;
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+
+        .nav a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: #2b3139;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #b2ff59 0%, #0ecb81 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #eaecef;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .page-title-section {
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #eaecef;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #848e9c;
+            margin-bottom: 0;
+        }
+
+        .btn-back {
+            padding: 8px 16px;
+            background: #2b3139;
+            color: #eaecef;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background: #474d57;
+        }
+
+        .filter-section {
+            background: #1e2329;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            color: #848e9c;
+            font-weight: 600;
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            background: #0b0e11;
+            border: 1px solid #2b3139;
+            border-radius: 6px;
+            color: #eaecef;
+            font-size: 13px;
+            min-width: 150px;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #b2ff59;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .event-card {
+            background: #1e2329;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 1px solid #2b3139;
+            cursor: pointer;
+        }
+
+        .event-card:hover {
+            border-color: #b2ff59;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(178, 255, 89, 0.1);
+        }
+
+        .event-header {
+            background: linear-gradient(135deg, #b2ff59 0%, #0ecb81 100%);
+            padding: 20px;
+            color: #000;
+        }
+
+        .event-date {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .event-day {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .event-body {
+            padding: 20px;
+        }
+
+        .event-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #eaecef;
+            margin-bottom: 12px;
+        }
+
+        .event-location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #848e9c;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .event-location-icon {
+            font-size: 16px;
+        }
+
+        .event-time {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #848e9c;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .event-time-icon {
+            font-size: 16px;
+        }
+
+        .waste-types {
+            margin-bottom: 15px;
+        }
+
+        .waste-types-label {
+            font-size: 12px;
+            color: #848e9c;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .waste-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .waste-tag {
+            background: rgba(178, 255, 89, 0.1);
+            color: #b2ff59;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .waste-tag.metal {
+            background: rgba(14, 203, 129, 0.1);
+            color: #0ecb81;
+        }
+
+        .waste-tag.plastic {
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff;
+        }
+
+        .waste-tag.glass {
+            background: rgba(240, 185, 11, 0.1);
+            color: #f0b90b;
+        }
+
+        .event-description {
+            font-size: 13px;
+            color: #848e9c;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .event-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #2b3139;
+        }
+
+        .event-price {
+            font-size: 14px;
+            font-weight: 600;
+            color: #b2ff59;
+        }
+
+        .event-btn {
+            padding: 6px 12px;
+            background: #b2ff59;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .event-btn:hover {
+            background: #c0ee8c;
+        }
+
+        .special-badge {
+            display: inline-block;
+            background: #f6465d;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .map-section {
+            background: #1e2329;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #eaecef;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 400px;
+            background: #0b0e11;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #848e9c;
+            font-size: 14px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #1e2329;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border-left: 3px solid #b2ff59;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #b2ff59;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #848e9c;
+        }
+
+        @media (max-width: 768px) {
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .filter-section {
+                flex-direction: column;
+            }
+
+            .filter-input {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+
+        /* Mobile Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 12px;
+                flex-direction: row;
+                gap: 0;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .header-left {
+                width: auto;
+                gap: 12px;
+                flex: 1;
+            }
+
+            .logo {
+                font-size: 18px;
+                white-space: nowrap;
+            }
+
+            .nav {
+                gap: 8px;
+                flex: 1;
+                justify-content: flex-start;
+            }
+
+            .nav a {
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+
+            .nav a h3 {
+                margin: 0;
+                font-size: 11px;
+            }
+
+            .header-right {
+                width: auto;
+                justify-content: flex-end;
+                gap: 8px;
+                display: flex;
+            }
+
+            .user-avatar {
+                width: 36px;
+                height: 36px;
+            }
+
+            .container {
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .page-subtitle {
+                font-size: 13px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 12px;
+            }
+
+            .stat-number {
+                font-size: 24px;
+            }
+
+            .stat-label {
+                font-size: 11px;
+            }
+
+            .map-container {
+                height: 300px;
+                font-size: 13px;
+            }
+
+            .booth-tabs {
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+
+            .booth-tab {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th {
+                padding: 12px 10px;
+                font-size: 11px;
+            }
+
+            td {
+                padding: 12px 10px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 8px 10px;
+                flex-direction: row;
+                gap: 0;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .header-left {
+                flex-direction: row;
+                gap: 8px;
+                width: auto;
+                align-items: center;
+                min-width: 0;
+            }
+
+            .logo {
+                font-size: 16px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            .nav {
+                gap: 6px;
+                width: auto;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                flex-shrink: 1;
+                min-width: 0;
+            }
+
+            .nav a {
+                font-size: 10px;
+                flex: 0 0 auto;
+                padding: 3px 4px;
+                white-space: nowrap;
+            }
+
+            .nav a h3 {
+                margin: 0;
+                font-size: 10px;
+            }
+
+            .header-right {
+                width: auto;
+                gap: 6px;
+                flex-wrap: nowrap;
+                flex-shrink: 0;
+            }
+
+            .user-profile {
+                gap: 8px;
+            }
+
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+
+            .user-name {
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .page-title {
+                font-size: 20px;
+            }
+
+            .page-subtitle {
+                font-size: 12px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 10px;
+            }
+
+            .stat-number {
+                font-size: 20px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .map-container {
+                height: 250px;
+                font-size: 12px;
+            }
+
+            .booth-tabs {
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+
+            .booth-tab {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+
+            table {
+                font-size: 11px;
+            }
+
+            th {
+                padding: 10px 5px;
+                font-size: 10px;
+            }
+
+            td {
+                padding: 10px 5px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">🌿 ECOBANK</div>
+            <div class="nav">
+                <a href="index.html"><h3>Home</h3></a>
+                <a href="trash_types.html"><h3>Type</h3></a>
+                <a href="exchange.html"><h3>Exchange</h3></a>
+                <a href="wallet.html"><h3>Wallet</h3></a>
+                <a href="booths.html"><h3>Booths</h3></a>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-profile">
+                <div class="user-avatar">S</div>
+                <span class="user-name">Somchai</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <div class="page-title-section">
+                <div class="page-title">🎪 Events & Booths</div>
+                <div class="page-subtitle">ตารางการรับซื้อขยะประจำวัน และกิจกรรมพิเศษ</div>
+            </div>
+            <a href="index.html" class="btn-back">🔙 ย้อนกลับ</a>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Booths วันนี้</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">28</div>
+                <div class="stat-label">Booths สัปดาห์นี้</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">ประเภทขยะทั้งหมด</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">กิจกรรมพิเศษ</div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-group">
+                <label class="filter-label">ค้นหาวันที่</label>
+                <input type="date" class="filter-input" id="dateFilter">
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">ค้นหาทำเลที่ตั้ง</label>
+                <input type="text" class="filter-input" id="locationFilter" placeholder="เช่น สาทร, ชิดลม">
+            </div>
+        </div>
+
+        <div class="events-grid" id="eventsGrid">
+            <!-- Events will be populated by JavaScript -->
+        </div>
+
+        <div class="map-section">
+            <h2 class="section-title">📍 แผนที่สถานที่รับซื้อ</h2>
+            <div class="map-container">
+                🗺️ Google Maps Integration (ระบุตำแหน่ง Booth ทั้งหมด)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const events = [
+            {
+                date: '2024-11-29',
+                day: '29 พ.ย.',
+                title: 'Silom Recycling Hub',
+                location: 'ถ. สีลม, สีลม, บางรัก',
+                time: '09:00 - 17:00',
+                wasteTypes: ['ทองแดง', 'อลูมิเนียม', 'สแตนเลส'],
+                description: 'ศูนย์รับซื้อขยะโลหะหลักของเรา มีราคาเสนอที่ดีที่สุด',
+                price: 'ราคาดีที่สุด',
+                special: false
+            },
+            {
+                date: '2024-11-29',
+                day: '29 พ.ย.',
+                title: 'Chidlom Plastic Collection',
+                location: 'ถ. เพชรบุรี, ราชเทวี, ปทุมวัน',
+                time: '10:00 - 18:00',
+                wasteTypes: ['ขวดพลาสติก PET', 'พลาสติกนวม'],
+                description: 'รับซื้อพลาสติกคุณภาพสูง มีโบนัสเพิ่มเติมสำหรับปริมาณมาก',
+                price: 'เพิ่มโบนัส +5%',
+                special: true
+            },
+            {
+                date: '2024-11-29',
+                day: '29 พ.ย.',
+                title: 'Sathorn Paper Depot',
+                location: 'ถ. สาทร, สาทร, บางรัก',
+                time: '08:00 - 16:00',
+                wasteTypes: ['กระดาษ', 'บรรจุภัณฑ์'],
+                description: 'รับซื้อกระดาษและบรรจุภัณฑ์ทุกชนิด ราคาตรวจสอบเบิกปลายทาง',
+                price: 'ตรวจสอบเบิก',
+                special: false
+            },
+            {
+                date: '2024-11-30',
+                day: '30 พ.ย.',
+                title: 'Ecobank Weekend Festival 🎉',
+                location: 'สวนลุมพินี, พระราม 4, বাংকค',
+                time: '10:00 - 20:00',
+                wasteTypes: ['ทั้งหมด'],
+                description: 'งานสุดสัปดาห์พิเศษ! ราคาพิเศษ + กิจกรรมหมุนวงล้อ + ของรางวัล',
+                price: 'ราคา x 1.5 เท่า!',
+                special: true
+            },
+            {
+                date: '2024-11-30',
+                day: '30 พ.ย.',
+                title: 'Bangrak Glass Recycling',
+                location: 'ถ. ตรีมิต, บางรัก, บางรัก',
+                time: '09:00 - 17:00',
+                wasteTypes: ['แก้ว'],
+                description: 'ศูนย์รับซื้อแก้วเฉพาะ ราคาแข่งขันสูงสุด',
+                price: 'ราคาสูง +10%',
+                special: false
+            },
+            {
+                date: '2024-12-01',
+                day: '01 ธ.ค.',
+                title: 'Wireless Road Metal Exchange',
+                location: 'ถ. เวลส์, ลุมพินี, ปทุมวัน',
+                time: '08:30 - 17:30',
+                wasteTypes: ['ทองแดง', 'สแตนเลส', 'อลูมิเนียม'],
+                description: 'แลกเปลี่ยนโลหะและได้ใบอนุญาตการ์ดสมาชิก',
+                price: 'สมาชิก +8%',
+                special: false
+            },
+            {
+                date: '2024-12-01',
+                day: '01 ธ.ค.',
+                title: 'Nana Comprehensive Collection',
+                location: 'ถ. พหลโยธิน 13, ดินแก้ว, ดินแก้ว',
+                time: '11:00 - 19:00',
+                wasteTypes: ['ทั้งหมด'],
+                description: 'รับซื้อขยะทุกประเภทในที่เดียว สะดวกชาวบ้านแถวนานา',
+                price: 'ราคามาตรฐาน',
+                special: false
+            },
+            {
+                date: '2024-12-02',
+                day: '02 ธ.ค.',
+                title: 'Double Bonus Tuesday! 🎁',
+                location: 'สาขาทั่วประเทศ (สมาชิก)',
+                time: '08:00 - 20:00',
+                wasteTypes: ['ทั้งหมด'],
+                description: 'วันพิเศษ: ได้โบนัสเงินกลับ x2 ทั่วสาขา ECOBANK',
+                price: 'โบนัส x2 เท่า!',
+                special: true
+            },
+            {
+                date: '2024-12-02',
+                day: '02 ธ.ค.',
+                title: 'Sukhumvit Plastic Focus',
+                location: 'ถ. สุขุมวิท 38, สุขุมวิท, วัฒนา',
+                time: '09:00 - 18:00',
+                wasteTypes: ['ขวดพลาสติก PET', 'พลาสติกแข็ง'],
+                description: 'เชี่ยวชาญด้านพลาสติก มีการประเมินอย่างเป็นมืออาชีพ',
+                price: 'ราคาตรวจสอบ',
+                special: false
+            },
+            {
+                date: '2024-12-03',
+                day: '03 ธ.ค.',
+                title: 'Express Pickup Service',
+                location: 'วัตถุดิบเหลือใช้จากบ้าน (Online Booking)',
+                time: '06:00 - 22:00',
+                wasteTypes: ['ทั้งหมด'],
+                description: 'บริการนำส่ง เรียกเสบียงทางออนไลน์ ได้ราคาเสนอทันที',
+                price: 'ราคา Online',
+                special: false
+            },
+            {
+                date: '2024-12-03',
+                day: '03 ธ.ค.',
+                title: 'Ploenchit Paper Warehouse',
+                location: 'ถ. เพลินจิต, ลุมพินี, ปทุมวัน',
+                time: '07:00 - 17:00',
+                wasteTypes: ['กระดาษ', 'บรรจุภัณฑ์', 'ไม้'],
+                description: 'โกดังรับซื้อกระดาษขนาดใหญ่ ให้ราคาส่วนลดบัญชีรายเดือน',
+                price: 'ปรึกษาก่อน',
+                special: false
+            },
+            {
+                date: '2024-12-04',
+                day: '04 ธ.ค.',
+                title: 'Lumpini Glass Collection 🎆',
+                location: 'สวนลุมพินี, พระราม 4, บางรัก',
+                time: '10:00 - 19:00',
+                wasteTypes: ['แก้ว'],
+                description: 'กิจกรรมพิเศษ: แก้วนำกลับได้ x3 เท่า + ชา ฟรี',
+                price: 'ราคา x3 เท่า!',
+                special: true
+            }
+        ];
+
+        // Render events
+        function renderEvents(filteredEvents = events) {
+            const grid = document.getElementById('eventsGrid');
+            grid.innerHTML = '';
+
+            if (filteredEvents.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #848e9c;">ไม่พบข้อมูล Booth สำหรับวันที่เลือก</div>';
+                return;
+            }
+
+            filteredEvents.forEach(event => {
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                
+                const specialBadge = event.special ? '<div class="special-badge">🔥 ราคาพิเศษ</div>' : '';
+                
+                card.innerHTML = `
+                    <div class="event-header">
+                        <div class="event-date">${event.date}</div>
+                        <div class="event-day">${event.day}</div>
+                    </div>
+                    <div class="event-body">
+                        ${specialBadge}
+                        <div class="event-title">${event.title}</div>
+                        
+                        <div class="event-location">
+                            <span class="event-location-icon">📍</span>
+                            <span>${event.location}</span>
+                        </div>
+                        
+                        <div class="event-time">
+                            <span class="event-time-icon">🕒</span>
+                            <span>${event.time}</span>
+                        </div>
+                        
+                        <div class="waste-types">
+                            <div class="waste-types-label">ประเภทขยะ:</div>
+                            <div class="waste-tags">
+                                ${event.wasteTypes.map(type => {
+                                    let className = '';
+                                    if (type.includes('โลหะ') || type.includes('แดง') || type.includes('สแตนเลส') || type.includes('อลูมิเนียม')) {
+                                        className = 'metal';
+                                    } else if (type.includes('พลาสติก') || type.includes('ขวด')) {
+                                        className = 'plastic';
+                                    } else if (type.includes('แก้ว')) {
+                                        className = 'glass';
+                                    }
+                                    return `<div class="waste-tag ${className}">${type}</div>`;
+                                }).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="event-description">${event.description}</div>
+                        
+                        <div class="event-footer">
+                            <div class="event-price">${event.price}</div>
+                            <button class="event-btn">ไปตรวจสอบ</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter events
+        function filterEvents() {
+            const dateFilter = document.getElementById('dateFilter').value;
+            const locationFilter = document.getElementById('locationFilter').value.toLowerCase();
+
+            return events.filter(event => {
+                const matchDate = !dateFilter || event.date === dateFilter;
+                const matchLocation = !locationFilter || event.location.toLowerCase().includes(locationFilter);
+                return matchDate && matchLocation;
+            });
+        }
+
+        // Event listeners
+        document.getElementById('dateFilter').addEventListener('change', () => {
+            renderEvents(filterEvents());
+        });
+
+        document.getElementById('locationFilter').addEventListener('input', () => {
+            renderEvents(filterEvents());
+        });
+
+        // Set today's date as default
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('dateFilter').value = today;
+
+        // Initial render
+        renderEvents(filterEvents());
+    </script>
+</body>
+</html>

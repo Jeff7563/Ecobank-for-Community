@@ -1,0 +1,326 @@
+/* --- 1. Variables & Reset --- */
+:root {
+    --primary-color: #b2ff59;       /* เขียวสว่าง ECO */
+    --primary-hover: #98f330;
+    --bg-dark: #0b0e11;             /* พื้นหลังดำ */
+    --bg-card: #1e2329;             /* พื้นหลังการ์ด */
+    --text-main: #eaecef;           /* ตัวหนังสือขาว */
+    --text-muted: #848e9c;          /* ตัวหนังสือเทา */
+    --success: #0ecb81;             /* สีเขียวหุ้นขึ้น */
+    --danger: #f6465d;              /* สีแดงหุ้นตก */
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+a { text-decoration: none; color: inherit; transition: 0.3s; }
+ul { list-style: none; }
+
+/* --- 2. Animations --- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.animate-fade-in { animation: fadeIn 0.8s ease-out; }
+.animate-slide-up { animation: slideUp 0.6s ease-out forwards; }
+
+/* --- 3. Header & Nav --- */
+.header {
+    background: #181a20;
+    padding: 15px 30px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid #2b3139;
+    position: sticky; top: 0; z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+.header-left { display: flex; align-items: center; gap: 40px; }
+.header-right { display: flex; align-items: center; gap: 15px; }
+
+.logo { color: var(--primary-color); font-size: 24px; font-weight: 800; cursor: pointer; }
+.logo:hover { transform: scale(1.05); }
+
+.nav { display: flex; gap: 20px; }
+.nav-link { color: var(--text-main); font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 4px; }
+.nav-link:hover, .nav-link.active { color: var(--primary-color); background: rgba(178, 255, 89, 0.1); }
+
+/* --- 4. Container & Layout --- */
+.container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+.page-title { font-size: 32px; font-weight: 700; margin-bottom: 10px; color: var(--text-main); }
+.page-subtitle { color: var(--text-muted); margin-bottom: 40px; }
+
+/* --- 5. Cards & Grid --- */
+.grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.card {
+    background: var(--bg-card); border-radius: 12px; padding: 24px;
+    border: 1px solid transparent; transition: all 0.3s ease;
+    cursor: pointer; position: relative; overflow: hidden;
+}
+.card:hover { border-color: var(--primary-color); transform: translateY(-5px); box-shadow: 0 8px 30px rgba(178, 255, 89, 0.15); }
+.card-icon { font-size: 40px; margin-bottom: 16px; }
+.card-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.card-value { font-size: 24px; font-weight: 700; color: var(--primary-color); }
+
+/* --- 6. Buttons --- */
+.btn {
+    padding: 10px 24px; border-radius: 8px; border: none;
+    font-weight: 600; cursor: pointer; transition: 0.3s;
+    font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-primary { background: var(--primary-color); color: #000; }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(178, 255, 89, 0.3); }
+.btn-outline { background: transparent; border: 1px solid #2b3139; color: var(--text-main); }
+.btn-outline:hover { border-color: var(--primary-color); color: var(--primary-color); }
+.btn-login { background: transparent; border: 1px solid #2b3139; color: var(--text-main); }
+.btn-login:hover { border-color: var(--primary-color); color: var(--primary-color); }
+.btn-register { background: var(--primary-color); color: #000; }
+.btn-register:hover { background: var(--primary-hover); }
+.btn-danger { background: rgba(246, 70, 93, 0.1); color: var(--danger); }
+.btn-danger:hover { background: var(--danger); color: white; }
+
+/* --- 7. Table --- */
+.table-container { background: var(--bg-card); border-radius: 12px; overflow: hidden; margin-top: 20px; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 16px 24px; color: var(--text-muted); font-size: 12px; text-transform: uppercase; border-bottom: 1px solid #2b3139; }
+td { padding: 16px 24px; border-bottom: 1px solid #2b3139; font-size: 14px; }
+tr:hover { background: #2b3139; }
+.text-up { color: var(--success); }
+.text-down { color: var(--danger); }
+
+/* --- 8. Forms & Inputs --- */
+.form-group { margin-bottom: 20px; }
+.form-label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 14px; }
+.form-control {
+    width: 100%; padding: 12px 16px; background: #0b0e11;
+    border: 1px solid #2b3139; border-radius: 8px;
+    color: var(--text-main); font-size: 14px; transition: 0.3s;
+}
+.form-control:focus { outline: none; border-color: var(--primary-color); }
+
+.search-container { display: flex; gap: 10px; margin-bottom: 30px; background: var(--bg-card); padding: 10px; border-radius: 12px; flex-wrap: wrap; }
+.search-input { flex: 1; background: transparent; border: none; color: var(--text-main); padding: 8px; font-size: 16px; }
+.search-input:focus { outline: none; }
+.filter-pills { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+.filter-btn { padding: 6px 16px; border-radius: 20px; background: #2b3139; color: var(--text-muted); font-size: 13px; cursor: pointer; border: 1px solid transparent; white-space: nowrap; transition: 0.3s; }
+.filter-btn:hover, .filter-btn.active { background: rgba(178, 255, 89, 0.1); color: var(--primary-color); border-color: var(--primary-color); }
+
+/* --- 9. Global Popup System --- */
+.popup-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+    z-index: 10000; display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: all 0.3s ease;
+}
+.popup-overlay.show { opacity: 1; visibility: visible; }
+.popup-box {
+    background: #1e2329; width: 90%; max-width: 400px; padding: 30px;
+    border-radius: 16px; border: 1px solid #2b3139; text-align: center;
+    transform: scale(0.8); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.popup-overlay.show .popup-box { transform: scale(1); }
+.popup-icon { font-size: 48px; margin-bottom: 15px; }
+.popup-title { font-size: 20px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
+.popup-message { font-size: 14px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5; }
+.popup-buttons { display: flex; gap: 10px; justify-content: center; }
+.popup-btn {
+    flex: 1; padding: 12px; border-radius: 8px; border: none;
+    font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 14px;
+}
+.popup-btn-primary { background: var(--primary-color); color: #000; }
+.popup-btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
+.popup-btn-danger { background: var(--danger); color: #fff; }
+.popup-btn-danger:hover { background: #d63031; transform: translateY(-2px); }
+.popup-btn-secondary { background: transparent; border: 1px solid #2b3139; color: var(--text-muted); }
+.popup-btn-secondary:hover { border-color: var(--text-main); color: var(--text-main); }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .header { padding: 10px 15px; flex-direction: column; gap: 15px; }
+    .header-left, .header-right { width: 100%; justify-content: space-between; }
+    .nav { display: none; }
+    .grid-cards { grid-template-columns: 1fr; }
+}
+
+
+/* --- 11. New Animated Auth Design (เพิ่มต่อท้ายไฟล์) --- */
+.auth-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #0b0e11;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background Effects (วงกลมเรืองแสงจางๆ ด้านหลัง) */
+.auth-body::before {
+    content: '';
+    position: absolute;
+    top: -10%; left: -10%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(178,255,89,0.1) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+.auth-body::after {
+    content: '';
+    position: absolute;
+    bottom: -10%; right: -10%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(14,203,129,0.08) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.auth-card {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    background: rgba(30, 35, 41, 0.6); /* โปร่งแสงนิดๆ */
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 50px 40px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    z-index: 1;
+    overflow: hidden;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.auth-header h2 {
+    font-size: 28px;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+/* Animated Input Field (Floating Label) */
+.input-box {
+    position: relative;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #2b3139;
+}
+
+.input-box input {
+    width: 100%;
+    height: 50px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #fff;
+    padding: 0 5px;
+}
+
+.input-box label {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    color: #848e9c;
+    font-size: 16px;
+    pointer-events: none;
+    transition: .5s;
+}
+
+/* เมื่อ Input ถูก Focus หรือมีข้อความ -> เลื่อน Label ขึ้น */
+.input-box input:focus ~ label,
+.input-box input:valid ~ label {
+    top: -5px;
+    color: var(--primary-color);
+    font-size: 12px;
+}
+
+.input-box input:focus ~ .input-line,
+.input-box input:valid ~ .input-line {
+    width: 100%;
+}
+
+/* เส้นขีดด้านล่างวิ่งตอน Focus */
+.input-line {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: 0.5s;
+}
+
+/* Toggle Password Icon */
+.toggle-pwd {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #848e9c;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 18px;
+    transition: 0.3s;
+}
+.toggle-pwd:hover { color: #fff; }
+
+/* Buttons & Links */
+.auth-btn {
+    width: 100%;
+    height: 50px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    transition: 0.3s;
+    margin-top: 10px;
+    box-shadow: 0 0 10px rgba(178,255,89,0.3);
+}
+
+.auth-btn:hover {
+    background: #98f330;
+    box-shadow: 0 0 20px rgba(178,255,89,0.6);
+    transform: scale(1.02);
+}
+
+.auth-link {
+    font-size: 14px;
+    color: #848e9c;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.auth-link a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+.auth-link a:hover { text-decoration: underline; }
+
+.back-home {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: #848e9c;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 10;
+}
+.back-home:hover { color: #fff; }

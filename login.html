@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - ECOBANK</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-body">
+
+    <a href="index.html" class="back-home">← กลับหน้าหลัก</a>
+
+    <div class="auth-card animate-slide-up">
+        <div class="auth-header">
+            <div style="font-size: 40px; margin-bottom: 10px;">🌿</div>
+            <h2>Welcome Back</h2>
+            <p style="color: #848e9c; font-size: 14px;">เข้าสู่ระบบเพื่อจัดการบัญชีของคุณ</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="input-box">
+                <input type="email" id="email" required>
+                <label>อีเมล</label>
+                <div class="input-line"></div>
+            </div>
+
+            <div class="input-box">
+                <input type="password" id="password" required>
+                <label>รหัสผ่าน</label>
+                <div class="input-line"></div>
+                <button type="button" class="toggle-pwd" id="togglePassword">👁️</button>
+            </div>
+
+            <button type="submit" class="auth-btn">เข้าสู่ระบบ</button>
+
+            <div class="auth-link">
+                ยังไม่มีบัญชี? <a href="register.html">สมัครสมาชิกใหม่</a>
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from "./js/firebase-config.js";
+        import { showPopup } from "./js/firebase-service.js";
+
+        // Toggle Password
+        const pwdInput = document.getElementById('password');
+        const toggleBtn = document.getElementById('togglePassword');
+        toggleBtn.addEventListener('click', () => {
+            const type = pwdInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            pwdInput.setAttribute('type', type);
+            toggleBtn.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+
+        // Login Logic
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = pwdInput.value;
+            const btn = e.target.querySelector('button[type="submit"]');
+
+            try {
+                btn.textContent = "Checking...";
+                btn.disabled = true;
+                btn.style.opacity = "0.7";
+
+                await signInWithEmailAndPassword(auth, email, password);
+                
+                await showPopup("เข้าสู่ระบบสำเร็จ", "ยินดีต้อนรับกลับสู่ ECOBANK!", "success");
+                window.location.href = "index.html";
+            } catch (error) {
+                console.error(error);
+                let msg = "อีเมลหรือรหัสผ่านไม่ถูกต้อง";
+                if(error.code === 'auth/user-not-found') msg = "ไม่พบผู้ใช้งานนี้";
+                if(error.code === 'auth/wrong-password') msg = "รหัสผ่านผิด";
+                
+                showPopup("เข้าสู่ระบบไม่สำเร็จ", msg, "error");
+                btn.textContent = "เข้าสู่ระบบ";
+                btn.disabled = false;
+                btn.style.opacity = "1";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ผู้ดูแลระบบ - ECOBANK</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* คง CSS เดิมไว้ทั้งหมด */
+        .admin-badge { background: var(--primary-color); color: #000; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-left: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .stat-card { background: linear-gradient(145deg, #1e2329, #161a1e); border: 1px solid #2b3139; border-radius: 16px; padding: 25px; display: flex; flex-direction: column; position: relative; overflow: hidden; transition: transform 0.3s; }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary-color); }
+        .stat-card::after { content: ''; position: absolute; top: 0; right: 0; width: 80px; height: 80px; background: radial-gradient(circle, rgba(178,255,89,0.1) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; }
+        .stat-icon { font-size: 32px; margin-bottom: 10px; }
+        .stat-label { font-size: 14px; color: #848e9c; }
+        .stat-value { font-size: 28px; font-weight: 700; color: #fff; margin-top: 5px; }
+        .stat-unit { font-size: 14px; font-weight: 400; color: var(--primary-color); margin-left: 5px; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .dashboard-card { background: var(--bg-card); border: 1px solid #2b3139; border-radius: 16px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; overflow: hidden; }
+        .dashboard-card:hover { border-color: var(--primary-color); transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        .card-icon-large { font-size: 50px; margin-bottom: 20px; display: inline-block; }
+        .action-btn { margin-top: 20px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--primary-color); background: transparent; color: var(--primary-color); font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .dashboard-card:hover .action-btn { background: var(--primary-color); color: #000; }
+        
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+        .modal.show { display: flex; opacity: 1; }
+        .modal-content { background: #1e2329; padding: 30px; border-radius: 16px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; border: 1px solid #2b3139; position: relative; transform: scale(0.9); transition: transform 0.3s; }
+        .modal.show .modal-content { transform: scale(1); }
+        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 24px; color: #848e9c; cursor: pointer; }
+        .close-modal:hover { color: #fff; }
+        
+        .admin-list-item { background: #0b0e11; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2b3139; }
+        .admin-actions { display: flex; gap: 5px; }
+        .admin-actions button { border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        
+        .btn-edit { background: #2b3139; color: #ffeb3b; }
+        .btn-edit:hover { background: #ffeb3b; color: #000; }
+        .btn-del { background: #2b3139; color: #f6465d; }
+        .btn-del:hover { background: #f6465d; color: #fff; }
+
+        .status-badge { font-size: 11px; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 5px; }
+        .st-open { color: #b2ff59; border: 1px solid #b2ff59; background: rgba(178, 255, 89, 0.1); }
+        .st-closed { color: #f6465d; border: 1px solid #f6465d; background: rgba(246, 70, 93, 0.1); }
+
+        /* ✅ CSS สำหรับ Checkbox Grid เลือกขยะ */
+        .trash-select-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 5px;
+            padding: 10px;
+            background: #0b0e11;
+            border-radius: 8px;
+            border: 1px solid #2b3139;
+        }
+        .trash-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #ccc;
+            cursor: pointer;
+        }
+        .trash-checkbox-item input { accent-color: var(--primary-color); width: 16px; height: 16px; cursor: pointer; }
+
+        /* POS Styles */
+        .pos-section { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #2b3139; }
+        .pos-user-card { background: rgba(178, 255, 89, 0.1); border: 1px solid var(--primary-color); padding: 15px; border-radius: 8px; color: var(--primary-color); display: none; align-items: center; gap: 10px; }
+        .pos-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .pos-table th { text-align: left; color: #848e9c; padding: 10px; border-bottom: 1px solid #2b3139; }
+        .pos-table td { padding: 10px; border-bottom: 1px solid #2b3139; }
+        .pos-total { text-align: right; font-size: 24px; font-weight: 700; color: var(--primary-color); margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left"><div class="logo">🌿 ECOBANK <span class="admin-badge">ADMIN</span></div></div>
+        <div class="header-right"><button id="logoutBtn" class="btn btn-danger">ออกจากระบบ</button></div>
+    </header>
+
+    <main class="container animate-fade-in">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <div class="page-title">⚙️ แผงควบคุมระบบ</div>
+                <p class="page-subtitle" style="margin-bottom:0;">ภาพรวมสถิติและการจัดการระบบธนาคารขยะ</p>
+            </div>
+            
+            <select id="communityFilter" class="form-control" style="width:auto; min-width: 200px; background: #1e2329;">
+                <option value="all">🌐 ทุกชุมชน (ภาพรวม)</option>
+                <option value="muang_sakon_nakhon">📍 ชุมชนเมืองสกลนคร</option>
+                <option value="banthala">📍 ชุมชนบ้านท่าแร่</option>
+                <option value="kokpar_sil">📍 ชุมชนกกปลาซิว</option>
+            </select>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">♻️</div>
+                <div class="stat-label">ขยะรีไซเคิลสะสม</div>
+                <div class="stat-value"><span id="statWeight">0</span><span class="stat-unit">kg</span></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🪙</div>
+                <div class="stat-label">แต้มหมุนเวียนในชุมชน</div>
+                <div class="stat-value"><span id="statPoints">0</span><span class="stat-unit">แต้ม</span></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-label">สมาชิกทั้งหมด</div>
+                <div class="stat-value"><span id="statMembers">0</span><span class="stat-unit">คน</span></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-label">ยอดเงินรับซื้อรวม</div>
+                <div class="stat-value"><span id="statMoney">0</span><span class="stat-unit">฿</span></div>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 20px; color: var(--text-muted); border-bottom: 1px solid #2b3139; padding-bottom: 10px;">เมนูจัดการ</h3>
+        <div class="dashboard-grid">
+            <div class="dashboard-card" onclick="openPosModal()" style="border-color: var(--primary-color);">
+                <div class="card-icon-large">⚖️</div>
+                <div class="card-title">บันทึกการรับซื้อ (POS)</div>
+                <p style="color:var(--text-muted); font-size:14px;">ทำรายการรับซื้อและคำนวณเงิน</p>
+                <button class="action-btn" style="background: var(--primary-color); color: #000;">เริ่มทำรายการ</button>
+            </div>
+            <div class="dashboard-card" onclick="openTrashModal()">
+                <div class="card-icon-large">📦</div>
+                <div class="card-title">จัดการประเภทขยะ</div>
+                <p style="color:var(--text-muted); font-size:14px;">แก้ไขราคากลางและข้อมูลขยะ</p>
+                <button class="action-btn">เข้าจัดการ</button>
+            </div>
+            <div class="dashboard-card" onclick="openEventModal()">
+                <div class="card-icon-large">🏪</div>
+                <div class="card-title">จัดการจุดรับซื้อ</div>
+                <p style="color:var(--text-muted); font-size:14px;">ตั้งค่าสถานที่, เวลา และประเภทขยะ</p>
+                <button class="action-btn">เข้าจัดการ</button>
+            </div>
+            <div class="dashboard-card" onclick="openRewardModal()">
+                <div class="card-icon-large">🎁</div>
+                <div class="card-title">จัดการของรางวัล</div>
+                <p style="color:var(--text-muted); font-size:14px;">เพิ่ม/ลด รายการของรางวัล</p>
+                <button class="action-btn">เข้าจัดการ</button>
+            </div>
+            <div class="dashboard-card" onclick="runFixData()">
+                <div class="card-icon-large">🔧</div>
+                <div class="card-title">ซ่อมข้อมูลเก่า</div>
+                <p style="color:var(--text-muted); font-size:14px;">เติมข้อมูลชุมชนให้สมาชิกเก่า</p>
+                <button class="action-btn">เริ่มซ่อมแซม</button>
+            </div>
+            <div class="dashboard-card" onclick="seedData()">
+                <div class="card-icon-large">🔄</div>
+                <div class="card-title">รีเซ็ตข้อมูลระบบ</div>
+                <p style="color:var(--text-muted); font-size:14px;">ล้างข้อมูลเก่าและลงข้อมูลตัวอย่าง</p>
+                <button class="action-btn" style="border-color:var(--danger); color:var(--danger);">รีเซ็ตทันที</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="posModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closePosModal()">&times;</span>
+            <h2 style="margin-bottom:20px;">⚖️ รับซื้อขยะ / บันทึกรายการ</h2>
+            <div class="pos-section">
+                <label class="form-label">ค้นหาสมาชิก (เบอร์โทรศัพท์)</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="tel" id="searchPhone" class="form-control" placeholder="กรอกเบอร์โทรลูกค้า...">
+                    <button onclick="searchUser()" class="btn btn-primary">ค้นหา</button>
+                </div>
+                <div id="posUserResult" class="pos-user-card" style="margin-top: 10px;">
+                    <span style="font-size: 24px;">👤</span>
+                    <div><div style="font-weight: bold;" id="posUserName"></div><div style="font-size: 12px; color: #000;" id="posUserPhone"></div></div>
+                </div>
+                <div style="margin-top: 10px;"><label style="color: #848e9c; font-size: 13px;"><input type="checkbox" id="guestCheckbox" onchange="toggleGuestMode()"> ไม่ได้เป็นสมาชิก (Walk-in)</label></div>
+            </div>
+            <div class="pos-section">
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; align-items: end;">
+                    <div class="form-group" style="margin-bottom:0;"><label class="form-label">ประเภทขยะ</label><select id="posTrashType" class="form-control"></select></div>
+                    <div class="form-group" style="margin-bottom:0;"><label class="form-label">น้ำหนัก (kg)</label><input type="number" id="posWeight" class="form-control" step="0.1"></div>
+                    <div class="form-group" style="margin-bottom:0;"><label class="form-label">ราคา/หน่วย</label><input type="text" id="posPricePerUnit" class="form-control" disabled></div>
+                    <button onclick="addPosItem()" class="btn btn-primary" style="height: 42px;">เพิ่ม</button>
+                </div>
+                <table class="pos-table">
+                    <thead><tr><th>รายการ</th><th>น้ำหนัก</th><th>ราคา</th><th>ลบ</th></tr></thead>
+                    <tbody id="posItemsList"></tbody>
+                </table>
+                <div class="pos-total">รวมสุทธิ: <span id="posTotalAmount">0.00</span> ฿</div>
+            </div>
+            <button onclick="submitTransaction()" class="btn btn-primary" style="width: 100%; font-size: 18px; padding: 15px;">✅ ยืนยันการรับซื้อ</button>
+        </div>
+    </div>
+
+    <div class="modal" id="trashModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeTrashModal()">&times;</span>
+            <h2 style="margin-bottom:20px;">📦 รายการขยะ</h2>
+            <button onclick="toggleTrashForm()" class="btn btn-primary" style="width:100%; margin-bottom:20px;">+ เพิ่มประเภทขยะ</button>
+            <div id="trashForm" style="display:none; background:#2b3139; padding:20px; border-radius:12px; margin-bottom:20px;">
+                <h3 style="margin-bottom:15px; color:#fff;" id="trashFormTitle">เพิ่มประเภทขยะใหม่</h3>
+                <form onsubmit="saveTrash(event)">
+                    <input type="hidden" id="trashId">
+                    <div class="form-group"><label class="form-label">ชื่อ</label><input id="trashName" class="form-control" required></div>
+                    <div class="form-group"><label class="form-label">หมวดหมู่</label><select id="trashCategory" class="form-control"><option>พลาสติก</option><option>กระดาษ</option><option>โลหะ</option><option>แก้ว</option></select></div>
+                    <div class="form-group"><label class="form-label">ราคา</label><input id="trashPrice" type="number" step="0.01" class="form-control" required></div>
+                    <div class="form-group"><label class="form-label">ไอคอน</label><input id="trashIcon" class="form-control" value="📦"></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%" id="trashSubmitBtn">บันทึก</button>
+                    <button type="button" class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="cancelTrashEdit()">ยกเลิก</button>
+                </form>
+            </div>
+            <div id="trashList" style="max-height:400px; overflow-y:auto;"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="rewardModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeRewardModal()">&times;</span>
+            <h2 style="margin-bottom:20px;">🎁 ของรางวัล</h2>
+            <button onclick="toggleRewardForm()" class="btn btn-primary" style="width:100%; margin-bottom:20px;">+ เพิ่มของรางวัล</button>
+            <div id="rewardForm" style="display:none; background:#2b3139; padding:20px; border-radius:12px; margin-bottom:20px;">
+                <h3 style="margin-bottom:15px; color:#fff;" id="rewardFormTitle">เพิ่มของรางวัลใหม่</h3>
+                <form onsubmit="saveReward(event)">
+                    <input type="hidden" id="rewardId">
+                    <div class="form-group"><label class="form-label">ชื่อของรางวัล</label><input id="rewardName" class="form-control" required></div>
+                    <div class="form-group"><label class="form-label">รายละเอียด</label><input id="rewardDesc" class="form-control" required></div>
+                    <div class="form-group"><label class="form-label">ใช้แต้มแลก (Points)</label><input id="rewardCost" type="number" class="form-control" required></div>
+                    <div class="form-group"><label class="form-label">จำนวนสต็อก</label><input id="rewardStock" type="number" class="form-control" required></div>
+                    <div class="form-group"><label class="form-label">ไอคอน</label><input id="rewardIcon" class="form-control" value="🎁"></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%" id="rewardSubmitBtn">บันทึก</button>
+                    <button type="button" class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="cancelRewardEdit()">ยกเลิก</button>
+                </form>
+            </div>
+            <div id="rewardList" style="max-height:400px; overflow-y:auto;"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeEventModal()">&times;</span>
+            <h2 style="margin-bottom:20px;">🏪 จุดรับซื้อ</h2>
+            <button onclick="toggleEventForm()" class="btn btn-primary" style="width:100%; margin-bottom:20px;">+ เพิ่มจุดรับซื้อ</button>
+            <div id="eventForm" style="display:none; background:#2b3139; padding:20px; border-radius:12px; margin-bottom:20px;">
+                <h3 style="margin-bottom:15px; color:#fff;" id="eventFormTitle">เพิ่มจุดรับซื้อใหม่</h3>
+                <form onsubmit="saveEvent(event)">
+                    <input type="hidden" id="eventId">
+                    
+                    <div class="form-group"><label class="form-label">ชื่อ</label><input id="eventName" class="form-control" required></div>
+                    <div class="form-group"><label class="form-label">ที่อยู่</label><input id="eventAddress" class="form-control" required></div>
+                    <div class="form-group"><label class="form-label">เขต</label><input id="eventDistrict" class="form-control" required></div>
+                    <div class="form-group"><label class="form-label">📅 วันที่เปิดรับ</label><input type="date" id="eventDate" class="form-control"></div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">สถานะ (Status)</label>
+                        <select id="eventStatus" class="form-control">
+                            <option value="open">🟢 เปิดรับซื้อ (Open)</option>
+                            <option value="closed">🔴 ปิดรับซื้อ (Closed)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">♻️ ประเภทขยะที่รับซื้อ (เลือกได้หลายข้อ)</label>
+                        <div id="trashTypeSelection" class="trash-select-grid">
+                            <div style="color:#666;">กำลังโหลดรายการขยะ...</div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:20px;" id="eventSubmitBtn">บันทึก</button>
+                    <button type="button" class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="cancelEventEdit()">ยกเลิก</button>
+                </form>
+            </div>
+            <div id="eventList" style="max-height:400px; overflow-y:auto;"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { 
+            getTrashTypes, addTrashType, updateTrashType, deleteTrashType,
+            getEvents, addEvent, updateEvent, deleteEvent, 
+            getRewards, addReward, updateReward, deleteReward,
+            seedInitialData, showPopup, showConfirm,
+            findUserByPhone, adminRecordTransaction, getCommunityStats, fixOldData
+        } from "./js/firebase-service.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from "./js/firebase-config.js";
+
+        // Global Vars
+        let currentPosUser = null;
+        let currentPosItems = [];
+        let allTrashTypes = [];
+        
+        onAuthStateChanged(auth, (user) => { if (!user) window.location.href = 'login.html'; });
+        document.getElementById('logoutBtn').addEventListener('click', async () => { if(await showConfirm("ยืนยัน","ออกจากระบบ?")) { await signOut(auth); window.location.href='login.html'; } });
+
+        async function loadStats() {
+            const selectedCommunity = document.getElementById('communityFilter').value;
+            document.getElementById('statWeight').innerText = "...";
+            const stats = await getCommunityStats(selectedCommunity);
+            animateValue("statWeight", 0, stats.weight, 1500);
+            animateValue("statPoints", 0, stats.points, 1500);
+            animateValue("statMembers", 0, stats.members, 1000);
+            animateValue("statMoney", 0, stats.money, 1500);
+        }
+        loadStats();
+        document.getElementById('communityFilter').addEventListener('change', loadStats);
+
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id); if(!obj) return;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = parseFloat(progress * (end - start) + start).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2});
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // --- POS Logic ---
+        window.openPosModal = async () => {
+            document.getElementById('posModal').classList.add('show');
+            currentPosUser = null; currentPosItems = [];
+            document.getElementById('searchPhone').value = '';
+            document.getElementById('posUserResult').style.display = 'none';
+            document.getElementById('guestCheckbox').checked = false;
+            document.getElementById('searchPhone').disabled = false;
+            renderPosItems();
+            allTrashTypes = await getTrashTypes();
+            const select = document.getElementById('posTrashType');
+            select.innerHTML = '<option value="">-- เลือก --</option>';
+            allTrashTypes.forEach(t => select.innerHTML += `<option value="${t.id}" data-price="${t.price_per_unit}">${t.name}</option>`);
+        };
+        window.closePosModal = () => document.getElementById('posModal').classList.remove('show');
+        document.getElementById('posTrashType').addEventListener('change', (e) => {
+            const price = e.target.options[e.target.selectedIndex].dataset.price;
+            document.getElementById('posPricePerUnit').value = price || '';
+        });
+        window.searchUser = async () => {
+            const phone = document.getElementById('searchPhone').value.trim();
+            if(!phone) return showPopup("แจ้งเตือน","กรุณากรอกเบอร์","error");
+            try {
+                const user = await findUserByPhone(phone);
+                if(user) {
+                    currentPosUser = user;
+                    document.getElementById('posUserName').textContent = user.username;
+                    document.getElementById('posUserPhone').textContent = user.phone;
+                    document.getElementById('posUserResult').style.display = 'flex';
+                    document.getElementById('guestCheckbox').checked = false;
+                } else showPopup("ไม่พบ","ไม่พบสมาชิก","error");
+            } catch(e) { console.error(e); }
+        };
+        window.toggleGuestMode = () => {
+            const isGuest = document.getElementById('guestCheckbox').checked;
+            if(isGuest) {
+                currentPosUser = { id: null, username: 'Guest', phone: '-' };
+                document.getElementById('searchPhone').disabled = true;
+                document.getElementById('posUserResult').style.display = 'flex';
+                document.getElementById('posUserName').textContent = "Guest";
+            } else {
+                currentPosUser = null;
+                document.getElementById('searchPhone').disabled = false;
+                document.getElementById('posUserResult').style.display = 'none';
+            }
+        };
+        window.addPosItem = () => {
+            const select = document.getElementById('posTrashType');
+            const trashId = select.value;
+            const trashName = select.options[select.selectedIndex].text;
+            const weight = parseFloat(document.getElementById('posWeight').value);
+            const price = parseFloat(document.getElementById('posPricePerUnit').value);
+            if(!trashId || !weight) return;
+            currentPosItems.push({ id: trashId, name: trashName, weight, price, subtotal: weight*price });
+            document.getElementById('posWeight').value = '';
+            renderPosItems();
+        };
+        function renderPosItems() {
+            const tbody = document.getElementById('posItemsList');
+            let total = 0;
+            tbody.innerHTML = currentPosItems.map((item, idx) => {
+                total += item.subtotal;
+                return `<tr><td>${item.name}</td><td>${item.weight}</td><td>${item.subtotal.toFixed(2)}</td><td><button onclick="removePosItem(${idx})" style="color:red; background:none; border:none;">x</button></td></tr>`;
+            }).join('');
+            document.getElementById('posTotalAmount').textContent = total.toFixed(2);
+        }
+        window.removePosItem = (idx) => { currentPosItems.splice(idx, 1); renderPosItems(); };
+        window.submitTransaction = async () => {
+            if(!currentPosUser || currentPosItems.length===0) return showPopup("แจ้งเตือน","ข้อมูลไม่ครบ","error");
+            const total = parseFloat(document.getElementById('posTotalAmount').textContent);
+            if(await showConfirm("ยืนยัน", `ยอดรวม ${total} บาท?`)) {
+                await adminRecordTransaction(currentPosUser, currentPosItems, total);
+                await showPopup("สำเร็จ","บันทึกแล้ว","success");
+                closePosModal();
+                loadStats();
+            }
+        };
+
+        // --- TRASH MANAGEMENT ---
+        window.openTrashModal = async () => { document.getElementById('trashModal').classList.add('show'); loadTrashList(); cancelTrashEdit(); };
+        window.closeTrashModal = () => document.getElementById('trashModal').classList.remove('show');
+        window.toggleTrashForm = () => { 
+            const form = document.getElementById('trashForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            if(form.style.display === 'block' && !document.getElementById('trashId').value) {
+                document.getElementById('trashFormTitle').innerText = 'เพิ่มประเภทขยะใหม่';
+                document.getElementById('trashSubmitBtn').innerText = 'บันทึก';
+            }
+        };
+        async function loadTrashList() {
+            const l = document.getElementById('trashList'); const i = await getTrashTypes(); window._allTrash = i;
+            l.innerHTML = i.map(x => `
+                <div class="admin-list-item">
+                    <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:20px;">${x.icon||'📦'}</span><div><div>${x.name}</div><div style="font-size:12px; color:#888;">${x.price_per_unit} ฿/kg</div></div></div>
+                    <div class="admin-actions"><button class="btn-edit" onclick="editTrash('${x.id}')">✏️</button><button class="btn-del" onclick="delTrash('${x.id}')">🗑️</button></div>
+                </div>`).join('');
+        }
+        window.editTrash = (id) => {
+            const t = window._allTrash.find(x => x.id === id); if(!t) return;
+            document.getElementById('trashId').value = t.id; document.getElementById('trashName').value = t.name;
+            document.getElementById('trashCategory').value = t.category; document.getElementById('trashPrice').value = t.price_per_unit;
+            document.getElementById('trashIcon').value = t.icon;
+            document.getElementById('trashFormTitle').innerText = 'แก้ไขประเภทขยะ'; document.getElementById('trashSubmitBtn').innerText = 'บันทึกการแก้ไข';
+            document.getElementById('trashForm').style.display = 'block';
+        };
+        window.cancelTrashEdit = () => {
+            document.getElementById('trashId').value = ''; document.getElementById('trashName').value = '';
+            document.getElementById('trashPrice').value = ''; document.getElementById('trashIcon').value = '📦';
+            document.getElementById('trashFormTitle').innerText = 'เพิ่มประเภทขยะใหม่'; document.getElementById('trashSubmitBtn').innerText = 'บันทึก';
+            document.getElementById('trashForm').style.display = 'none';
+        };
+        window.saveTrash = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('trashId').value;
+            const d = { name: document.getElementById('trashName').value, price_per_unit: document.getElementById('trashPrice').value, category: document.getElementById('trashCategory').value, icon: document.getElementById('trashIcon').value };
+            if (id) await updateTrashType(id, d); else await addTrashType(d);
+            showPopup("สำเร็จ", id ? "แก้ไขข้อมูลเรียบร้อย" : "เพิ่มข้อมูลเรียบร้อย", "success");
+            cancelTrashEdit(); loadTrashList();
+        };
+        window.delTrash = async (id) => { if(await showConfirm("ลบ?","ยืนยัน")) { await deleteTrashType(id); loadTrashList(); } };
+
+        // --- REWARD MANAGEMENT ---
+        window.openRewardModal = async () => { document.getElementById('rewardModal').classList.add('show'); loadRewardList(); cancelRewardEdit(); };
+        window.closeRewardModal = () => document.getElementById('rewardModal').classList.remove('show');
+        window.toggleRewardForm = () => {
+            const form = document.getElementById('rewardForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            if(form.style.display === 'block' && !document.getElementById('rewardId').value) {
+                document.getElementById('rewardFormTitle').innerText = 'เพิ่มของรางวัลใหม่';
+                document.getElementById('rewardSubmitBtn').innerText = 'บันทึก';
+            }
+        };
+        async function loadRewardList() {
+            const l = document.getElementById('rewardList'); const i = await getRewards(); window._allRewards = i;
+            l.innerHTML = i.map(x => `
+                <div class="admin-list-item">
+                    <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:20px;">${x.icon||'🎁'}</span><div><div>${x.name}</div><div style="font-size:12px; color:#888;">${x.cost} แต้ม | สต็อก ${x.stock}</div></div></div>
+                    <div class="admin-actions"><button class="btn-edit" onclick="editReward('${x.id}')">✏️</button><button class="btn-del" onclick="delReward('${x.id}')">🗑️</button></div>
+                </div>`).join('');
+        }
+        window.editReward = (id) => {
+            const r = window._allRewards.find(x => x.id === id); if(!r) return;
+            document.getElementById('rewardId').value = r.id; document.getElementById('rewardName').value = r.name;
+            document.getElementById('rewardDesc').value = r.desc; document.getElementById('rewardCost').value = r.cost;
+            document.getElementById('rewardStock').value = r.stock; document.getElementById('rewardIcon').value = r.icon;
+            document.getElementById('rewardFormTitle').innerText = 'แก้ไขของรางวัล'; document.getElementById('rewardSubmitBtn').innerText = 'บันทึกการแก้ไข';
+            document.getElementById('rewardForm').style.display = 'block';
+        };
+        window.cancelRewardEdit = () => {
+            document.getElementById('rewardId').value = ''; document.getElementById('rewardName').value = '';
+            document.getElementById('rewardDesc').value = ''; document.getElementById('rewardCost').value = '';
+            document.getElementById('rewardStock').value = ''; document.getElementById('rewardIcon').value = '🎁';
+            document.getElementById('rewardFormTitle').innerText = 'เพิ่มของรางวัลใหม่'; document.getElementById('rewardSubmitBtn').innerText = 'บันทึก';
+            document.getElementById('rewardForm').style.display = 'none';
+        };
+        window.saveReward = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('rewardId').value;
+            const d = { 
+                name: document.getElementById('rewardName').value, desc: document.getElementById('rewardDesc').value,
+                cost: parseInt(document.getElementById('rewardCost').value), stock: parseInt(document.getElementById('rewardStock').value),
+                icon: document.getElementById('rewardIcon').value
+            };
+            if (id) await updateReward(id, d); else await addReward(d);
+            showPopup("สำเร็จ", id ? "แก้ไขข้อมูลเรียบร้อย" : "เพิ่มข้อมูลเรียบร้อย", "success");
+            cancelRewardEdit(); loadRewardList();
+        };
+        window.delReward = async (id) => { if(await showConfirm("ลบ?","ยืนยัน")) { await deleteReward(id); loadRewardList(); } };
+
+        // --- EVENT MANAGEMENT (Updated: Select Trash Types) ---
+        window.openEventModal = async () => { 
+            document.getElementById('eventModal').classList.add('show'); 
+            await loadTrashCheckboxes(); // โหลดรายการขยะมาสร้าง Checkbox
+            loadEventList(); 
+            cancelEventEdit(); 
+        };
+        window.closeEventModal = () => document.getElementById('eventModal').classList.remove('show');
+        window.toggleEventForm = () => {
+            const form = document.getElementById('eventForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            if(form.style.display === 'block' && !document.getElementById('eventId').value) {
+                document.getElementById('eventFormTitle').innerText = 'เพิ่มจุดรับซื้อใหม่';
+                document.getElementById('eventSubmitBtn').innerText = 'บันทึก';
+            }
+        };
+
+        // ฟังก์ชันสร้าง Checkbox รายการขยะ
+        async function loadTrashCheckboxes() {
+            const trashList = await getTrashTypes();
+            allTrashTypes = trashList; // เก็บไว้ใช้เทียบ
+            const container = document.getElementById('trashTypeSelection');
+            
+            container.innerHTML = trashList.map(t => `
+                <label class="trash-checkbox-item">
+                    <input type="checkbox" value="${t.id}" name="acceptedTrash">
+                    ${t.name}
+                </label>
+            `).join('');
+        }
+
+        async function loadEventList() {
+            const l = document.getElementById('eventList'); const i = await getEvents(); window._allEvents = i;
+            l.innerHTML = i.map(x => {
+                const statusHtml = x.status === 'closed' 
+                    ? '<span class="status-badge st-closed">ปิดรับซื้อ</span>' 
+                    : '<span class="status-badge st-open">เปิดรับซื้อ</span>';
+                
+                // นับจำนวนขยะที่รับซื้อ
+                const acceptedCount = x.accepted_trash_ids ? x.accepted_trash_ids.length : 0;
+
+                return `
+                <div class="admin-list-item">
+                    <div>
+                        <div style="font-weight:bold;">${x.name}</div>
+                        <div style="font-size:12px; color:#888;">${x.district} ${x.date ? ' | 📅 ' + x.date : ''}</div>
+                        <div style="font-size:12px; color:#aaa; margin-top:2px;">♻️ รับซื้อ: ${acceptedCount} ประเภท</div>
+                        ${statusHtml}
+                    </div>
+                    <div class="admin-actions"><button class="btn-edit" onclick="editEvent('${x.id}')">✏️</button><button class="btn-del" onclick="delEvent('${x.id}')">🗑️</button></div>
+                </div>`;
+            }).join('');
+        }
+
+        window.editEvent = (id) => {
+            const e = window._allEvents.find(x => x.id === id); if(!e) return;
+            document.getElementById('eventId').value = e.id; 
+            document.getElementById('eventName').value = e.name;
+            document.getElementById('eventAddress').value = e.address; 
+            document.getElementById('eventDistrict').value = e.district;
+            document.getElementById('eventDate').value = e.date || '';
+            document.getElementById('eventStatus').value = e.status || 'open';
+
+            // ติ๊ก Checkbox ตามที่บันทึกไว้
+            const checkboxes = document.querySelectorAll('input[name="acceptedTrash"]');
+            checkboxes.forEach(cb => {
+                cb.checked = e.accepted_trash_ids && e.accepted_trash_ids.includes(cb.value);
+            });
+
+            document.getElementById('eventFormTitle').innerText = 'แก้ไขข้อมูลจุดรับซื้อ'; 
+            document.getElementById('eventSubmitBtn').innerText = 'บันทึกการแก้ไข';
+            document.getElementById('eventForm').style.display = 'block';
+        };
+
+        window.cancelEventEdit = () => {
+            document.getElementById('eventId').value = ''; 
+            document.getElementById('eventName').value = '';
+            document.getElementById('eventAddress').value = ''; 
+            document.getElementById('eventDistrict').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventStatus').value = 'open';
+            
+            // Clear Checkboxes
+            document.querySelectorAll('input[name="acceptedTrash"]').forEach(cb => cb.checked = false);
+
+            document.getElementById('eventFormTitle').innerText = 'เพิ่มจุดรับซื้อใหม่'; 
+            document.getElementById('eventSubmitBtn').innerText = 'บันทึก';
+            document.getElementById('eventForm').style.display = 'none';
+        };
+
+        window.saveEvent = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('eventId').value;
+            
+            // เก็บค่า Checkbox ที่ถูกติ๊ก
+            const checkedBoxes = document.querySelectorAll('input[name="acceptedTrash"]:checked');
+            const acceptedIds = Array.from(checkedBoxes).map(cb => cb.value);
+
+            const d = { 
+                name: document.getElementById('eventName').value, 
+                address: document.getElementById('eventAddress').value, 
+                district: document.getElementById('eventDistrict').value,
+                date: document.getElementById('eventDate').value,
+                status: document.getElementById('eventStatus').value,
+                accepted_trash_ids: acceptedIds // บันทึก ID ขยะลงไปด้วย
+            };
+
+            if (id) await updateEvent(id, d); else await addEvent(d);
+            showPopup("สำเร็จ", id ? "แก้ไขข้อมูลเรียบร้อย" : "เพิ่มข้อมูลเรียบร้อย", "success");
+            cancelEventEdit(); loadEventList();
+        };
+        window.delEvent = async (id) => { if(await showConfirm("ลบ?","ยืนยัน")) { await deleteEvent(id); loadEventList(); } };
+        
+        // Utils
+        window.seedData = async () => { if(await showConfirm("Reset?","ยืนยัน")) { await seedInitialData(); showPopup("สำเร็จ","รีเซ็ตแล้ว","success"); loadStats(); } };
+        window.runFixData = async () => { if(await showConfirm("ยืนยัน","เติมข้อมูลชุมชน?")) { const c = await fixOldData(); showPopup("สำเร็จ",`อัปเดต ${c} รายการ`,"success"); loadStats(); } };
+
+        window.removePosItem = removePosItem;
+    </script>
+</body>
+</html>

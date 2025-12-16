@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตารางรับซื้อ - ECOBANK</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* CSS การ์ด (เหมือนเดิมเป๊ะ) */
+        .schedule-card {
+            background: #1e2329; border: 1px solid #2b3139; border-radius: 12px; padding: 20px;
+            margin-bottom: 15px; transition: all 0.3s ease; cursor: pointer;
+            display: flex; flex-direction: column; position: relative; overflow: hidden;
+        }
+        .schedule-card:hover { border-color: var(--primary-color); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .card-header-row { display: flex; align-items: center; width: 100%; z-index: 2; }
+        .date-box { background: #2b3139; padding: 10px 15px; border-radius: 8px; text-align: center; margin-right: 20px; min-width: 60px; border: 1px solid #363c45; }
+        .date-day { font-size: 24px; font-weight: bold; color: #fff; line-height: 1; }
+        .date-month { font-size: 12px; color: #848e9c; margin-top: 5px; }
+        .tag { font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgba(178, 255, 89, 0.1); color: var(--primary-color); margin-right: 5px; display: inline-block; margin-top: 5px; }
+        
+        .card-details {
+            max-height: 0; opacity: 0; overflow: hidden; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-top: 0; background: #15181d; border-radius: 8px;
+        }
+        .schedule-card:hover .card-details { max-height: 500px; opacity: 1; margin-top: 20px; padding: 20px; border-top: 1px solid #2b3139; }
+        
+        .detail-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .detail-table th { color: #848e9c; text-align: left; padding: 10px; border-bottom: 1px solid #2b3139; font-weight: 600; font-size: 12px; }
+        .detail-table td { color: #eaecef; text-align: left; padding: 10px; border-bottom: 1px solid #23262f; font-size: 13px; }
+        .detail-table tr:last-child td { border-bottom: none; }
+        
+        .expand-hint { font-size: 11px; color: #555; margin-top: 5px; transition: 0.3s; cursor: pointer; }
+        .schedule-card:hover .expand-hint { opacity: 0; }
+        
+        .st-open { color: #b2ff59; font-weight: bold; font-size: 14px; }
+        .st-closed { color: #f6465d; font-weight: bold; font-size: 14px; }
+        .st-wait { color: #f0b90b; font-weight: bold; font-size: 14px; }
+
+        /* User Dropdown */
+        .user-dropdown { position: relative; display: inline-block; }
+        .user-btn { background: #1e2329; color: #eaecef; padding: 8px 16px; border-radius: 20px; border: 1px solid #2b3139; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; font-size: 14px; }
+        .user-btn:hover { border-color: var(--primary-color); background: #2b3139; }
+        .user-avatar-xs { width: 24px; height: 24px; background: var(--primary-color); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .dropdown-content { display: none; position: absolute; right: 0; top: 100%; margin-top: 10px; background-color: #1e2329; min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border-radius: 12px; border: 1px solid #2b3139; z-index: 1000; overflow: visible; }
+        .dropdown-content::before { content: ""; position: absolute; top: -20px; left: 0; width: 100%; height: 20px; background: transparent; }
+        .user-dropdown:hover .dropdown-content { display: block; animation: fadeIn 0.2s; }
+        .dropdown-content a { color: #eaecef; padding: 12px 16px; text-decoration: none; display: block; font-size: 14px; border-bottom: 1px solid #2b3139; transition: 0.2s; }
+        .dropdown-content a:last-child { border-bottom: none; }
+        .dropdown-content a:hover { background-color: #2b3139; color: var(--primary-color); padding-left: 20px; }
+        .dropdown-content a.logout-item:hover { color: #f6465d; background-color: rgba(246, 70, 93, 0.1); }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left"><div class="logo">🌿 ECOBANK</div><nav class="nav"><a href="index.html" class="nav-link">หน้าแรก</a><a href="trash_types.html" class="nav-link">ราคาขยะวันนี้</a><a href="leaderboard.html" class="nav-link">จัดอันดับ</a><a href="exchange.html" class="nav-link active">ตลาดซื้อขาย</a><a href="booths.html" class="nav-link">จุดรับซื้อ</a><a href="rewards.html" class="nav-link">ของรางวัล</a><a href="wallet.html" class="nav-link">กระเป๋าเงิน</a></nav></div>
+        <div id="authSection" class="header-right"></div>
+    </header>
+
+    <main class="container animate-fade-in">
+        <div class="page-title">📅 ตารางกิจกรรมรับซื้อ</div>
+        <p class="page-subtitle">ตรวจสอบรอบการรับซื้อขยะในชุมชนของคุณล่วงหน้า (ชี้ที่การ์ดเพื่อดูราคา)</p>
+
+        <div id="scheduleList" class="animate-slide-up">
+            <div style="text-align:center; color:#666; padding:40px;">กำลังโหลดตาราง...</div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { getEvents, getTrashTypes, showConfirm } from "./js/firebase-service.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from "./js/firebase-config.js";
+
+        // Auth
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('authSection').innerHTML = `
+                    <div class="user-dropdown">
+                        <div class="user-btn"><div class="user-avatar-xs">👤</div><span>${user.email.split('@')[0]}</span><span style="font-size:10px; color:#888;">▼</span></div>
+                        <div class="dropdown-content">
+                            <a href="profile.html">👤 ข้อมูลส่วนตัว (Profile)</a><a href="wallet.html">💰 กระเป๋าเงิน (Wallet)</a><a href="#" id="logoutBtn" class="logout-item">🚪 ออกจากระบบ</a>
+                        </div>
+                    </div>`;
+                document.getElementById('logoutBtn').addEventListener('click', async (e) => { e.preventDefault(); if(await showConfirm("ยืนยัน","ออกจากระบบ?")) { await signOut(auth); window.location.href='login.html'; } });
+            } else {
+                document.getElementById('authSection').innerHTML = `<a href="login.html" class="btn btn-login">เข้าสู่ระบบ</a>`;
+            }
+        });
+
+        // Main Logic
+        async function initSchedule() {
+            try {
+                const events = await getEvents();
+                const allTrash = await getTrashTypes(); // ดึงรายการขยะทั้งหมดมาเทียบ ID
+                const container = document.getElementById('scheduleList');
+
+                if (events.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; color:#666; padding:40px;">ไม่มีกิจกรรมเร็วๆ นี้</div>';
+                    return;
+                }
+
+                events.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+
+                container.innerHTML = events.map(evt => {
+                    const d = evt.date ? new Date(evt.date) : new Date();
+                    const day = d.getDate();
+                    const months = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+                    const month = months[d.getMonth()];
+
+                    // 1. กรองรายการขยะที่จุดรับซื้อนี้ยอมรับ (Accepted Trash)
+                    const acceptedTrashList = allTrash.filter(t => 
+                        evt.accepted_trash_ids && evt.accepted_trash_ids.includes(t.id)
+                    );
+
+                    // 2. สร้าง HTML สำหรับ Tags (หน้าการ์ด)
+                    let tagsHtml = '';
+                    if (acceptedTrashList.length > 0) {
+                        // โชว์แค่ 3 อันแรก ถ้าเยอะเกิน
+                        tagsHtml = acceptedTrashList.slice(0, 3).map(t => `<span class="tag">${t.name}</span>`).join('');
+                        if (acceptedTrashList.length > 3) tagsHtml += `<span class="tag">+${acceptedTrashList.length - 3}</span>`;
+                    } else {
+                        tagsHtml = `<span class="tag" style="color:#666; background:rgba(255,255,255,0.05);">รับทุกประเภท</span>`;
+                    }
+
+                    // 3. สร้าง HTML สำหรับตารางใน Dropdown (เฉพาะที่รับซื้อ)
+                    let tableRows = '';
+                    if (acceptedTrashList.length > 0) {
+                        tableRows = acceptedTrashList.map(t => `
+                            <tr>
+                                <td>${t.icon || '📦'} ${t.name}</td>
+                                <td style="color: var(--primary-color); font-weight:bold;">${t.price_per_unit} ฿/kg</td>
+                                <td style="color:#888;">${t.category}</td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        // ถ้ารับทุกอย่าง หรือไม่ได้ระบุ ให้โชว์ทั้งหมด (Fallback)
+                        tableRows = allTrash.map(t => `
+                            <tr>
+                                <td>${t.icon || '📦'} ${t.name}</td>
+                                <td style="color: var(--primary-color); font-weight:bold;">${t.price_per_unit} ฿/kg</td>
+                                <td style="color:#888;">${t.category}</td>
+                            </tr>
+                        `).join('');
+                    }
+
+                    // สถานะ
+                    let statusHtml = '<span class="st-wait">⏳ รอดำเนินการ</span>';
+                    if(evt.status === 'open') statusHtml = '<span class="st-open">● เปิดรับซื้อ</span>';
+                    else if(evt.status === 'closed') statusHtml = '<span class="st-closed">● ปิดรับซื้อ</span>';
+
+                    return `
+                    <div class="schedule-card">
+                        <div class="card-header-row">
+                            <div class="date-box">
+                                <div class="date-day">${day}</div>
+                                <div class="date-month">${month}</div>
+                            </div>
+                            <div style="flex: 1;">
+                                <h3 style="font-size: 18px; margin-bottom: 5px; color:#fff;">📍 ${evt.name}</h3>
+                                <div style="margin-bottom: 5px; color: #848e9c; font-size: 14px;">เวลา: 09:00 - 16:00 น. | ${evt.district}</div>
+                                <div>${tagsHtml}</div> </div>
+                            <div style="text-align: right;">
+                                <div>${statusHtml}</div>
+                                <div class="expand-hint">ชี้เพื่อดูรายละเอียด ▼</div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-details">
+                            <h4 style="font-size: 14px; margin-bottom: 15px; color: var(--primary-color); border-bottom:1px solid #333; padding-bottom:10px;">📋 ราคารับซื้อวันนี้ (เฉพาะรายการที่จุดนี้รับ)</h4>
+                            <table class="detail-table">
+                                <thead><tr><th width="50%">ประเภทขยะ</th><th width="30%">ราคาปัจจุบัน</th><th width="20%">หมวดหมู่</th></tr></thead>
+                                <tbody>
+                                    ${tableRows}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>`;
+                }).join('');
+
+            } catch (err) { console.error(err); }
+        }
+
+        initSchedule();
+    </script>
+</body>
+</html>

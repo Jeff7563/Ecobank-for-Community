@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สมัครสมาชิก - ECOBANK</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* CSS เฉพาะหน้า Register */
+        body {
+            background-color: #0b0e11;
+            color: #eaecef;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            
+            /* ✅ แก้ไข Layout: ใช้ Flex แบบยืดหยุ่น */
+            display: flex;
+            justify-content: center;
+            /* align-items: center;  <-- ลบบรรทัดนี้ออก (ตัวการทำชนขอบบน) */
+            
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px; /* เว้นระยะขอบรอบๆ */
+            box-sizing: border-box;
+            
+            overflow-y: auto; /* ✅ บังคับให้ Scroll ได้เสมอ */
+        }
+
+        /* ✅ การ์ดฟอร์ม: ใช้ margin: auto เพื่อจัดกลางและกันชนขอบ */
+        .auth-card {
+            margin: auto; /* พระเอกของเรา: จัดกลางแนวตั้ง+นอน อัตโนมัติ */
+            width: 100%;
+            max-width: 500px;
+            
+            /* สไตล์เดิม */
+            background: rgba(30, 35, 41, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 40px 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .header-icon { font-size: 48px; margin-bottom: 20px; text-align: center; }
+        .page-title { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 8px; color: #fff; }
+        .page-subtitle { font-size: 14px; color: #848e9c; text-align: center; margin-bottom: 30px; }
+
+        /* Input Box Style (Neon + Animated) */
+        .input-box {
+            position: relative;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #2b3139;
+        }
+
+        .input-box input,
+        .input-box select {
+            width: 100%;
+            height: 50px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #fff;
+            padding: 0 5px;
+        }
+
+        .input-box label {
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+            color: #848e9c;
+            font-size: 16px;
+            pointer-events: none;
+            transition: .5s;
+        }
+
+        /* Animation: เมื่อ Focus หรือมีค่า ให้ Label ลอยขึ้น */
+        .input-box input:focus ~ label,
+        .input-box input:valid ~ label,
+        .input-box select:focus ~ label,
+        .input-box select:valid ~ label {
+            top: -5px;
+            color: var(--primary-color);
+            font-size: 12px;
+        }
+
+        /* เส้น Neon ด้านล่าง */
+        .input-line {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: 0.5s;
+        }
+
+        .input-box input:focus ~ .input-line,
+        .input-box input:valid ~ .input-line,
+        .input-box select:focus ~ .input-line,
+        .input-box select:valid ~ .input-line {
+            width: 100%;
+        }
+
+        /* ปุ่มและลิงก์ */
+        .auth-btn {
+            width: 100%;
+            height: 50px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            color: #000;
+            transition: 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 0 10px rgba(178,255,89,0.3);
+        }
+
+        .auth-btn:hover {
+            background: #98f330;
+            box-shadow: 0 0 20px rgba(178,255,89,0.6);
+            transform: scale(1.02);
+        }
+
+        .auth-link {
+            font-size: 14px;
+            color: #848e9c;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .auth-link a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .back-home {
+            position: fixed; /* ✅ ใช้ fixed เพื่อให้ปุ่มยังอยู่มุมจอเสมอเวลาเลื่อนลง */
+            top: 20px;
+            left: 20px;
+            color: #848e9c;
+            font-size: 14px;
+            text-decoration: none;
+            z-index: 100;
+        }
+        .back-home:hover { color: #fff; }
+
+        /* Select Box Fix */
+        select.auth-select {
+            appearance: none;
+            cursor: pointer;
+        }
+        select.auth-select option {
+            background: #1e2329;
+            color: #fff;
+        }
+
+        /* Password Eye */
+        .toggle-pwd {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #848e9c;
+            cursor: pointer;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body class="auth-body">
+
+    <a href="index.html" class="back-home">← กลับหน้าหลัก</a>
+
+    <div class="auth-card animate-slide-up">
+        <div class="auth-header" style="text-align: center; margin-bottom: 30px;">
+            <h2 style="font-size: 28px; color: #fff; margin-bottom: 10px;">Create Account</h2>
+            <p style="color: #848e9c; font-size: 14px;">เข้าร่วมสังคม Zero Waste วันนี้</p>
+        </div>
+
+        <form id="registerForm">
+            <div class="input-box">
+                <input type="text" id="username" required>
+                <label>ชื่อ-นามสกุล</label>
+                <div class="input-line"></div>
+            </div>
+
+            <div class="input-box">
+                <input type="tel" id="phone" required>
+                <label>เบอร์โทรศัพท์</label>
+                <div class="input-line"></div>
+            </div>
+
+            <div class="input-box">
+                <select id="community" class="auth-select" required>
+                    <option value="" disabled selected></option> 
+                    <option value="muang_sakon_nakhon">📍 ชุมชนเมืองสกลนคร</option>
+                    <option value="banthala">📍 ชุมชนบ้านท่าแร่</option>
+                    <option value="kokpar_sil">📍 ชุมชนกกปลาซิว</option>
+                    <option value="other">📍 อื่นๆ</option>
+                </select>
+                <label>เลือกชุมชน</label>
+                <div class="input-line"></div>
+            </div>
+
+            <div class="input-box">
+                <input type="text" id="address" required>
+                <label>ที่อยู่ (รายละเอียด)</label>
+                <div class="input-line"></div>
+            </div>
+
+            <div class="input-box">
+                <input type="email" id="email" required>
+                <label>อีเมล</label>
+                <div class="input-line"></div>
+            </div>
+
+            <div class="input-box">
+                <input type="password" id="password" required minlength="6">
+                <label>รหัสผ่าน</label>
+                <div class="input-line"></div>
+                <button type="button" class="toggle-pwd" id="togglePassword">👁️</button>
+            </div>
+
+            <div class="input-box">
+                <input type="password" id="confirmPassword" required>
+                <label>ยืนยันรหัสผ่าน</label>
+                <div class="input-line"></div>
+            </div>
+
+            <button type="submit" class="auth-btn" id="submitBtn">สมัครสมาชิก</button>
+
+            <div class="auth-link">
+                มีบัญชีอยู่แล้ว? <a href="login.html">เข้าสู่ระบบเลย</a>
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { auth, db } from "./js/firebase-config.js";
+        import { showPopup } from "./js/firebase-service.js";
+
+        // Toggle Password
+        const pwdInput = document.getElementById('password');
+        const toggleBtn = document.getElementById('togglePassword');
+        toggleBtn.addEventListener('click', () => {
+            const type = pwdInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            pwdInput.setAttribute('type', type);
+            toggleBtn.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+
+        // Register Logic
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = pwdInput.value;
+            const confirm = document.getElementById('confirmPassword').value;
+            const btn = document.getElementById('submitBtn');
+
+            if (password !== confirm) {
+                showPopup("รหัสผ่านไม่ตรงกัน", "กรุณาตรวจสอบรหัสผ่านอีกครั้ง", "error");
+                return;
+            }
+
+            // เตรียมข้อมูล (รวมชุมชน)
+            const userData = {
+                username: document.getElementById('username').value,
+                phone: document.getElementById('phone').value,
+                community: document.getElementById('community').value,
+                address: document.getElementById('address').value,
+                email: email,
+                role: "user",
+                tier: "free",
+                points: 0,
+                created_at: new Date(),
+                balance: { cash: 0.00, waste_point: 0 },
+                portfolio: {}
+            };
+
+            try {
+                btn.textContent = "Creating...";
+                btn.disabled = true;
+                btn.style.opacity = "0.7";
+
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // บันทึกลง Firestore
+                await setDoc(doc(db, "users", user.uid), userData);
+
+                await showPopup("สมัครสมาชิกสำเร็จ!", "ยินดีต้อนรับสู่ ECOBANK", "success");
+                window.location.href = "index.html";
+
+            } catch (error) {
+                console.error(error);
+                let msg = "เกิดข้อผิดพลาด";
+                if (error.code === 'auth/email-already-in-use') msg = "อีเมลนี้ถูกใช้งานแล้ว";
+                else if (error.code === 'auth/weak-password') msg = "รหัสผ่านต้องมีความยาว 6 ตัวขึ้นไป";
+                
+                showPopup("สมัครไม่สำเร็จ", msg, "error");
+                btn.textContent = "สมัครสมาชิก";
+                btn.disabled = false;
+                btn.style.opacity = "1";
+            }
+        });
+    </script>
+</body>
+</html>

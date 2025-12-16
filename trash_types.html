@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ราคาขยะวันนี้ - ECOBANK</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* --- User Dropdown Style (เพิ่มใหม่) --- */
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-btn {
+            background: #1e2329;
+            color: #eaecef;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #2b3139;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .user-btn:hover {
+            border-color: var(--primary-color);
+            background: #2b3139;
+        }
+
+        .user-avatar-xs {
+            width: 24px; height: 24px;
+            background: var(--primary-color);
+            color: #000;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%; 
+            margin-top: 10px; 
+            background-color: #1e2329;
+            min-width: 200px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            border-radius: 12px;
+            border: 1px solid #2b3139;
+            z-index: 1000;
+            overflow: visible;
+        }
+
+        .dropdown-content::before {
+            content: "";
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: transparent;
+        }
+
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+            animation: fadeIn 0.2s;
+        }
+
+        .dropdown-content a {
+            color: #eaecef;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            border-bottom: 1px solid #2b3139;
+            transition: 0.2s;
+        }
+
+        .dropdown-content a:last-child { border-bottom: none; }
+
+        .dropdown-content a:hover {
+            background-color: #2b3139;
+            color: var(--primary-color);
+            padding-left: 20px;
+        }
+
+        .dropdown-content a.logout-item:hover {
+            color: #f6465d;
+            background-color: rgba(246, 70, 93, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">🌿 ECOBANK</div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">หน้าแรก</a>
+                <a href="trash_types.html" class="nav-link active">ราคาขยะวันนี้</a>
+                <a href="leaderboard.html" class="nav-link">จัดอันดับ</a>
+                <a href="exchange.html" class="nav-link">ตลาดซื้อขาย</a>
+                <a href="booths.html" class="nav-link">จุดรับซื้อ</a>
+                <a href="rewards.html" class="nav-link">ของรางวัล</a>
+                <a href="wallet.html" class="nav-link">กระเป๋าเงิน</a>
+            </nav>
+        </div>
+        <div id="authSection" class="header-right">
+            <a href="login.html" class="btn btn-login">เข้าสู่ระบบ</a>
+            <a href="register.html" class="btn btn-register">สมัครสมาชิก</a>
+        </div>
+    </header>
+
+    <main class="container animate-fade-in">
+        <div class="page-title">📦 ราคารับซื้อขยะ</div>
+        <p class="page-subtitle">อัปเดตราคาล่าสุดประจำวัน (ราคาอาจมีการเปลี่ยนแปลงหน้าจุดรับซื้อ)</p>
+
+        <div class="search-container">
+            <span style="font-size: 20px; padding: 8px;">🔍</span>
+            <input type="text" id="searchInput" class="search-input" placeholder="ค้นหาชื่อขยะ (เช่น ขวด, กระดาษ)...">
+        </div>
+
+        <div class="filter-pills" style="margin-bottom: 30px;">
+            <button class="filter-btn active" onclick="filterCategory('all')">ทั้งหมด</button>
+            <button class="filter-btn" onclick="filterCategory('พลาสติก')">พลาสติก</button>
+            <button class="filter-btn" onclick="filterCategory('โลหะ')">โลหะ</button>
+            <button class="filter-btn" onclick="filterCategory('กระดาษ')">กระดาษ</button>
+            <button class="filter-btn" onclick="filterCategory('แก้ว')">แก้ว</button>
+        </div>
+
+        <div id="trashGrid" class="grid-cards animate-slide-up">
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                กำลังโหลดข้อมูล... ⏳
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { getTrashTypes } from "./js/firebase-service.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from "./js/firebase-config.js";
+
+        let allTrashData = []; // ตัวแปรเก็บข้อมูลดิบ
+
+        // 1. จัดการ Auth Header
+        const authSection = document.getElementById('authSection');
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                authSection.innerHTML = `
+                    <div class="user-dropdown">
+                        <div class="user-btn">
+                            <div class="user-avatar-xs">👤</div>
+                            <span>${user.email.split('@')[0]}</span>
+                            <span style="font-size:10px; color:#888;">▼</span>
+                        </div>
+                        <div class="dropdown-content">
+                            <a href="profile.html">👤 ข้อมูลส่วนตัว (Profile)</a>
+                            <a href="wallet.html">💰 กระเป๋าเงิน (Wallet)</a>
+                            <a href="#" id="logoutBtn" class="logout-item">🚪 ออกจากระบบ</a>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    await signOut(auth);
+                    window.location.href = 'login.html';
+                });
+            }
+        });
+
+        // 2. โหลดข้อมูลและแสดงผล
+        async function initPage() {
+            try {
+                allTrashData = await getTrashTypes();
+                renderGrid(allTrashData); // แสดงทั้งหมดรอบแรก
+            } catch (error) {
+                document.getElementById('trashGrid').innerHTML = `<p style="color:red; text-align:center;">เกิดข้อผิดพลาด: ${error.message}</p>`;
+            }
+        }
+
+        // 3. ฟังก์ชันวาดการ์ด
+        function renderGrid(data) {
+            const grid = document.getElementById('trashGrid');
+            
+            if (data.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">ไม่พบข้อมูลที่ค้นหา</p>`;
+                return;
+            }
+
+            grid.innerHTML = data.map(item => `
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:start;">
+                        <div class="card-icon">${item.icon || '📦'}</div>
+                        <span style="font-size:12px; background:#2b3139; padding:4px 8px; border-radius:4px; color:var(--text-muted);">${item.category}</span>
+                    </div>
+                    <div class="card-title" style="margin-top:10px;">${item.name}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:end; margin-top:15px;">
+                        <div>
+                            <div style="font-size:12px; color:var(--text-muted);">ราคารับซื้อ</div>
+                            <div class="card-value">฿${item.price_per_unit.toFixed(2)}</div>
+                        </div>
+                        <div style="font-size:12px; color:var(--text-muted);">ต่อ ${item.unit}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 4. ฟังก์ชันกรองข้อมูล (Search & Filter)
+        window.filterCategory = (category) => {
+            // ปรับ Active Class ปุ่ม
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // กรองข้อมูล
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = allTrashData.filter(item => 
+                (item.name.toLowerCase().includes(searchVal)) &&
+                (category === 'all' || item.category === category)
+            );
+            renderGrid(filtered);
+        }
+
+        // Event Listener ช่องค้นหา
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            const activeBtn = document.querySelector('.filter-btn.active');
+            // จำลองการคลิกปุ่มเดิมเพื่อกรองใหม่
+            activeBtn.click();
+        });
+
+        initPage();
+    </script>
+</body>
+</html>

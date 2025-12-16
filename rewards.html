@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตลาดซื้อขาย - ECOBANK</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .points-banner {
+            background: linear-gradient(135deg, #1e2329 0%, #15181d 100%);
+            border: 1px solid var(--primary-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(178,255,89,0.1);
+        }
+        .my-points {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+        .points-label { font-size: 14px; color: #848e9c; }
+
+        /* Grid ของรางวัล */
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .reward-card {
+            background: #1e2329;
+            border: 1px solid #2b3139;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .reward-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .reward-icon { font-size: 50px; margin-bottom: 15px; display: inline-block; }
+        .reward-name { font-weight: bold; font-size: 16px; margin-bottom: 5px; color: #fff; }
+        .reward-desc { font-size: 12px; color: #848e9c; margin-bottom: 15px; height: 32px; overflow: hidden; }
+        
+        .reward-cost {
+            background: rgba(178, 255, 89, 0.1);
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .btn-redeem {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-redeem:hover {
+            background: var(--primary-color);
+            color: #000;
+        }
+        .btn-redeem:disabled {
+            border-color: #444; color: #666; cursor: not-allowed; background: transparent;
+        }
+        /* --- User Dropdown Style (เพิ่มใหม่) --- */
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-btn {
+            background: #1e2329;
+            color: #eaecef;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #2b3139;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .user-btn:hover {
+            border-color: var(--primary-color);
+            background: #2b3139;
+        }
+
+        .user-avatar-xs {
+            width: 24px; height: 24px;
+            background: var(--primary-color);
+            color: #000;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+
+        /* แก้ไข Class นี้ */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            
+            /* 👇 1. เปลี่ยนจาก 110% เป็น 100% เพื่อให้จุดเริ่มมันชิดขอบปุ่ม */
+            top: 100%; 
+            
+            /* 👇 2. ใช้ margin ดันลงมาแทน (เพื่อให้ดูมีช่องว่างสวยๆ เหมือนเดิม) */
+            margin-top: 10px; 
+            
+            background-color: #1e2329;
+            min-width: 200px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            border-radius: 12px;
+            border: 1px solid #2b3139;
+            z-index: 1000;
+            overflow: visible; /* ✅ สำคัญ! ต้องเป็น visible เพื่อให้สะพาน (::before) ทำงานได้ */
+        }
+
+        /* 🔥 เพิ่มส่วนนี้: สะพานล่องหน (Invisible Bridge) */
+        .dropdown-content::before {
+            content: "";
+            position: absolute;
+            top: -20px; /* ดันขึ้นไปข้างบนเพื่อปิดช่องว่างระหว่างปุ่มกับเมนู */
+            left: 0;
+            width: 100%;
+            height: 20px; /* ความสูงของสะพาน */
+            background: transparent; /* โปร่งใส มองไม่เห็นแต่เมาส์จับได้ */
+        }
+
+        /* โชว์เมื่อเอาเมาส์ชี้ */
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+            animation: fadeIn 0.2s;
+        }
+
+        .dropdown-content a {
+            color: #eaecef;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            border-bottom: 1px solid #2b3139;
+            transition: 0.2s;
+        }
+
+        .dropdown-content a:last-child { border-bottom: none; }
+
+        .dropdown-content a:hover {
+            background-color: #2b3139;
+            color: var(--primary-color);
+            padding-left: 20px; /* ขยับนิดนึงตอนชี้ */
+        }
+
+        /* ปุ่ม Logout สีแดง */
+        .dropdown-content a.logout-item:hover {
+            color: #f6465d;
+            background-color: rgba(246, 70, 93, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">🌿 ECOBANK</div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">หน้าแรก</a>
+                <a href="trash_types.html" class="nav-link">ราคาขยะวันนี้</a>
+                <a href="leaderboard.html" class="nav-link">จัดอันดับ</a>
+                <a href="exchange.html" class="nav-link ">ตลาดซื้อขาย</a>
+                <a href="booths.html" class="nav-link">จุดรับซื้อ</a>
+                <a href="rewards.html" class="nav-link active">ของรางวัล</a>
+                <a href="wallet.html" class="nav-link">กระเป๋าเงิน</a>
+            </nav>
+        </div>
+        <div id="authSection" class="header-right"></div>
+    </header>
+
+    <main class="container animate-fade-in">
+        <div class="page-title">🎁 แลกของรางวัล</div>
+        <p class="page-subtitle">ใช้แต้มสะสมของคุณแลกรับของรางวัลรักษ์โลก</p>
+
+        <div class="points-banner">
+            <div>
+                <div class="points-label">แต้มสะสมของคุณ</div>
+                <div class="my-points" id="userPoints">...</div>
+            </div>
+            <div style="font-size: 40px;">🪙</div>
+        </div>
+
+        <div id="rewardsList" class="rewards-grid">
+            <div style="text-align:center; grid-column: 1/-1; color:#666; padding: 40px;">กำลังโหลดของรางวัล...</div>
+        </div>
+
+        
+
+    </main>
+
+    <script type="module">
+        import { 
+            getRewards, getUserWallet, redeemReward, seedInitialData, showPopup, showConfirm 
+        } from "./js/firebase-service.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from "./js/firebase-config.js";
+
+        let currentUser = null;
+        let userPoints = 0;
+
+        // ตรวจสอบ Login และสร้าง Dropdown
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                
+                // ✅ สร้าง Dropdown HTML
+                document.getElementById('authSection').innerHTML = `
+                    <div class="user-dropdown">
+                        <div class="user-btn">
+                            <div class="user-avatar-xs">👤</div>
+                            <span>${user.email.split('@')[0]}</span>
+                            <span style="font-size:10px; color:#888;">▼</span>
+                        </div>
+                        <div class="dropdown-content">
+                            <a href="profile.html">👤 ข้อมูลส่วนตัว (Profile)</a>
+                            <a href="wallet.html">💰 กระเป๋าเงิน (Wallet)</a>
+                            <a href="#" id="logoutBtn" class="logout-item">🚪 ออกจากระบบ</a>
+                        </div>
+                    </div>
+                `;
+
+                // ผูกปุ่ม Logout ใหม่ (เพราะปุ่มเพิ่งถูกสร้างขึ้นมาใหม่)
+                document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    if(await showConfirm("ยืนยัน", "ต้องการออกจากระบบ?")) {
+                        await signOut(auth);
+                        window.location.href = 'login.html';
+                    }
+                });
+
+                // ... (โค้ดโหลดข้อมูลอื่นๆ ของคุณ เช่น loadWalletData หรือ loadStats) ...
+                if (typeof loadWalletData === 'function') await loadWalletData(); 
+                if (typeof loadUserData === 'function') await loadUserData();
+
+            } else {
+                // กรณีไม่ได้ Login
+                document.getElementById('authSection').innerHTML = `<a href="login.html" class="btn btn-primary" style="padding: 8px 20px;">เข้าสู่ระบบ</a>`;
+                // ... (ซ่อนเนื้อหาอื่นๆ ตามเดิม) ...
+            }
+        });
+
+        async function loadUserData() {
+            if (!currentUser) return;
+            const wallet = await getUserWallet(currentUser.uid);
+            userPoints = wallet ? (wallet.points || 0) : 0;
+            animateValue("userPoints", 0, userPoints, 1000);
+            loadRewards(); // Reload rewards to check enabled/disabled buttons
+        }
+
+        async function loadRewards() {
+            const container = document.getElementById('rewardsList');
+            const rewards = await getRewards();
+
+            if (rewards.length === 0) {
+                container.innerHTML = '<div style="text-align:center; grid-column: 1/-1; color:#666;">ยังไม่มีของรางวัลในระบบ</div>';
+                return;
+            }
+
+            container.innerHTML = rewards.map(r => {
+                const canRedeem = currentUser && userPoints >= r.cost;
+                return `
+                <div class="reward-card">
+                    <div class="reward-icon">${r.icon}</div>
+                    <div class="reward-name">${r.name}</div>
+                    <div class="reward-desc">${r.desc}</div>
+                    <div class="reward-cost">${r.cost} แต้ม</div>
+                    <button class="btn-redeem" ${canRedeem ? '' : 'disabled'} 
+                        onclick="triggerRedeem('${r.id}', '${r.name}', ${r.cost})">
+                        ${canRedeem ? 'แลกเลย' : 'แต้มไม่พอ'}
+                    </button>
+                </div>`;
+            }).join('');
+        }
+
+        window.triggerRedeem = async (id, name, cost) => {
+            if (!currentUser) return showPopup("แจ้งเตือน", "กรุณาเข้าสู่ระบบก่อน", "error");
+            
+            if (await showConfirm("ยืนยันการแลก", `ต้องการแลก "${name}" ใช้ ${cost} แต้ม?`)) {
+                const result = await redeemReward(currentUser.uid, { id, name, cost });
+                
+                if (result.success) {
+                    await showPopup("สำเร็จ", "แลกของรางวัลเรียบร้อยแล้ว!", "success");
+                    loadUserData(); // รีโหลดแต้มใหม่
+                } else {
+                    await showPopup("ผิดพลาด", result.message, "error");
+                }
+            }
+        };
+
+        // Admin Seed
+        window.seedRewards = async () => {
+            if(await showConfirm("Admin Only", "ต้องการลงข้อมูลของรางวัลเริ่มต้นหรือไม่?")) {
+                await seedInitialData();
+                showPopup("สำเร็จ", "ลงข้อมูลเรียบร้อย", "success");
+                loadRewards();
+            }
+        };
+
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id); if(!obj) return;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString();
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+    </script>
+</body>
+</html>

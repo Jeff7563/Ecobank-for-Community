@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน้าแรก - ECOBANK</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* CSS เฉพาะหน้า Home */
+        .hero-section {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 20px;
+        }
+        .hero-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #fff, #bbb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-subtitle {
+            color: #848e9c;
+            font-size: 16px;
+        }
+
+        /* Stats Grid */
+        .home-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .home-stat-card {
+            background: #1e2329;
+            border: 1px solid #2b3139;
+            border-radius: 16px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+        .home-stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .h-icon-box {
+            width: 50px; height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; margin-bottom: 20px;
+        }
+
+        .h-label { font-size: 14px; color: #848e9c; margin-bottom: 5px; font-weight: 600; }
+        .h-value { font-size: 28px; font-weight: 800; color: #eaecef; }
+        .h-unit { font-size: 16px; color: #848e9c; font-weight: 400; margin-left: 5px; }
+        .h-trend { font-size: 14px; margin-top: 5px; font-weight: 600; }
+        .trend-up { color: var(--primary-color); }
+
+        /* Table Section */
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px;
+        }
+        .table-card {
+            background: #1e2329;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #2b3139;
+        }
+        .home-table {
+            width: 100%; border-collapse: collapse;
+        }
+        .home-table th {
+            text-align: left; padding: 20px;
+            color: #848e9c; font-size: 13px; font-weight: 600;
+            border-bottom: 1px solid #2b3139;
+            background: #161a1e;
+        }
+        .home-table td {
+            padding: 20px;
+            border-bottom: 1px solid #2b3139;
+            color: #eaecef; font-size: 15px;
+        }
+        .home-table tr:last-child td { border-bottom: none; }
+        .home-table tr:hover { background: rgba(255,255,255,0.02); }
+
+        .trash-icon-sm { margin-right: 10px; font-size: 18px; }
+        .badge-cate {
+            background: #2b3139; color: #aaa;
+            padding: 4px 10px; border-radius: 6px; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .text-price { color: var(--primary-color); font-weight: 700; }
+        .text-volume { color: #fff; font-weight: 500; font-family: 'Courier New', Courier, monospace; }
+
+        /* Dropdown Styles */
+        .user-dropdown { position: relative; display: inline-block; }
+        .user-btn { background: #1e2329; color: #eaecef; padding: 8px 16px; border-radius: 20px; border: 1px solid #2b3139; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; font-size: 14px; }
+        .user-btn:hover { border-color: var(--primary-color); background: #2b3139; }
+        .user-avatar-xs { width: 24px; height: 24px; background: var(--primary-color); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .dropdown-content { display: none; position: absolute; right: 0; top: 100%; margin-top: 10px; background-color: #1e2329; min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border-radius: 12px; border: 1px solid #2b3139; z-index: 1000; overflow: visible; }
+        .dropdown-content::before { content: ""; position: absolute; top: -20px; left: 0; width: 100%; height: 20px; background: transparent; }
+        .user-dropdown:hover .dropdown-content { display: block; animation: fadeIn 0.2s; }
+        .dropdown-content a { color: #eaecef; padding: 12px 16px; text-decoration: none; display: block; font-size: 14px; border-bottom: 1px solid #2b3139; transition: 0.2s; }
+        .dropdown-content a:last-child { border-bottom: none; }
+        .dropdown-content a:hover { background-color: #2b3139; color: var(--primary-color); padding-left: 20px; }
+        .dropdown-content a.logout-item:hover { color: #f6465d; background-color: rgba(246, 70, 93, 0.1); }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">🌿 ECOBANK</div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link active">หน้าแรก</a>
+                <a href="trash_types.html" class="nav-link">ราคาขยะวันนี้</a>
+                <a href="leaderboard.html" class="nav-link">จัดอันดับ</a>
+                <a href="exchange.html" class="nav-link">ตลาดซื้อขาย</a>
+                <a href="booths.html" class="nav-link">จุดรับซื้อ</a>
+                <a href="wallet.html" class="nav-link">กระเป๋าเงิน</a>
+            </nav>
+        </div>
+        <div id="authSection" class="header-right"></div>
+    </header>
+
+    <main class="container animate-fade-in">
+        
+        <div class="hero-section">
+            <div class="hero-title">เปลี่ยนขยะให้เป็นมูลค่า ♻️</div>
+            <p class="hero-subtitle">เช็คราคาขยะแบบ Real-time และบริหารจัดการรายได้เพื่อชุมชน</p>
+        </div>
+
+        <div class="home-stats-grid">
+            
+            <div class="home-stat-card">
+                <div class="h-icon-box">📈</div>
+                <div class="h-label">ดัชนีราคาขยะ</div>
+                <div class="h-value" style="font-size:24px;">Stable</div>
+                <div class="h-trend trend-up">+2.4% <span style="color:#848e9c; font-weight:400; font-size:12px;">วันนี้</span></div>
+            </div>
+
+            <div class="home-stat-card">
+                <div class="h-icon-box" style="color:var(--primary-color);">⚖️</div>
+                <div class="h-label">ปริมาณรับซื้อรวม</div>
+                <div>
+                    <span class="h-value" id="homeTotalWeight">0</span>
+                    <span class="h-unit">kg</span>
+                </div>
+            </div>
+
+            <div class="home-stat-card">
+                <div class="h-icon-box" style="color:#a855f7;">👥</div>
+                <div class="h-label">สมาชิกชุมชน</div>
+                <div>
+                    <span class="h-value" id="homeTotalMembers">0</span>
+                    <span class="h-unit">คน</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="section-header">
+            <h3>🔥 ราคาขยะยอดนิยม (Top Movers)</h3>
+            <a href="trash_types.html" class="btn btn-outline" style="font-size:12px; padding:6px 12px;">ดูทั้งหมด ></a>
+        </div>
+
+        <div class="table-card">
+            <table class="home-table">
+                <thead>
+                    <tr>
+                        <th>ชื่อขยะ</th>
+                        <th>ราคา / KG</th>
+                        <th>ปริมาณซื้อขาย (Volume)</th>
+                        <th>หมวดหมู่</th>
+                    </tr>
+                </thead>
+                <tbody id="homeTrashTable">
+                    <tr><td colspan="4" style="text-align:center; color:#666;">กำลังโหลดข้อมูล...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <script type="module">
+        import { getCommunityStats, getTrashTypes, getTrashVolumeStats, showConfirm } from "./js/firebase-service.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth } from "./js/firebase-config.js";
+
+        // Auth Logic & Dropdown
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('authSection').innerHTML = `
+                    <div class="user-dropdown">
+                        <div class="user-btn"><div class="user-avatar-xs">👤</div><span>${user.email.split('@')[0]}</span><span style="font-size:10px; color:#888;">▼</span></div>
+                        <div class="dropdown-content">
+                            <a href="profile.html">👤 ข้อมูลส่วนตัว (Profile)</a><a href="wallet.html">💰 กระเป๋าเงิน (Wallet)</a><a href="#" id="logoutBtn" class="logout-item">🚪 ออกจากระบบ</a>
+                        </div>
+                    </div>`;
+                document.getElementById('logoutBtn').addEventListener('click', async (e) => { e.preventDefault(); if(await showConfirm("ยืนยัน","ออกจากระบบ?")) { await signOut(auth); window.location.href='login.html'; } });
+            } else {
+                document.getElementById('authSection').innerHTML = `<a href="login.html" class="btn btn-login">เข้าสู่ระบบ</a><a href="register.html" class="btn btn-register">สมัครสมาชิก</a>`;
+            }
+        });
+
+        // Main Logic
+        async function initHome() {
+            try {
+                // 1. ดึงสถิติภาพรวม
+                const stats = await getCommunityStats('all');
+                animateValue("homeTotalWeight", 0, parseFloat(stats.weight), 1500);
+                animateValue("homeTotalMembers", 0, stats.members, 1500);
+
+                // 2. ดึงปริมาณการซื้อขายจริง (Volume) มาเก็บไว้
+                const volumeStats = await getTrashVolumeStats();
+
+                // 3. ดึงรายการขยะมาโชว์
+                const trashList = await getTrashTypes();
+                const tbody = document.getElementById('homeTrashTable');
+                
+                // เลือกมาโชว์แค่ 5 อันดับแรก
+                const top5 = trashList.slice(0, 5); 
+
+                if (top5.length > 0) {
+                    tbody.innerHTML = top5.map(t => {
+                        // ✅ ใช้ตัวเลขจริงจาก DB (ถ้าไม่มีให้เป็น 0)
+                        const volume = volumeStats[t.id] || 0;
+
+                        return `
+                        <tr>
+                            <td><span class="trash-icon-sm">${t.icon || '📦'}</span> ${t.name}</td>
+                            <td class="text-price">฿${t.price_per_unit}</td>
+                            <td class="text-volume">${volume.toLocaleString()} kg</td>
+                            <td><span class="badge-cate">${t.category}</span></td>
+                        </tr>`;
+                    }).join('');
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">ไม่พบข้อมูล</td></tr>`;
+                }
+            } catch (err) {
+                console.error("Home Init Error:", err);
+            }
+        }
+
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id); if(!obj) return;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = parseFloat(progress * (end - start) + start).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2});
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        initHome();
+    </script>
+</body>
+</html>

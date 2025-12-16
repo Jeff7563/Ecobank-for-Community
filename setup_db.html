@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Setup Database - ECOBANK</title>
+    <style>
+        body { 
+            background: #0b0e11; color: #b2ff59; font-family: sans-serif; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            height: 100vh; margin: 0;
+        }
+        button {
+            padding: 15px 30px; font-size: 20px; background: #b2ff59; color: #000;
+            border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
+            transition: 0.2s;
+        }
+        button:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(178,255,89,0.5); }
+    </style>
+</head>
+<body>
+    <h1>🛠️ Admin Database Setup</h1>
+    <p>กดปุ่มด้านล่างเพื่อสร้างข้อมูลตัวอย่าง (Trash Types & Booths)</p>
+    <br>
+    <button id="seedBtn">🌱 SEED DATA NOW</button>
+
+    <script type="module">
+        import { seedInitialData } from "./js/firebase-service.js";
+        
+        document.getElementById('seedBtn').addEventListener('click', async () => {
+            if(confirm('ต้องการล้างและสร้างข้อมูลใหม่ใช่หรือไม่?')) {
+                await seedInitialData();
+            }
+        });
+    </script>
+</body>
+</html>

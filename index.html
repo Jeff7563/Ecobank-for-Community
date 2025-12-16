@@ -16,9 +16,13 @@
             font-size: 36px;
             font-weight: 800;
             margin-bottom: 10px;
-            background: linear-gradient(90deg, #fff, #bbb);
-            -webkit-background-clip: text;
+            
+            /* ✅ แก้ไข CSS Warning ตรงนี้ */
+            background: linear-gradient(90deg, #fff, #73ff00);
+            background-clip: text;          /* มาตรฐาน */
+            -webkit-background-clip: text;  /* สำหรับ Chrome/Safari */
             -webkit-text-fill-color: transparent;
+            color: transparent;             /* Fallback */
         }
         .hero-subtitle {
             color: #848e9c;
@@ -124,6 +128,7 @@
                 <a href="leaderboard.html" class="nav-link">จัดอันดับ</a>
                 <a href="exchange.html" class="nav-link">ตลาดซื้อขาย</a>
                 <a href="booths.html" class="nav-link">จุดรับซื้อ</a>
+                <a href="rewards.html" class="nav-link">ของรางวัล</a>
                 <a href="wallet.html" class="nav-link">กระเป๋าเงิน</a>
             </nav>
         </div>
@@ -213,24 +218,24 @@
         // Main Logic
         async function initHome() {
             try {
-                // 1. ดึงสถิติภาพรวม
+                // 1. ดึงสถิติภาพรวม (ยอดขยะรวม & จำนวนสมาชิก)
                 const stats = await getCommunityStats('all');
                 animateValue("homeTotalWeight", 0, parseFloat(stats.weight), 1500);
                 animateValue("homeTotalMembers", 0, stats.members, 1500);
 
-                // 2. ดึงปริมาณการซื้อขายจริง (Volume) มาเก็บไว้
+                // 2. ดึงปริมาณการซื้อขายจริง (Volume) จาก DB
                 const volumeStats = await getTrashVolumeStats();
 
-                // 3. ดึงรายการขยะมาโชว์
+                // 3. ดึงรายการขยะมาโชว์ในตาราง
                 const trashList = await getTrashTypes();
                 const tbody = document.getElementById('homeTrashTable');
                 
-                // เลือกมาโชว์แค่ 5 อันดับแรก
+                // โชว์แค่ 5 รายการแรก (หรือจะเรียงตาม Volume ก็ได้)
                 const top5 = trashList.slice(0, 5); 
 
                 if (top5.length > 0) {
                     tbody.innerHTML = top5.map(t => {
-                        // ✅ ใช้ตัวเลขจริงจาก DB (ถ้าไม่มีให้เป็น 0)
+                        // ✅ ดึง Volume จริงจาก DB (ถ้าไม่มีให้เป็น 0)
                         const volume = volumeStats[t.id] || 0;
 
                         return `

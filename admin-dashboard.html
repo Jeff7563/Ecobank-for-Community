@@ -6,7 +6,7 @@
     <title>ผู้ดูแลระบบ - ECOBANK</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* คง CSS เดิมไว้ทั้งหมด */
+        /* CSS เดิม */
         .admin-badge { background: var(--primary-color); color: #000; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-left: 10px; text-transform: uppercase; letter-spacing: 1px; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px; }
         .stat-card { background: linear-gradient(145deg, #1e2329, #161a1e); border: 1px solid #2b3139; border-radius: 16px; padding: 25px; display: flex; flex-direction: column; position: relative; overflow: hidden; transition: transform 0.3s; }
@@ -43,28 +43,10 @@
         .st-open { color: #b2ff59; border: 1px solid #b2ff59; background: rgba(178, 255, 89, 0.1); }
         .st-closed { color: #f6465d; border: 1px solid #f6465d; background: rgba(246, 70, 93, 0.1); }
 
-        /* ✅ CSS สำหรับ Checkbox Grid เลือกขยะ */
-        .trash-select-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-            margin-top: 5px;
-            padding: 10px;
-            background: #0b0e11;
-            border-radius: 8px;
-            border: 1px solid #2b3139;
-        }
-        .trash-checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: #ccc;
-            cursor: pointer;
-        }
+        .trash-select-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 5px; padding: 10px; background: #0b0e11; border-radius: 8px; border: 1px solid #2b3139; }
+        .trash-checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc; cursor: pointer; }
         .trash-checkbox-item input { accent-color: var(--primary-color); width: 16px; height: 16px; cursor: pointer; }
 
-        /* POS Styles */
         .pos-section { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #2b3139; }
         .pos-user-card { background: rgba(178, 255, 89, 0.1); border: 1px solid var(--primary-color); padding: 15px; border-radius: 8px; color: var(--primary-color); display: none; align-items: center; gap: 10px; }
         .pos-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
@@ -134,7 +116,7 @@
             <div class="dashboard-card" onclick="openEventModal()">
                 <div class="card-icon-large">🏪</div>
                 <div class="card-title">จัดการจุดรับซื้อ</div>
-                <p style="color:var(--text-muted); font-size:14px;">ตั้งค่าสถานที่, เวลา และประเภทขยะ</p>
+                <p style="color:var(--text-muted); font-size:14px;">ตั้งค่าสถานที่, เวลา, พิกัด</p>
                 <button class="action-btn">เข้าจัดการ</button>
             </div>
             <div class="dashboard-card" onclick="openRewardModal()">
@@ -199,8 +181,7 @@
             <div id="trashForm" style="display:none; background:#2b3139; padding:20px; border-radius:12px; margin-bottom:20px;">
                 <h3 style="margin-bottom:15px; color:#fff;" id="trashFormTitle">เพิ่มประเภทขยะใหม่</h3>
                 <form onsubmit="saveTrash(event)">
-                    <input type="hidden" id="trashId">
-                    <div class="form-group"><label class="form-label">ชื่อ</label><input id="trashName" class="form-control" required></div>
+                    <input type="hidden" id="trashId"> <div class="form-group"><label class="form-label">ชื่อ</label><input id="trashName" class="form-control" required></div>
                     <div class="form-group"><label class="form-label">หมวดหมู่</label><select id="trashCategory" class="form-control"><option>พลาสติก</option><option>กระดาษ</option><option>โลหะ</option><option>แก้ว</option></select></div>
                     <div class="form-group"><label class="form-label">ราคา</label><input id="trashPrice" type="number" step="0.01" class="form-control" required></div>
                     <div class="form-group"><label class="form-label">ไอคอน</label><input id="trashIcon" class="form-control" value="📦"></div>
@@ -249,6 +230,17 @@
                     <div class="form-group"><label class="form-label">เขต</label><input id="eventDistrict" class="form-control" required></div>
                     <div class="form-group"><label class="form-label">📅 วันที่เปิดรับ</label><input type="date" id="eventDate" class="form-control"></div>
                     
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <div class="form-group">
+                            <label class="form-label">Latitude (ละติจูด)</label>
+                            <input type="number" id="eventLat" class="form-control" placeholder="17.xxxx" step="any">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Longitude (ลองจิจูด)</label>
+                            <input type="number" id="eventLng" class="form-control" placeholder="104.xxxx" step="any">
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
                         <label class="form-label">สถานะ (Status)</label>
                         <select id="eventStatus" class="form-control">
@@ -283,7 +275,6 @@
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { auth } from "./js/firebase-config.js";
 
-        // Global Vars
         let currentPosUser = null;
         let currentPosItems = [];
         let allTrashTypes = [];
@@ -484,10 +475,10 @@
         };
         window.delReward = async (id) => { if(await showConfirm("ลบ?","ยืนยัน")) { await deleteReward(id); loadRewardList(); } };
 
-        // --- EVENT MANAGEMENT (Updated: Select Trash Types) ---
+        // --- EVENT MANAGEMENT ---
         window.openEventModal = async () => { 
             document.getElementById('eventModal').classList.add('show'); 
-            await loadTrashCheckboxes(); // โหลดรายการขยะมาสร้าง Checkbox
+            await loadTrashCheckboxes();
             loadEventList(); 
             cancelEventEdit(); 
         };
@@ -501,18 +492,14 @@
             }
         };
 
-        // ฟังก์ชันสร้าง Checkbox รายการขยะ
         async function loadTrashCheckboxes() {
             const trashList = await getTrashTypes();
-            allTrashTypes = trashList; // เก็บไว้ใช้เทียบ
+            allTrashTypes = trashList;
             const container = document.getElementById('trashTypeSelection');
-            
             container.innerHTML = trashList.map(t => `
                 <label class="trash-checkbox-item">
-                    <input type="checkbox" value="${t.id}" name="acceptedTrash">
-                    ${t.name}
-                </label>
-            `).join('');
+                    <input type="checkbox" value="${t.id}" name="acceptedTrash"> ${t.name}
+                </label>`).join('');
         }
 
         async function loadEventList() {
@@ -522,15 +509,11 @@
                     ? '<span class="status-badge st-closed">ปิดรับซื้อ</span>' 
                     : '<span class="status-badge st-open">เปิดรับซื้อ</span>';
                 
-                // นับจำนวนขยะที่รับซื้อ
-                const acceptedCount = x.accepted_trash_ids ? x.accepted_trash_ids.length : 0;
-
                 return `
                 <div class="admin-list-item">
                     <div>
                         <div style="font-weight:bold;">${x.name}</div>
                         <div style="font-size:12px; color:#888;">${x.district} ${x.date ? ' | 📅 ' + x.date : ''}</div>
-                        <div style="font-size:12px; color:#aaa; margin-top:2px;">♻️ รับซื้อ: ${acceptedCount} ประเภท</div>
                         ${statusHtml}
                     </div>
                     <div class="admin-actions"><button class="btn-edit" onclick="editEvent('${x.id}')">✏️</button><button class="btn-del" onclick="delEvent('${x.id}')">🗑️</button></div>
@@ -546,12 +529,11 @@
             document.getElementById('eventDistrict').value = e.district;
             document.getElementById('eventDate').value = e.date || '';
             document.getElementById('eventStatus').value = e.status || 'open';
+            document.getElementById('eventLat').value = e.lat || ''; // Load Lat
+            document.getElementById('eventLng').value = e.lng || ''; // Load Lng
 
-            // ติ๊ก Checkbox ตามที่บันทึกไว้
             const checkboxes = document.querySelectorAll('input[name="acceptedTrash"]');
-            checkboxes.forEach(cb => {
-                cb.checked = e.accepted_trash_ids && e.accepted_trash_ids.includes(cb.value);
-            });
+            checkboxes.forEach(cb => { cb.checked = e.accepted_trash_ids && e.accepted_trash_ids.includes(cb.value); });
 
             document.getElementById('eventFormTitle').innerText = 'แก้ไขข้อมูลจุดรับซื้อ'; 
             document.getElementById('eventSubmitBtn').innerText = 'บันทึกการแก้ไข';
@@ -565,8 +547,9 @@
             document.getElementById('eventDistrict').value = '';
             document.getElementById('eventDate').value = '';
             document.getElementById('eventStatus').value = 'open';
+            document.getElementById('eventLat').value = ''; // Reset Lat
+            document.getElementById('eventLng').value = ''; // Reset Lng
             
-            // Clear Checkboxes
             document.querySelectorAll('input[name="acceptedTrash"]').forEach(cb => cb.checked = false);
 
             document.getElementById('eventFormTitle').innerText = 'เพิ่มจุดรับซื้อใหม่'; 
@@ -577,8 +560,6 @@
         window.saveEvent = async (e) => {
             e.preventDefault();
             const id = document.getElementById('eventId').value;
-            
-            // เก็บค่า Checkbox ที่ถูกติ๊ก
             const checkedBoxes = document.querySelectorAll('input[name="acceptedTrash"]:checked');
             const acceptedIds = Array.from(checkedBoxes).map(cb => cb.value);
 
@@ -588,16 +569,19 @@
                 district: document.getElementById('eventDistrict').value,
                 date: document.getElementById('eventDate').value,
                 status: document.getElementById('eventStatus').value,
-                accepted_trash_ids: acceptedIds // บันทึก ID ขยะลงไปด้วย
+                lat: document.getElementById('eventLat').value, // Save Lat
+                lng: document.getElementById('eventLng').value, // Save Lng
+                accepted_trash_ids: acceptedIds
             };
 
-            if (id) await updateEvent(id, d); else await addEvent(d);
-            showPopup("สำเร็จ", id ? "แก้ไขข้อมูลเรียบร้อย" : "เพิ่มข้อมูลเรียบร้อย", "success");
-            cancelEventEdit(); loadEventList();
+            if (id) { await updateEvent(id, d); showPopup("สำเร็จ","แก้ไขข้อมูลเรียบร้อย","success"); } 
+            else { await addEvent(d); showPopup("สำเร็จ","เพิ่มข้อมูลเรียบร้อย","success"); }
+            
+            cancelEventEdit();
+            loadEventList();
         };
         window.delEvent = async (id) => { if(await showConfirm("ลบ?","ยืนยัน")) { await deleteEvent(id); loadEventList(); } };
         
-        // Utils
         window.seedData = async () => { if(await showConfirm("Reset?","ยืนยัน")) { await seedInitialData(); showPopup("สำเร็จ","รีเซ็ตแล้ว","success"); loadStats(); } };
         window.runFixData = async () => { if(await showConfirm("ยืนยัน","เติมข้อมูลชุมชน?")) { const c = await fixOldData(); showPopup("สำเร็จ",`อัปเดต ${c} รายการ`,"success"); loadStats(); } };
 

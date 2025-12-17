@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>กระเป๋าเงิน - ECOBANK</title>
+    <title>ECOBANK</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
     <link rel="stylesheet" href="css/style.css">
     <style>
         .wallet-card {
@@ -13,27 +14,31 @@
         }
         .wallet-card::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(178,255,89,0.05) 0%, rgba(0,0,0,0) 70%); pointer-events: none;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.05) 0%, rgba(0,0,0,0) 70%); pointer-events: none; /* เปลี่ยนแสงเป็นสีทอง */
         }
         .balance-title { color: var(--text-muted); font-size: 16px; margin-bottom: 10px; }
-        .balance-amount { font-size: 56px; font-weight: 800; color: var(--primary-color); letter-spacing: -1px; }
+        
+        /* เปลี่ยนสีตัวเลขเป็นสีทอง (Points) */
+        .balance-amount { font-size: 56px; font-weight: 800; color: #ffd700; letter-spacing: -1px; text-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
         .balance-unit { font-size: 20px; color: var(--text-main); font-weight: normal; margin-left: 10px; }
         
-        /* ปุ่ม Action */
+        /* ปุ่ม Action แบบใหม่ */
         .action-container { display: flex; justify-content: center; margin-bottom: 40px; }
-        .btn-withdraw {
-            background: transparent;
-            border: 1px solid #f6465d;
-            color: #f6465d;
-            padding: 12px 30px;
+        .btn-redeem {
+            background: linear-gradient(45deg, #f0b90b, #d4a008); /* สีทอง */
+            color: #000;
+            border: none;
+            padding: 12px 35px;
             border-radius: 30px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
             display: flex; align-items: center; gap: 8px;
+            text-decoration: none; /* สำหรับ tag a */
+            box-shadow: 0 4px 15px rgba(240, 185, 11, 0.3);
         }
-        .btn-withdraw:hover { background: #f6465d; color: #fff; box-shadow: 0 0 15px rgba(246, 70, 93, 0.4); }
+        .btn-redeem:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(240, 185, 11, 0.5); }
 
         .tx-item { 
             display: flex; justify-content: space-between; align-items: center; 
@@ -52,13 +57,6 @@
             display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; 
         }
 
-        /* --- Modal Withdraw --- */
-        .modal-input {
-            width: 100%; padding: 12px; background: #0b0e11; border: 1px solid #2b3139;
-            color: #fff; font-size: 24px; text-align: center; border-radius: 8px; margin: 20px 0;
-        }
-        .modal-input:focus { border-color: var(--primary-color); outline: none; }
-
         /* --- Receipt & Dropdown Styles --- */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
         .modal.show { display: flex; opacity: 1; }
@@ -71,8 +69,9 @@
         .receipt-table { width: 100%; font-size: 12px; margin-bottom: 15px; }
         .receipt-table th { text-align: left; border-bottom: 1px solid #000; padding: 5px 0; }
         .receipt-table td { padding: 5px 0; vertical-align: top; }
-        .receipt-total { border-top: 2px dashed #000; padding-top: 10px; text-align: right; font-size: 18px; font-weight: bold; margin-bottom: 20px; }
-        .receipt-footer { text-align: center; font-size: 10px; color: #555; }
+        .receipt-total { border-top: 2px dashed #000; padding-top: 10px; text-align: right; font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        .receipt-points-info { text-align: right; font-size: 12px; color: #555; line-height: 1.5; }
+        .receipt-footer { text-align: center; font-size: 10px; color: #555; margin-top: 20px;}
         .close-receipt { position: absolute; top: -40px; right: 0; color: #fff; font-size: 30px; cursor: pointer; }
 
         /* User Dropdown */
@@ -104,16 +103,17 @@
     <main class="container animate-fade-in">
         <div class="page-title">💰 My Wallet</div>
         <div id="walletContent" style="display:none;">
+            
             <div class="wallet-card animate-slide-up">
-                <div class="balance-title">ยอดเงินคงเหลือในบัญชี</div>
-                <div class="balance-amount"><span id="balanceText">0.00</span><span class="balance-unit">THB</span></div>
+                <div class="balance-title">คะแนนสะสมของคุณ</div>
+                <div class="balance-amount"><span id="pointText">0</span><span class="balance-unit">Points</span></div>
                 <div style="margin-top: 20px; font-size: 14px; color: var(--text-muted);">User ID: <span id="userIdDisplay">...</span></div>
             </div>
 
             <div class="action-container">
-                <button onclick="openWithdrawModal()" class="btn-withdraw">
-                    🏦 แจ้งถอนเงิน (Withdraw)
-                </button>
+                <a href="rewards.html" class="btn-redeem">
+                    🎁 แลกของรางวัล (Redeem)
+                </a>
             </div>
 
             <div class="content-tabs">
@@ -133,19 +133,43 @@
             <h2>กรุณาเข้าสู่ระบบ</h2>
             <a href="login.html" class="btn btn-primary">เข้าสู่ระบบทันที</a>
         </div>
-    </main>
 
-    <div class="modal" id="withdrawModal">
-        <div style="background:#1e2329; padding:30px; border-radius:16px; border:1px solid #2b3139; width:90%; max-width:400px; text-align:center;">
-            <h3 style="color:#fff; margin-bottom:10px;">💸 แจ้งถอนเงิน</h3>
-            <p style="color:#888; font-size:14px;">ระบุจำนวนเงินที่ต้องการถอน</p>
-            <input type="number" id="withdrawAmount" class="modal-input" placeholder="0.00" step="10">
-            <div style="display:flex; gap:10px; margin-top:20px;">
-                <button onclick="closeWithdrawModal()" class="btn" style="flex:1; background:#2b3139; color:#fff; border:none; padding:12px; border-radius:8px;">ยกเลิก</button>
-                <button onclick="confirmWithdraw()" class="btn btn-primary" style="flex:1; padding:12px; border-radius:8px;">ยืนยัน</button>
+        <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-logo">🌿 ECOBANK</div>
+                <p class="footer-desc">
+                    แพลตฟอร์มธนาคารขยะดิจิทัลเพื่อชุมชน<br>
+                    เปลี่ยนขยะให้เป็นมูลค่า สร้างรายได้ ลดโลกร้อน
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h4>เมนูลัด</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">หน้าแรก</a></li>
+                    <li><a href="trash_types.html">ราคาขยะวันนี้</a></li>
+                    <li><a href="booths.html">จุดรับซื้อ</a></li>
+                    <li><a href="exchange.html">ตลาดซื้อขาย</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>ติดต่อเรา</h4>
+                <ul class="footer-contact">
+                    <li>📞 011-111-111</li>
+                    <li>📧 contact@ecobank.com</li>
+                    <li>📍 เทศบาลเมืองสกลนคร</li>
+                </ul>
             </div>
         </div>
-    </div>
+        
+        <div class="footer-bottom">
+            &copy; 2025 ECOBANK. All Rights Reserved.
+        </div>
+    </footer>
+        
+    </main>
 
     <div class="modal" id="receiptModal">
         <div style="position:relative;">
@@ -161,7 +185,13 @@
                     <thead><tr><th>Item</th><th style="text-align:right;">Total</th></tr></thead>
                     <tbody id="rcpItems"></tbody>
                 </table>
-                <div class="receipt-total" id="rcpTotal">Total: 0.00 THB</div>
+                <div class="receipt-total" id="rcpTotal">Paid Cash: 0.00 THB</div>
+                
+                <div style="border-top: 1px dotted #000; margin-top: 10px; padding-top: 10px;">
+                    <div class="receipt-points-info">Points Earned: <b id="rcpEarned">0</b></div>
+                    <div class="receipt-points-info">Current Balance: <b id="rcpBalance">0</b></div>
+                </div>
+
                 <div class="receipt-footer">Thank you for saving the world!<br>www.ecobank.com<div style="margin-top:10px; font-size:24px;">🌱</div></div>
             </div>
         </div>
@@ -169,7 +199,7 @@
 
     <script type="module">
         import { 
-            getUserWallet, getUserTransactions, getTrashTypes, getTrashTypeById, requestWithdraw, 
+            getUserWallet, getUserTransactions, getTrashTypes, getTrashTypeById,
             showPopup, showConfirm 
         } from "./js/firebase-service.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -177,12 +207,12 @@
 
         let currentUser = null;
         let globalTransactions = [];
-        let allTrashTypes = []; 
+        let allTrashTypes = [];
+        let currentPoints = 0; // เก็บแต้มปัจจุบันไว้ใช้โชว์ในใบเสร็จ
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                // Render Dropdown
                 document.getElementById('authSection').innerHTML = `
                     <div class="user-dropdown">
                         <div class="user-btn"><div class="user-avatar-xs">👤</div><span>${user.email.split('@')[0]}</span><span style="font-size:10px; color:#888;">▼</span></div>
@@ -196,7 +226,6 @@
                 document.getElementById('loginWarning').style.display = 'none';
                 document.getElementById('userIdDisplay').innerText = user.uid.slice(0, 8) + "...";
                 
-                // โหลดข้อมูลขยะมารอไว้ก่อน
                 allTrashTypes = await getTrashTypes();
                 await loadWalletData();
             } else {
@@ -216,27 +245,21 @@
         async function loadWalletData() {
             if (!currentUser) return;
             const walletData = await getUserWallet(currentUser.uid);
-            let balance = walletData?.balance?.cash || 0;
-            animateValue("balanceText", 0, balance, 1000);
+            
+            // ✅ เปลี่ยนการแสดงผลเป็น "แต้ม" (Points)
+            currentPoints = walletData?.points || 0;
+            animateValue("pointText", 0, currentPoints, 1000);
 
-            // ✅ Portfolio Logic (แก้ปัญหา Unknown Trash)
+            // Portfolio Logic
             const portfolio = walletData?.portfolio || {};
             const pContainer = document.getElementById('portfolioGrid');
             if (Object.keys(portfolio).length === 0) pContainer.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">ไม่มีขยะในครอบครอง</div>';
             else {
                 let pHtml = '';
                 for (const [id, qty] of Object.entries(portfolio)) {
-                    // 1. ลองค้นหาจาก List ที่โหลดมา
                     let trash = allTrashTypes.find(t => t.id === id);
-                    
-                    // 2. ถ้าไม่เจอ (เช่น เป็น ID เก่า) ให้ลองดึงจาก DB ตรงๆ
-                    if (!trash) {
-                        try {
-                            trash = await getTrashTypeById(id);
-                        } catch (e) { console.log("Not found in DB either"); }
-                    }
+                    if (!trash) { try { trash = await getTrashTypeById(id); } catch (e) {} }
 
-                    // 3. ถ้ายังไม่เจออีก แสดงว่าถูกลบไปแล้วจริงๆ
                     const name = trash ? trash.name : `<span style="color:#666;">รายการเดิม (ID: ${id.slice(0,4)}...)</span>`;
                     const icon = trash ? (trash.icon || '📦') : '❓';
                     
@@ -253,55 +276,72 @@
                 txContainer.innerHTML = globalTransactions.map((tx, index) => {
                     let dateStr = tx.created_at?.seconds ? new Date(tx.created_at.seconds * 1000).toLocaleString('th-TH') : "เมื่อสักครู่";
                     const isIncome = (tx.type === 'deposit' || tx.type === 'sell');
-                    const label = tx.type === 'sell' ? 'ขายขยะ' : (tx.type === 'withdraw' ? 'ถอนเงิน' : (tx.type === 'redeem' ? 'แลกของรางวัล' : tx.type));
+                    
+                    // ปรับ Label ให้สื่อความหมาย
+                    let label = tx.type === 'sell' ? 'ขายขยะ (ได้รับเงินสด)' : (tx.type === 'redeem' ? 'แลกของรางวัล' : tx.type);
+                    
                     const sign = isIncome ? '+' : '';
                     const colorClass = isIncome ? 'text-up' : 'text-down'; 
+                    
+                    // แสดงยอดเงินสำหรับขาย, แสดงแต้มสำหรับแลกของ
+                    let amountDisplay = '';
+                    if (tx.type === 'sell') {
+                        amountDisplay = `${sign}${Math.abs(tx.amount).toFixed(2)} ฿`;
+                    } else if (tx.type === 'redeem') {
+                        amountDisplay = `${Math.abs(tx.amount)} Pts`;
+                    } else {
+                        amountDisplay = `${sign}${Math.abs(tx.amount)}`;
+                    }
                     
                     return `
                     <div class="tx-item" onclick="openReceipt(${index})">
                         <div style="display:flex; align-items:center;">
-                            <div class="tx-icon" style="background: #2b3139;">${isIncome?'💰':'💸'}</div>
+                            <div class="tx-icon" style="background: #2b3139;">${isIncome?'💰':'🎁'}</div>
                             <div>
                                 <div style="font-weight:600; color:var(--text-main);">${label}</div>
                                 <div style="font-size:12px; color:var(--text-muted);">${dateStr}</div>
                             </div>
                         </div>
                         <div class="${colorClass}" style="font-weight:bold; font-size:16px;">
-                            ${sign}${Math.abs(tx.amount).toFixed(2)} ${tx.type==='redeem'?'แต้ม':'฿'}
+                            ${amountDisplay}
                         </div>
                     </div>`;
                 }).join('');
             }
         }
 
-        // --- Withdraw Logic ---
-        window.openWithdrawModal = () => { document.getElementById('withdrawModal').classList.add('show'); };
-        window.closeWithdrawModal = () => { document.getElementById('withdrawModal').classList.remove('show'); };
-        
-        window.confirmWithdraw = async () => {
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            if(!amount || amount <= 0) return showPopup("แจ้งเตือน", "กรุณาระบุจำนวนเงิน", "error");
-            
-            if(await showConfirm("ยืนยัน", `ต้องการถอนเงิน ${amount} บาท?`)) {
-                const res = await requestWithdraw(currentUser.uid, amount);
-                if(res.success) {
-                    await showPopup("สำเร็จ", "แจ้งถอนเงินเรียบร้อยแล้ว", "success");
-                    closeWithdrawModal();
-                    loadWalletData();
-                } else {
-                    showPopup("ผิดพลาด", res.message, "error");
-                }
-            }
-        };
-
-        // --- Receipt Logic ---
+        // --- Receipt Logic (Updated) ---
         window.openReceipt = (index) => {
             const tx = globalTransactions[index];
             if(!tx) return;
             document.getElementById('rcpDate').innerText = `Date: ${tx.created_at?.seconds ? new Date(tx.created_at.seconds * 1000).toLocaleString('th-TH') : "N/A"}`;
             document.getElementById('rcpId').innerText = `Ref: ${tx.id.slice(0,8).toUpperCase()}`;
-            document.getElementById('rcpTotal').innerText = `Total: ${Math.abs(tx.amount).toFixed(2)} ${tx.type==='redeem'?'Points':'THB'}`;
+            
+            // 1. แสดงยอดเงิน (Paid Cash)
+            let totalCash = 0;
+            if (tx.type === 'sell') {
+                totalCash = Math.abs(tx.amount);
+                document.getElementById('rcpTotal').innerText = `Paid Cash: ${totalCash.toFixed(2)} THB`;
+            } else if (tx.type === 'redeem') {
+                document.getElementById('rcpTotal').innerText = `Redeemed: ${Math.abs(tx.amount)} Points`;
+            } else {
+                document.getElementById('rcpTotal').innerText = `Total: ${Math.abs(tx.amount)}`;
+            }
 
+            // 2. แสดงแต้มที่ได้รับ (Points Earned)
+            // (สมมติ 1 บาท = 1 แต้ม สำหรับการขาย)
+            let earnedPoints = 0;
+            if (tx.type === 'sell') {
+                earnedPoints = Math.floor(Math.abs(tx.amount));
+                document.getElementById('rcpEarned').innerText = `+${earnedPoints}`;
+            } else {
+                document.getElementById('rcpEarned').innerText = "0";
+            }
+
+            // 3. แสดงแต้มคงเหลือปัจจุบัน
+            document.getElementById('rcpBalance').innerText = currentPoints.toLocaleString();
+
+            // รายการสินค้า
             let itemsHtml = '';
             if (tx.type === 'sell' && tx.items && Array.isArray(tx.items)) {
                 tx.items.forEach(item => {
@@ -309,7 +349,7 @@
                 });
             } else {
                 const label = tx.detail || (tx.type === 'withdraw' ? 'Withdrawal' : 'Transaction');
-                itemsHtml = `<tr><td>${label}</td><td style="text-align:right;">${Math.abs(tx.amount).toFixed(2)}</td></tr>`;
+                itemsHtml = `<tr><td>${label}</td><td style="text-align:right;">${Math.abs(tx.amount)}</td></tr>`;
             }
             document.getElementById('rcpItems').innerHTML = itemsHtml;
             document.getElementById('receiptModal').classList.add('show');
@@ -322,7 +362,7 @@
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.innerHTML = (progress * (end - start) + start).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString(); // แสดงเป็นจำนวนเต็ม (แต้ม)
                 if (progress < 1) window.requestAnimationFrame(step);
             };
             window.requestAnimationFrame(step);

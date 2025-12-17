@@ -3,50 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ผู้ดูแลระบบ - ECOBANK</title>
+    <title>ECOBANK - ADMIN</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* CSS เดิม */
-        .admin-badge { background: var(--primary-color); color: #000; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-left: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .stat-card { background: linear-gradient(145deg, #1e2329, #161a1e); border: 1px solid #2b3139; border-radius: 16px; padding: 25px; display: flex; flex-direction: column; position: relative; overflow: hidden; transition: transform 0.3s; }
-        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary-color); }
-        .stat-card::after { content: ''; position: absolute; top: 0; right: 0; width: 80px; height: 80px; background: radial-gradient(circle, rgba(178,255,89,0.1) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; }
+        /* --- Sidebar Styles --- */
+        body { display: flex; overflow-x: hidden; }
+        
+        .sidebar {
+            position: fixed; top: 0; left: 0; height: 100%; width: 60px;
+            background: #0b0e11; border-right: 1px solid #2b3139;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000; overflow: hidden; display: flex; flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+        }
+        .sidebar:hover { width: 260px; } 
+
+        .sidebar-header {
+            height: 70px; display: flex; align-items: center; padding: 0 18px;
+            border-bottom: 1px solid #2b3139; white-space: nowrap; overflow: hidden;
+        }
+        .sidebar-logo { font-weight: 800; font-size: 20px; color: #fff; margin-left: 10px; opacity: 0; transition: 0.2s; }
+        .sidebar:hover .sidebar-logo { opacity: 1; }
+
+        .menu-list { flex: 1; padding: 20px 10px; list-style: none; }
+        .menu-item {
+            display: flex; align-items: center; padding: 12px 15px;
+            color: #848e9c; cursor: pointer; border-radius: 8px; margin-bottom: 5px;
+            transition: 0.2s; white-space: nowrap; overflow: hidden;
+        }
+        .menu-item:hover { background: #1e2329; color: #fff; }
+        .menu-item.active { background: var(--primary-color); color: #000; font-weight: bold; }
+        
+        .menu-icon { font-size: 20px; min-width: 30px; text-align: center; }
+        .menu-text { margin-left: 15px; font-size: 14px; opacity: 0; transition: 0.2s; }
+        .sidebar:hover .menu-text { opacity: 1; }
+
+        .sidebar-footer { padding: 15px; border-top: 1px solid #2b3139; }
+
+        /* --- Main Content --- */
+        .main-content {
+            margin-left: 60px; width: calc(100% - 60px);
+            padding: 30px; transition: margin-left 0.3s;
+        }
+
+        /* --- Dashboard Cards --- */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .dashboard-card { background: var(--bg-card); border: 1px solid #2b3139; border-radius: 16px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+        .dashboard-card:hover { border-color: var(--primary-color); transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        .card-icon-large { font-size: 50px; margin-bottom: 20px; display: inline-block; }
+        
+        /* Action Button */
+        .action-btn { margin-top: 20px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--primary-color); background: transparent; color: var(--primary-color); font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .dashboard-card:hover .action-btn { background: var(--primary-color); color: #000; }
+
+        /* Danger Button */
+        .btn-danger-custom { border-color: #f6465d !important; color: #f6465d !important; }
+        .dashboard-card:hover .btn-danger-custom { background: #f6465d !important; color: #fff !important; border-color: #f6465d !important; }
+
+        /* --- Stats Layout --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: linear-gradient(145deg, #1e2329, #161a1e); border: 1px solid #2b3139; border-radius: 16px; padding: 25px; }
         .stat-icon { font-size: 32px; margin-bottom: 10px; }
         .stat-label { font-size: 14px; color: #848e9c; }
         .stat-value { font-size: 28px; font-weight: 700; color: #fff; margin-top: 5px; }
         .stat-unit { font-size: 14px; font-weight: 400; color: var(--primary-color); margin-left: 5px; }
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-        .dashboard-card { background: var(--bg-card); border: 1px solid #2b3139; border-radius: 16px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; overflow: hidden; }
-        .dashboard-card:hover { border-color: var(--primary-color); transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
-        .card-icon-large { font-size: 50px; margin-bottom: 20px; display: inline-block; }
-        .action-btn { margin-top: 20px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--primary-color); background: transparent; color: var(--primary-color); font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .dashboard-card:hover .action-btn { background: var(--primary-color); color: #000; }
-        
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
-        .modal.show { display: flex; opacity: 1; }
-        .modal-content { background: #1e2329; padding: 30px; border-radius: 16px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; border: 1px solid #2b3139; position: relative; transform: scale(0.9); transition: transform 0.3s; }
+
+        /* Stats Extended */
+        .stats-extended-row {
+            display: grid; grid-template-columns: 2fr 1fr; gap: 25px;
+            animation: fadeIn 0.5s;
+        }
+        @media (max-width: 900px) { .stats-extended-row { grid-template-columns: 1fr; } }
+
+        .content-card {
+            background: #1e2329; border: 1px solid #2b3139; border-radius: 16px; padding: 25px;
+            height: 100%; box-sizing: border-box;
+        }
+        .card-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+            border-bottom: 1px solid #2b3139; padding-bottom: 15px;
+        }
+        .card-title-text { font-size: 18px; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 10px; }
+
+        /* Recent Transactions Table */
+        .recent-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .recent-table th { text-align: left; color: #848e9c; padding: 10px 0; border-bottom: 1px solid #2b3139; font-weight: 600; }
+        .recent-table td { padding: 12px 0; border-bottom: 1px solid #2b3139; color: #eaecef; }
+        .recent-table tr:last-child td { border-bottom: none; }
+        .badge-tx { padding: 3px 8px; border-radius: 4px; font-size: 11px; text-transform: uppercase; }
+        .badge-sell { background: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid #4caf50; }
+        .badge-withdraw { background: rgba(244, 67, 54, 0.15); color: #f44336; border: 1px solid #f44336; }
+
+        /* Progress Bars */
+        .progress-list { display: flex; flex-direction: column; gap: 15px; }
+        .progress-item .label { display: flex; justify-content: space-between; font-size: 13px; color: #ccc; margin-bottom: 5px; }
+        .progress-bg { background: #0b0e11; height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid #2b3139; }
+        .progress-fill { height: 100%; background: var(--primary-color); border-radius: 4px; transition: width 1s; }
+
+        /* View Control */
+        .view-section { display: none; animation: fadeIn 0.3s; }
+        .view-section.active { display: block; }
+
+        /* Modals & Helpers */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-content { background: #1e2329; padding: 30px; border-radius: 16px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; border: 1px solid #2b3139; transform: scale(0.9); transition: transform 0.3s; }
         .modal.show .modal-content { transform: scale(1); }
         .close-modal { position: absolute; top: 20px; right: 20px; font-size: 24px; color: #848e9c; cursor: pointer; }
-        .close-modal:hover { color: #fff; }
         
         .admin-list-item { background: #0b0e11; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2b3139; }
         .admin-actions { display: flex; gap: 5px; }
-        .admin-actions button { border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .btn-edit { background: #2b3139; color: #ffeb3b; border:none; width:32px; height:32px; border-radius:6px; cursor:pointer; }
+        .btn-del { background: #2b3139; color: #f6465d; border:none; width:32px; height:32px; border-radius:6px; cursor:pointer; }
         
-        .btn-edit { background: #2b3139; color: #ffeb3b; }
-        .btn-edit:hover { background: #ffeb3b; color: #000; }
-        .btn-del { background: #2b3139; color: #f6465d; }
-        .btn-del:hover { background: #f6465d; color: #fff; }
-
         .status-badge { font-size: 11px; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 5px; }
         .st-open { color: #b2ff59; border: 1px solid #b2ff59; background: rgba(178, 255, 89, 0.1); }
         .st-closed { color: #f6465d; border: 1px solid #f6465d; background: rgba(246, 70, 93, 0.1); }
-
+        
         .trash-select-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 5px; padding: 10px; background: #0b0e11; border-radius: 8px; border: 1px solid #2b3139; }
         .trash-checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ccc; cursor: pointer; }
         .trash-checkbox-item input { accent-color: var(--primary-color); width: 16px; height: 16px; cursor: pointer; }
-
+        
         .pos-section { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #2b3139; }
         .pos-user-card { background: rgba(178, 255, 89, 0.1); border: 1px solid var(--primary-color); padding: 15px; border-radius: 8px; color: var(--primary-color); display: none; align-items: center; gap: 10px; }
         .pos-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
@@ -56,93 +134,146 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-left"><div class="logo">🌿 ECOBANK <span class="admin-badge">ADMIN</span></div></div>
-        <div class="header-right"><button id="logoutBtn" class="btn btn-danger">ออกจากระบบ</button></div>
-    </header>
 
-    <main class="container animate-fade-in">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap: wrap; gap: 15px;">
-            <div>
-                <div class="page-title">⚙️ แผงควบคุมระบบ</div>
-                <p class="page-subtitle" style="margin-bottom:0;">ภาพรวมสถิติและการจัดการระบบธนาคารขยะ</p>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div style="font-size: 24px;">🌿</div>
+            <div class="sidebar-logo">ECOBANK</div>
+        </div>
+        
+        <ul class="menu-list">
+            <li class="menu-item active" onclick="switchView('management', this)">
+                <div class="menu-icon">🛠️</div>
+                <div class="menu-text">เมนูจัดการ</div>
+            </li>
+            <li class="menu-item" onclick="switchView('stats', this)">
+                <div class="menu-icon">📊</div>
+                <div class="menu-text">ภาพรวมสถิติ</div>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <li class="menu-item" id="logoutBtn" style="color:#f6465d;">
+                <div class="menu-icon">🚪</div>
+                <div class="menu-text">ออกจากระบบ</div>
+            </li>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        
+        <div id="view-management" class="view-section active">
+            <div style="margin-bottom: 30px;">
+                <h1 class="page-title">🛠️ เมนูจัดการ</h1>
+                <p class="page-subtitle">จัดการข้อมูลระบบ, การรับซื้อ, และตั้งค่าต่างๆ</p>
             </div>
-            
-            <select id="communityFilter" class="form-control" style="width:auto; min-width: 200px; background: #1e2329;">
-                <option value="all">🌐 ทุกชุมชน (ภาพรวม)</option>
-                <option value="muang_sakon_nakhon">📍 ชุมชนเมืองสกลนคร</option>
-                <option value="banthala">📍 ชุมชนบ้านท่าแร่</option>
-                <option value="kokpar_sil">📍 ชุมชนกกปลาซิว</option>
-            </select>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card" onclick="openPosModal()">
+                    <div class="card-icon-large">⚖️</div>
+                    <div class="card-title">บันทึกการรับซื้อ (POS)</div>
+                    <p style="color:var(--text-muted); font-size:14px;">ทำรายการรับซื้อและคำนวณเงิน</p>
+                    <button class="action-btn">เริ่มทำรายการ</button>
+                </div>
+                <div class="dashboard-card" onclick="openTrashModal()">
+                    <div class="card-icon-large">📦</div>
+                    <div class="card-title">จัดการประเภทขยะ</div>
+                    <p style="color:var(--text-muted); font-size:14px;">แก้ไขราคากลางและข้อมูลขยะ</p>
+                    <button class="action-btn">เข้าจัดการ</button>
+                </div>
+                <div class="dashboard-card" onclick="openEventModal()">
+                    <div class="card-icon-large">🏪</div>
+                    <div class="card-title">จัดการจุดรับซื้อ</div>
+                    <p style="color:var(--text-muted); font-size:14px;">ตั้งค่าสถานที่, เวลา, พิกัด</p>
+                    <button class="action-btn">เข้าจัดการ</button>
+                </div>
+                <div class="dashboard-card" onclick="openRewardModal()">
+                    <div class="card-icon-large">🎁</div>
+                    <div class="card-title">จัดการของรางวัล</div>
+                    <p style="color:var(--text-muted); font-size:14px;">เพิ่ม/ลด รายการของรางวัล</p>
+                    <button class="action-btn">เข้าจัดการ</button>
+                </div>
+                <div class="dashboard-card" onclick="runFixData()">
+                    <div class="card-icon-large">🔧</div>
+                    <div class="card-title">ซ่อมข้อมูลเก่า</div>
+                    <p style="color:var(--text-muted); font-size:14px;">เติมข้อมูลชุมชนให้สมาชิกเก่า</p>
+                    <button class="action-btn">เริ่มซ่อมแซม</button>
+                </div>
+                
+                <div class="dashboard-card" onclick="seedData()">
+                    <div class="card-icon-large">🔄</div>
+                    <div class="card-title">รีเซ็ตข้อมูลระบบ</div>
+                    <p style="color:var(--text-muted); font-size:14px;">ล้างข้อมูลเก่าและลงข้อมูลตัวอย่าง</p>
+                    <button class="action-btn btn-danger-custom">รีเซ็ตทันที</button>
+                </div>
+            </div>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">♻️</div>
-                <div class="stat-label">ขยะรีไซเคิลสะสม</div>
-                <div class="stat-value"><span id="statWeight">0</span><span class="stat-unit">kg</span></div>
+        <div id="view-stats" class="view-section">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h1 class="page-title">📊 ภาพรวมสถิติ</h1>
+                    <p class="page-subtitle" style="margin-bottom:0;">สรุปข้อมูลการดำเนินงานของธนาคารขยะ</p>
+                </div>
+                <select id="communityFilter" class="form-control" style="width:auto; min-width: 200px; background: #1e2329;">
+                    <option value="all">🌐 ทุกชุมชน (ภาพรวม)</option>
+                    <option value="muang_sakon_nakhon">📍 ชุมชนเมืองสกลนคร</option>
+                    <option value="banthala">📍 ชุมชนบ้านท่าแร่</option>
+                    <option value="kokpar_sil">📍 ชุมชนกกปลาซิว</option>
+                </select>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">🪙</div>
-                <div class="stat-label">แต้มหมุนเวียนในชุมชน</div>
-                <div class="stat-value"><span id="statPoints">0</span><span class="stat-unit">แต้ม</span></div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">♻️</div>
+                    <div class="stat-label">ขยะรีไซเคิลสะสม</div>
+                    <div class="stat-value"><span id="statWeight">0</span><span class="stat-unit">kg</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🪙</div>
+                    <div class="stat-label">แต้มหมุนเวียนในชุมชน</div>
+                    <div class="stat-value"><span id="statPoints">0</span><span class="stat-unit">แต้ม</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-label">สมาชิกทั้งหมด</div>
+                    <div class="stat-value"><span id="statMembers">0</span><span class="stat-unit">คน</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-label">ยอดเงินรับซื้อรวม</div>
+                    <div class="stat-value"><span id="statMoney">0</span><span class="stat-unit">฿</span></div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">👥</div>
-                <div class="stat-label">สมาชิกทั้งหมด</div>
-                <div class="stat-value"><span id="statMembers">0</span><span class="stat-unit">คน</span></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">💰</div>
-                <div class="stat-label">ยอดเงินรับซื้อรวม</div>
-                <div class="stat-value"><span id="statMoney">0</span><span class="stat-unit">฿</span></div>
+
+            <div class="stats-extended-row">
+                <div class="content-card">
+                    <div class="card-header">
+                        <div class="card-title-text">🕒 ธุรกรรมล่าสุด (5 รายการ)</div>
+                        <a href="#" style="font-size:12px; color:var(--primary-color);">ดูทั้งหมด</a>
+                    </div>
+                    <table class="recent-table">
+                        <thead><tr><th>เวลา</th><th>สมาชิก</th><th>ประเภท</th><th style="text-align:right;">ยอดเงิน/แต้ม</th></tr></thead>
+                        <tbody id="recentTxTable"><tr><td colspan="4" style="text-align:center; color:#666;">กำลังโหลด...</td></tr></tbody>
+                    </table>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header">
+                        <div class="card-title-text">📊 สัดส่วนขยะที่รับซื้อ</div>
+                    </div>
+                    <div id="trashDistribution" class="progress-list">
+                        <div style="text-align:center; color:#666;">กำลังโหลด...</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <h3 style="margin-bottom: 20px; color: var(--text-muted); border-bottom: 1px solid #2b3139; padding-bottom: 10px;">เมนูจัดการ</h3>
-        <div class="dashboard-grid">
-            <div class="dashboard-card" onclick="openPosModal()" style="border-color: var(--primary-color);">
-                <div class="card-icon-large">⚖️</div>
-                <div class="card-title">บันทึกการรับซื้อ (POS)</div>
-                <p style="color:var(--text-muted); font-size:14px;">ทำรายการรับซื้อและคำนวณเงิน</p>
-                <button class="action-btn" style="background: var(--primary-color); color: #000;">เริ่มทำรายการ</button>
-            </div>
-            <div class="dashboard-card" onclick="openTrashModal()">
-                <div class="card-icon-large">📦</div>
-                <div class="card-title">จัดการประเภทขยะ</div>
-                <p style="color:var(--text-muted); font-size:14px;">แก้ไขราคากลางและข้อมูลขยะ</p>
-                <button class="action-btn">เข้าจัดการ</button>
-            </div>
-            <div class="dashboard-card" onclick="openEventModal()">
-                <div class="card-icon-large">🏪</div>
-                <div class="card-title">จัดการจุดรับซื้อ</div>
-                <p style="color:var(--text-muted); font-size:14px;">ตั้งค่าสถานที่, เวลา, พิกัด</p>
-                <button class="action-btn">เข้าจัดการ</button>
-            </div>
-            <div class="dashboard-card" onclick="openRewardModal()">
-                <div class="card-icon-large">🎁</div>
-                <div class="card-title">จัดการของรางวัล</div>
-                <p style="color:var(--text-muted); font-size:14px;">เพิ่ม/ลด รายการของรางวัล</p>
-                <button class="action-btn">เข้าจัดการ</button>
-            </div>
-            <div class="dashboard-card" onclick="runFixData()">
-                <div class="card-icon-large">🔧</div>
-                <div class="card-title">ซ่อมข้อมูลเก่า</div>
-                <p style="color:var(--text-muted); font-size:14px;">เติมข้อมูลชุมชนให้สมาชิกเก่า</p>
-                <button class="action-btn">เริ่มซ่อมแซม</button>
-            </div>
-            <div class="dashboard-card" onclick="seedData()">
-                <div class="card-icon-large">🔄</div>
-                <div class="card-title">รีเซ็ตข้อมูลระบบ</div>
-                <p style="color:var(--text-muted); font-size:14px;">ล้างข้อมูลเก่าและลงข้อมูลตัวอย่าง</p>
-                <button class="action-btn" style="border-color:var(--danger); color:var(--danger);">รีเซ็ตทันที</button>
-            </div>
-        </div>
     </main>
 
     <div class="modal" id="posModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closePosModal()">&times;</span>
+            <span class="close-modal" onclick="closePosModal()">×</span>
             <h2 style="margin-bottom:20px;">⚖️ รับซื้อขยะ / บันทึกรายการ</h2>
             <div class="pos-section">
                 <label class="form-label">ค้นหาสมาชิก (เบอร์โทรศัพท์)</label>
@@ -175,7 +306,7 @@
 
     <div class="modal" id="trashModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeTrashModal()">&times;</span>
+            <span class="close-modal" onclick="closeTrashModal()">×</span>
             <h2 style="margin-bottom:20px;">📦 รายการขยะ</h2>
             <button onclick="toggleTrashForm()" class="btn btn-primary" style="width:100%; margin-bottom:20px;">+ เพิ่มประเภทขยะ</button>
             <div id="trashForm" style="display:none; background:#2b3139; padding:20px; border-radius:12px; margin-bottom:20px;">
@@ -195,7 +326,7 @@
 
     <div class="modal" id="rewardModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeRewardModal()">&times;</span>
+            <span class="close-modal" onclick="closeRewardModal()">×</span>
             <h2 style="margin-bottom:20px;">🎁 ของรางวัล</h2>
             <button onclick="toggleRewardForm()" class="btn btn-primary" style="width:100%; margin-bottom:20px;">+ เพิ่มของรางวัล</button>
             <div id="rewardForm" style="display:none; background:#2b3139; padding:20px; border-radius:12px; margin-bottom:20px;">
@@ -217,7 +348,7 @@
 
     <div class="modal" id="eventModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeEventModal()">&times;</span>
+            <span class="close-modal" onclick="closeEventModal()">×</span>
             <h2 style="margin-bottom:20px;">🏪 จุดรับซื้อ</h2>
             <button onclick="toggleEventForm()" class="btn btn-primary" style="width:100%; margin-bottom:20px;">+ เพิ่มจุดรับซื้อ</button>
             <div id="eventForm" style="display:none; background:#2b3139; padding:20px; border-radius:12px; margin-bottom:20px;">
@@ -227,35 +358,26 @@
                     
                     <div class="form-group"><label class="form-label">ชื่อ</label><input id="eventName" class="form-control" required></div>
                     <div class="form-group"><label class="form-label">ที่อยู่</label><input id="eventAddress" class="form-control" required></div>
+                    
+                    <div class="form-group"><label class="form-label">เบอร์โทรศัพท์ (ถ้ามี)</label><input id="eventPhone" class="form-control" placeholder="0xx-xxx-xxxx"></div>
+
                     <div class="form-group"><label class="form-label">เขต</label><input id="eventDistrict" class="form-control" required></div>
                     <div class="form-group"><label class="form-label">📅 วันที่เปิดรับ</label><input type="date" id="eventDate" class="form-control"></div>
-                    
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                        <div class="form-group">
-                            <label class="form-label">Latitude (ละติจูด)</label>
-                            <input type="number" id="eventLat" class="form-control" placeholder="17.xxxx" step="any">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Longitude (ลองจิจูด)</label>
-                            <input type="number" id="eventLng" class="form-control" placeholder="104.xxxx" step="any">
-                        </div>
+                        <div class="form-group"><label class="form-label">Latitude</label><input type="number" id="eventLat" class="form-control" placeholder="17.xxxx" step="any"></div>
+                        <div class="form-group"><label class="form-label">Longitude</label><input type="number" id="eventLng" class="form-control" placeholder="104.xxxx" step="any"></div>
                     </div>
-                    
                     <div class="form-group">
-                        <label class="form-label">สถานะ (Status)</label>
+                        <label class="form-label">สถานะ</label>
                         <select id="eventStatus" class="form-control">
                             <option value="open">🟢 เปิดรับซื้อ (Open)</option>
                             <option value="closed">🔴 ปิดรับซื้อ (Closed)</option>
                         </select>
                     </div>
-
                     <div class="form-group">
-                        <label class="form-label">♻️ ประเภทขยะที่รับซื้อ (เลือกได้หลายข้อ)</label>
-                        <div id="trashTypeSelection" class="trash-select-grid">
-                            <div style="color:#666;">กำลังโหลดรายการขยะ...</div>
-                        </div>
+                        <label class="form-label">♻️ ประเภทขยะที่รับซื้อ</label>
+                        <div id="trashTypeSelection" class="trash-select-grid"><div style="color:#666;">กำลังโหลด...</div></div>
                     </div>
-
                     <button type="submit" class="btn btn-primary" style="width:100%; margin-top:20px;" id="eventSubmitBtn">บันทึก</button>
                     <button type="button" class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="cancelEventEdit()">ยกเลิก</button>
                 </form>
@@ -266,33 +388,111 @@
 
     <script type="module">
         import { 
-            getTrashTypes, addTrashType, updateTrashType, deleteTrashType,
+            getTrashTypes, addTrashType, updateTrashType, deleteTrashType, getTrashVolumeStats,
             getEvents, addEvent, updateEvent, deleteEvent, 
             getRewards, addReward, updateReward, deleteReward,
             seedInitialData, showPopup, showConfirm,
-            findUserByPhone, adminRecordTransaction, getCommunityStats, fixOldData
+            findUserByPhone, adminRecordTransaction, getCommunityStats, fixOldData,
+            getRecentTransactions 
         } from "./js/firebase-service.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { auth } from "./js/firebase-config.js";
+        import { getDocs, collection, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { auth, db } from "./js/firebase-config.js";
 
         let currentPosUser = null;
         let currentPosItems = [];
         let allTrashTypes = [];
+        let allTrashData = []; 
         
         onAuthStateChanged(auth, (user) => { if (!user) window.location.href = 'login.html'; });
         document.getElementById('logoutBtn').addEventListener('click', async () => { if(await showConfirm("ยืนยัน","ออกจากระบบ?")) { await signOut(auth); window.location.href='login.html'; } });
 
+        window.switchView = (viewName, el) => {
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
+            document.getElementById(`view-${viewName}`).classList.add('active');
+        }
+
         async function loadStats() {
             const selectedCommunity = document.getElementById('communityFilter').value;
+            
             document.getElementById('statWeight').innerText = "...";
             const stats = await getCommunityStats(selectedCommunity);
+            
             animateValue("statWeight", 0, stats.weight, 1500);
             animateValue("statPoints", 0, stats.points, 1500);
             animateValue("statMembers", 0, stats.members, 1000);
             animateValue("statMoney", 0, stats.money, 1500);
+
+            allTrashData = await getTrashTypes();
+            
+            loadRecentTransactions(selectedCommunity);
+            loadTrashDistribution(selectedCommunity);
         }
         loadStats();
         document.getElementById('communityFilter').addEventListener('change', loadStats);
+
+        // --- Helper Functions ---
+        async function loadRecentTransactions(community) {
+            try {
+                const transactions = await getRecentTransactions(community);
+                const table = document.getElementById('recentTxTable');
+                
+                if(transactions.length === 0) {
+                    table.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#666;">ไม่มีรายการ</td></tr>`;
+                    return;
+                }
+
+                table.innerHTML = transactions.map(d => {
+                    const date = d.created_at?.seconds ? new Date(d.created_at.seconds*1000).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}) : '-';
+                    const typeBadge = d.type === 'sell' ? '<span class="badge-tx badge-sell">ขายขยะ</span>' : 
+                                      d.type === 'withdraw' ? '<span class="badge-tx badge-withdraw">ถอนเงิน</span>' : d.type;
+                    const amount = d.type === 'sell' ? `+${d.amount}` : `-${Math.abs(d.amount)}`;
+                    return `
+                        <tr>
+                            <td>${date}</td>
+                            <td>${d.member_name || 'Guest'}</td>
+                            <td>${typeBadge}</td>
+                            <td style="text-align:right; font-weight:bold; color:${d.type==='sell'?'#4caf50':'#f6465d'};">${amount}</td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch(e) { console.log(e); }
+        }
+
+        async function loadTrashDistribution(community) {
+            try {
+                const volumeStats = await getTrashVolumeStats(community); 
+                const container = document.getElementById('trashDistribution');
+                
+                let sortable = [];
+                for (let id in volumeStats) {
+                    const trash = allTrashData.find(t => t.id === id);
+                    if(trash) sortable.push({ name: trash.name, weight: volumeStats[id] });
+                }
+                sortable.sort((a, b) => b.weight - a.weight);
+                
+                const top5 = sortable.slice(0, 5);
+                const totalWeight = sortable.reduce((acc, curr) => acc + curr.weight, 0) || 1;
+
+                if(top5.length === 0) {
+                    container.innerHTML = `<div style="text-align:center; color:#666;">ไม่มีข้อมูล</div>`;
+                    return;
+                }
+
+                container.innerHTML = top5.map(item => {
+                    const percent = ((item.weight / totalWeight) * 100).toFixed(1);
+                    return `
+                        <div class="progress-item">
+                            <div class="label"><span>${item.name}</span><span>${item.weight.toFixed(1)} kg (${percent}%)</span></div>
+                            <div class="progress-bg"><div class="progress-fill" style="width: ${percent}%"></div></div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch(e) { console.log(e); }
+        }
 
         function animateValue(id, start, end, duration) {
             const obj = document.getElementById(id); if(!obj) return;
@@ -508,7 +708,6 @@
                 const statusHtml = x.status === 'closed' 
                     ? '<span class="status-badge st-closed">ปิดรับซื้อ</span>' 
                     : '<span class="status-badge st-open">เปิดรับซื้อ</span>';
-                
                 return `
                 <div class="admin-list-item">
                     <div>
@@ -525,12 +724,16 @@
             const e = window._allEvents.find(x => x.id === id); if(!e) return;
             document.getElementById('eventId').value = e.id; 
             document.getElementById('eventName').value = e.name;
-            document.getElementById('eventAddress').value = e.address; 
+            document.getElementById('eventAddress').value = e.address;
+            
+            // ✅ Load เบอร์โทร
+            document.getElementById('eventPhone').value = e.phone || ''; 
+
             document.getElementById('eventDistrict').value = e.district;
             document.getElementById('eventDate').value = e.date || '';
             document.getElementById('eventStatus').value = e.status || 'open';
-            document.getElementById('eventLat').value = e.lat || ''; // Load Lat
-            document.getElementById('eventLng').value = e.lng || ''; // Load Lng
+            document.getElementById('eventLat').value = e.lat || ''; 
+            document.getElementById('eventLng').value = e.lng || ''; 
 
             const checkboxes = document.querySelectorAll('input[name="acceptedTrash"]');
             checkboxes.forEach(cb => { cb.checked = e.accepted_trash_ids && e.accepted_trash_ids.includes(cb.value); });
@@ -544,11 +747,12 @@
             document.getElementById('eventId').value = ''; 
             document.getElementById('eventName').value = '';
             document.getElementById('eventAddress').value = ''; 
+            document.getElementById('eventPhone').value = ''; // ✅ Clear เบอร์โทร
             document.getElementById('eventDistrict').value = '';
             document.getElementById('eventDate').value = '';
             document.getElementById('eventStatus').value = 'open';
-            document.getElementById('eventLat').value = ''; // Reset Lat
-            document.getElementById('eventLng').value = ''; // Reset Lng
+            document.getElementById('eventLat').value = '';
+            document.getElementById('eventLng').value = '';
             
             document.querySelectorAll('input[name="acceptedTrash"]').forEach(cb => cb.checked = false);
 
@@ -566,11 +770,12 @@
             const d = { 
                 name: document.getElementById('eventName').value, 
                 address: document.getElementById('eventAddress').value, 
+                phone: document.getElementById('eventPhone').value, // ✅ Save เบอร์โทร
                 district: document.getElementById('eventDistrict').value,
                 date: document.getElementById('eventDate').value,
                 status: document.getElementById('eventStatus').value,
-                lat: document.getElementById('eventLat').value, // Save Lat
-                lng: document.getElementById('eventLng').value, // Save Lng
+                lat: document.getElementById('eventLat').value,
+                lng: document.getElementById('eventLng').value,
                 accepted_trash_ids: acceptedIds
             };
 

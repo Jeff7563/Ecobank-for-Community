@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>หน้าแรก - ECOBANK</title>
+    <title>ECOBANK</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
     <link rel="stylesheet" href="css/style.css">
     <style>
         /* CSS เฉพาะหน้า Home */
@@ -191,8 +192,45 @@
                 </tbody>
             </table>
         </div>
+        
+        <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-logo">🌿 ECOBANK</div>
+                <p class="footer-desc">
+                    แพลตฟอร์มธนาคารขยะดิจิทัลเพื่อชุมชน<br>
+                    เปลี่ยนขยะให้เป็นมูลค่า สร้างรายได้ ลดโลกร้อน
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h4>เมนูลัด</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">หน้าแรก</a></li>
+                    <li><a href="trash_types.html">ราคาขยะวันนี้</a></li>
+                    <li><a href="booths.html">จุดรับซื้อ</a></li>
+                    <li><a href="exchange.html">ตลาดซื้อขาย</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>ติดต่อเรา</h4>
+                <ul class="footer-contact">
+                    <li>📞 011-111-111</li>
+                    <li>📧 contact@ecobank.com</li>
+                    <li>📍 เทศบาลเมืองสกลนคร</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            &copy; 2025 ECOBANK. All Rights Reserved.
+        </div>
+    </footer>
 
     </main>
+
+    
 
     <script type="module">
         import { getCommunityStats, getTrashTypes, getTrashVolumeStats, showConfirm } from "./js/firebase-service.js";

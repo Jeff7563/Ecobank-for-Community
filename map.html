@@ -79,12 +79,13 @@
             crossorigin=""></script>
 
     <script type="module">
-        import { getEvents, showPopup } from "./js/firebase-service.js";
+        import { auth } from "./js/firebase-config.js";
+        import { getEvents, showPopup, showConfirm, signOutUser } from "./js/firebase-service.js";
         import { renderHeader, renderFooter, setupAuthListener } from "./js/components.js";
 
         renderHeader('map');
         renderFooter();
-        setupAuthListener();
+        setupAuthListener(auth, showConfirm, signOutUser);
 
         // 1. Initialize Map
         // Default: Sakon Nakhon

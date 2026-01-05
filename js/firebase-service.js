@@ -667,7 +667,12 @@ export async function getLeaderboard() {
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs
       .map((doc) => ({ id: doc.id, ...doc.data() }))
-      .filter(user => user.email !== 'admin@ecobank.com') // Hide Admin
+      .filter(user => {
+        const email = (user.email || "").toLowerCase();
+        const role = (user.role || "").toLowerCase();
+        const username = (user.username || "").toLowerCase();
+        return email !== 'admin@ecobank.com' && role !== 'admin' && username !== 'admin'; 
+      })
       .slice(0, 10); // Return top 10
   } catch (error) {
     return [];
@@ -811,4 +816,9 @@ export function showConfirm(title, message) {
     document.getElementById("popup-confirm").onclick = () => close(true);
     document.getElementById("popup-cancel").onclick = () => close(false);
   });
+}
+
+export async function signOutUser() {
+  const { signOut } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
+  return signOut(auth);
 }

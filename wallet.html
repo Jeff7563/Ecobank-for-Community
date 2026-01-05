@@ -73,32 +73,10 @@
         .receipt-points-info { text-align: right; font-size: 12px; color: #555; line-height: 1.5; }
         .receipt-footer { text-align: center; font-size: 10px; color: #555; margin-top: 20px;}
         .close-receipt { position: absolute; top: -40px; right: 0; color: #fff; font-size: 30px; cursor: pointer; }
-
-        /* User Dropdown */
-        .user-dropdown { position: relative; display: inline-block; }
-        .user-btn { background: #1e2329; color: #eaecef; padding: 8px 16px; border-radius: 20px; border: 1px solid #2b3139; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; font-size: 14px; }
-        .user-btn:hover { border-color: var(--primary-color); background: #2b3139; }
-        .user-avatar-xs { width: 24px; height: 24px; background: var(--primary-color); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-        
-        .dropdown-content { 
-            display: none; position: absolute; right: 0; top: 100%; margin-top: 10px; 
-            background-color: #1e2329; min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); 
-            border-radius: 12px; border: 1px solid #2b3139; z-index: 1000; overflow: visible; 
-        }
-        .dropdown-content::before { content: ""; position: absolute; top: -20px; left: 0; width: 100%; height: 20px; background: transparent; }
-        .user-dropdown:hover .dropdown-content { display: block; animation: fadeIn 0.2s; }
-        
-        .dropdown-content a { color: #eaecef; padding: 12px 16px; text-decoration: none; display: block; font-size: 14px; border-bottom: 1px solid #2b3139; transition: 0.2s; }
-        .dropdown-content a:last-child { border-bottom: none; }
-        .dropdown-content a:hover { background-color: #2b3139; color: var(--primary-color); padding-left: 20px; }
-        .dropdown-content a.logout-item:hover { color: #f6465d; background-color: rgba(246, 70, 93, 0.1); }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-left"><div class="logo">🌿 ECOBANK</div><nav class="nav"><a href="index.html" class="nav-link">หน้าแรก</a><a href="trash_types.html" class="nav-link">ราคาขยะวันนี้</a><a href="leaderboard.html" class="nav-link">จัดอันดับ</a><a href="exchange.html" class="nav-link">ตลาดซื้อขาย</a><a href="booths.html" class="nav-link">จุดรับซื้อ</a><a href="rewards.html" class="nav-link">ของรางวัล</a><a href="wallet.html" class="nav-link active">กระเป๋าเงิน</a></nav></div>
-        <div id="authSection" class="header-right"></div>
-    </header>
+    <header class="header"></header>
 
     <main class="container animate-fade-in">
         <div class="page-title">💰 My Wallet</div>
@@ -129,47 +107,13 @@
         </div>
 
         <div id="loginWarning" style="display:none; text-align: center; padding: 60px; background: var(--bg-card); border-radius: 12px;">
-            <div style="font-size: 50px; margin-bottom: 20px;">🔒</div>
-            <h2>กรุณาเข้าสู่ระบบ</h2>
-            <a href="login.html" class="btn btn-primary">เข้าสู่ระบบทันที</a>
+            <div style="font-size: 50px; margin-bottom: 20px;">⏳</div>
+            <h2>กำลังตรวจสอบข้อมูล...</h2>
         </div>
-
-        <footer class="site-footer">
-        <div class="footer-container">
-            <div class="footer-col">
-                <div class="footer-logo">🌿 ECOBANK</div>
-                <p class="footer-desc">
-                    แพลตฟอร์มธนาคารขยะดิจิทัลเพื่อชุมชน<br>
-                    เปลี่ยนขยะให้เป็นมูลค่า สร้างรายได้ ลดโลกร้อน
-                </p>
-            </div>
-
-            <div class="footer-col">
-                <h4>เมนูลัด</h4>
-                <ul class="footer-links">
-                    <li><a href="index.html">หน้าแรก</a></li>
-                    <li><a href="trash_types.html">ราคาขยะวันนี้</a></li>
-                    <li><a href="booths.html">จุดรับซื้อ</a></li>
-                    <li><a href="exchange.html">ตลาดซื้อขาย</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>ติดต่อเรา</h4>
-                <ul class="footer-contact">
-                    <li>📞 011-111-111</li>
-                    <li>📧 contact@ecobank.com</li>
-                    <li>📍 เทศบาลเมืองสกลนคร</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            &copy; 2025 ECOBANK. All Rights Reserved.
-        </div>
-    </footer>
         
     </main>
+
+    <footer class="site-footer"></footer>
 
     <div class="modal" id="receiptModal">
         <div style="position:relative;">
@@ -204,23 +148,33 @@
         } from "./js/firebase-service.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { auth } from "./js/firebase-config.js";
+        import { renderHeader, renderFooter } from "./js/components.js";
+
+        // 1. Render Components
+        renderHeader('wallet');
+        renderFooter();
 
         let currentUser = null;
         let globalTransactions = [];
         let allTrashTypes = [];
         let currentPoints = 0; // เก็บแต้มปัจจุบันไว้ใช้โชว์ในใบเสร็จ
 
+        // 2. Strict Auth Guard
         onAuthStateChanged(auth, async (user) => {
+            const authSection = document.getElementById('authSection');
             if (user) {
                 currentUser = user;
-                document.getElementById('authSection').innerHTML = `
-                    <div class="user-dropdown">
-                        <div class="user-btn"><div class="user-avatar-xs">👤</div><span>${user.email.split('@')[0]}</span><span style="font-size:10px; color:#888;">▼</span></div>
-                        <div class="dropdown-content">
-                            <a href="profile.html">👤 ข้อมูลส่วนตัว (Profile)</a><a href="wallet.html">💰 กระเป๋าเงิน (Wallet)</a><a href="#" id="logoutBtn" class="logout-item">🚪 ออกจากระบบ</a>
-                        </div>
-                    </div>`;
-                document.getElementById('logoutBtn').addEventListener('click', async (e) => { e.preventDefault(); if(await showConfirm("ยืนยัน","ออกจากระบบ?")) { await signOut(auth); window.location.href='login.html'; } });
+                // Header Auth Section Update
+                if(authSection) {
+                    authSection.innerHTML = `
+                        <div class="user-dropdown">
+                            <div class="user-btn"><div class="user-avatar-xs">👤</div><span>${user.email.split('@')[0]}</span><span style="font-size:10px; color:#888;">▼</span></div>
+                            <div class="dropdown-content">
+                                <a href="profile.html">👤 ข้อมูลส่วนตัว (Profile)</a><a href="wallet.html">💰 กระเป๋าเงิน (Wallet)</a><a href="#" id="logoutBtn" class="logout-item">🚪 ออกจากระบบ</a>
+                            </div>
+                        </div>`;
+                    document.getElementById('logoutBtn').addEventListener('click', async (e) => { e.preventDefault(); if(await showConfirm("ยืนยัน","ออกจากระบบ?")) { await signOut(auth); window.location.href='login.html'; } });
+                }
                 
                 document.getElementById('walletContent').style.display = 'block';
                 document.getElementById('loginWarning').style.display = 'none';
@@ -229,9 +183,8 @@
                 allTrashTypes = await getTrashTypes();
                 await loadWalletData();
             } else {
-                document.getElementById('authSection').innerHTML = `<a href="login.html" class="btn btn-login">เข้าสู่ระบบ</a>`;
-                document.getElementById('walletContent').style.display = 'none';
-                document.getElementById('loginWarning').style.display = 'block';
+                // Strict Redirect
+                window.location.replace("login.html");
             }
         });
 

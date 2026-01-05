@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนที่จุดรับซื้อ - ECOBANK</title>
+    <link rel="icon" href="./images/icon.png">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+          crossorigin=""/>
+          
+    <style>
+        .map-container {
+            width: 100%;
+            height: 60vh;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid #2b3139;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1; /* Fix z-index */
+        }
+        #map { width: 100%; height: 100%; background: #2b3139; }
+
+        .location-card {
+            background: #1e2329;
+            border: 1px solid #2b3139;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: block; /* Ensure block layout */
+        }
+        .location-card:hover { border-color: var(--primary-color); transform: translateY(-5px); }
+        .loc-icon { font-size: 24px; color: var(--primary-color); }
+        .btn-direct {
+            background: rgba(14,203,129,0.1); 
+            color: #0ecb81; 
+            border: 1px solid rgba(14,203,129,0.3); 
+            padding: 8px 10px; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .btn-direct:hover { background: #0ecb81; color: #000; }
+
+        /* Custom Popup */
+        .leaflet-popup-content-wrapper { background: #1e2329; color: #fff; border-radius: 8px; }
+        .leaflet-popup-tip { background: #1e2329; }
+        .leaflet-container a.leaflet-popup-close-button { color: #888; }
+    </style>
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="container animate-fade-in">
+        <div class="page-title">🗺️ แผนที่จุดรับซื้อ</div>
+        <p class="page-subtitle">ค้นหาจุดรับซื้อขยะใกล้บ้านคุณ</p>
+
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+
+        <h3 style="margin-bottom: 15px;">📍 รายการจุดรับซื้อ</h3>
+        <div id="locationList">
+            <div style="text-align:center; padding:20px; color:#666;">กำลังโหลดข้อมูล...</div>
+        </div>
+
+        <footer class="site-footer"></footer>
+    </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+            crossorigin=""></script>
+
+    <script type="module">
+        import { getEvents, showPopup } from "./js/firebase-service.js";
+        import { renderHeader, renderFooter } from "./js/components.js";
+
+        renderHeader('map');
+        renderFooter();
+
+        // 1. Initialize Map
+        // Default: Sakon Nakhon
+        const defaultLat = 17.1543;
+        const defaultLng = 104.1481;
+        
+        const map = L.map('map').setView([defaultLat, defaultLng], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Custom Icon
+        const leafIcon = L.icon({
+            iconUrl: './images/icon.png', // Fallback or use standard marker
+            iconSize: [30, 30],
+            iconAnchor: [15, 15],
+            popupAnchor: [0, -15]
+        });
+
+        const standardIcon = L.icon({
+            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+
+        async function initMap() {
+            try {
+                const events = await getEvents();
+                const listContainer = document.getElementById('locationList');
+                
+                if(events.length === 0) {
+                    listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:#666;">ไม่พบจุดรับซื้อในช่วงนี้</div>';
+                    return;
+                }
+
+                listContainer.innerHTML = '';
+                
+                // Card Grid Layout
+                listContainer.style.display = 'grid';
+                listContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
+                listContainer.style.gap = '20px';
+
+                const bounds = [];
+
+                events.forEach(loc => {
+                     // Check if loc has lat/lng
+                    let lat = parseFloat(loc.lat);
+                    let lng = parseFloat(loc.lng);
+                    
+                    // Fallback Location if missing (Sakon Nakhon)
+                    if(isNaN(lat) || isNaN(lng)) {
+                         lat = defaultLat + (Math.random() * 0.01);
+                         lng = defaultLng + (Math.random() * 0.01);
+                    }
+                    
+                    bounds.push([lat, lng]);
+
+                    // Add Marker
+                    const marker = L.marker([lat, lng], {icon: standardIcon}).addTo(map);
+                    marker.bindPopup(`<b>${loc.name}</b><br>${loc.district}`);
+
+                    // Add Card (Style from Booths)
+                    const statusHtml = loc.status === 'open' 
+                        ? '<span style="color:#b2ff59;">● เปิดให้บริการ</span>' 
+                        : '<span style="color:#f6465d;">● ปิดชั่วคราว</span>';
+
+                    const item = document.createElement('div');
+                    item.className = 'location-card animate-slide-up';
+                    item.style.marginBottom = '0'; // Reset margin
+                    item.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <span style="font-size:10px; background:rgba(255,255,255,0.1); color:#fff; padding:2px 8px; border-radius:4px;">จุดรับซื้อ</span>
+                            ${statusHtml}
+                        </div>
+                        <div style="display:flex; align-items:center; margin-bottom:10px;">
+                            <div class="loc-icon" style="margin-right:10px;">🏪</div>
+                            <div>
+                                <div class="loc-name" style="font-size:16px;">${loc.name}</div>
+                                <div class="loc-desc">${loc.address} (${loc.district})</div>
+                            </div>
+                        </div>
+                        <div style="font-size:12px; color:#888; margin-bottom:15px; display:flex; gap:15px;">
+                            <span>🕒 08:00 - 17:00</span>
+                            <span>📞 ${loc.phone || '-'}</span>
+                        </div>
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" target="_blank" class="btn-direct" style="width:100%; text-align:center; display:block;">
+                            🚗 นำทาง (Google Maps)
+                        </a>
+                    `;
+                    item.onclick = (e) => {
+                        if(e.target.tagName === 'A') return; // Don't trigger if clicked on link
+                        map.setView([lat, lng], 16);
+                        marker.openPopup();
+                        window.scrollTo({top: 0, behavior: 'smooth'});
+                    };
+                    listContainer.appendChild(item);
+                });
+
+                // Auto Fit Bounds
+                if(bounds.length > 0) {
+                    map.fitBounds(bounds, {padding: [50, 50]});
+                }
+
+            } catch(e) {
+                console.error(e);
+                showPopup("Error", "ไม่สามารถโหลดแผนที่ได้: " + e.message, "error");
+            }
+        }
+
+        // Get User Location
+        if(navigator.geolocation) {
+             navigator.geolocation.getCurrentPosition(pos => {
+                 const {latitude, longitude} = pos.coords;
+                 L.marker([latitude, longitude], {
+                     icon: L.divIcon({
+                         className: 'my-location-dot',
+                         html: '<div style="width:12px; height:12px; background:#007bff; border-radius:50%; border:2px solid #fff; box-shadow:0 0 10px rgba(0,123,255,0.5);"></div>'
+                     })
+                 }).addTo(map).bindPopup("คุณอยู่ที่นี่");
+                 // Optional: map.setView([latitude, longitude], 13);
+             });
+        }
+
+        initMap();
+    </script>
+</body>
+</html>

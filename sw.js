@@ -1,0 +1,50 @@
+const CACHE_NAME = "ecobank-v2";
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./css/style.css",
+  "./js/components.js",
+  "./js/firebase-config.js",
+  "./js/firebase-service.js",
+  "./login.html",
+  "./register.html",
+  "./admin-dashboard.html",
+  "./map.html",
+  "./knowledge.html",
+  "./manifest.json"
+];
+
+self.addEventListener("install", (e) => {
+  self.skipWaiting(); // Force activation
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS);
+    })
+  );
+});
+
+self.addEventListener("activate", (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) return caches.delete(key);
+        })
+      );
+    })
+  );
+  self.clients.claim(); // Take control immediately
+});
+
+self.addEventListener("fetch", (e) => {
+  // Network First for HTML, Cache First for others
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+        fetch(e.request).catch(() => caches.match(e.request))
+    );
+  } else {
+    e.respondWith(
+        caches.match(e.request).then((res) => res || fetch(e.request))
+    );
+  }
+});

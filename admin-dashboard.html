@@ -6,9 +6,20 @@
     <title>ECOBANK - ADMIN</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
     <link rel="stylesheet" href="css/style.css">
+    <!-- HTML5-QRCode Library -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('SW registered'))
+            .catch(err => console.log('SW failed', err));
+        });
+      }
+    </script>
     <style>
         /* --- Sidebar Styles --- */
-        body { display: flex; overflow-x: hidden; }
+        body { overflow-x: hidden; background-color: #0b0e11; }
         
         .sidebar {
             position: fixed; top: 0; left: 0; height: 100%; width: 60px;
@@ -17,6 +28,14 @@
             z-index: 1000; overflow: hidden; display: flex; flex-direction: column;
             box-shadow: 2px 0 10px rgba(0,0,0,0.5);
         }
+
+        /* History Modal */
+        #historyModal .modal-content { max-width: 900px; }
+        
+        /* Scanner Modal */
+        .scanner-container { width: 100%; max-width: 500px; background: #000; border-radius: 12px; overflow: hidden; position: relative; padding: 0; }
+        #reader { width: 100%; height: 350px; background: #000; }
+        .close-scanner { position: absolute; top: 10px; right: 10px; z-index: 10; background: rgba(0,0,0,0.5); border: none; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
         .sidebar:hover { width: 260px; } 
 
         .sidebar-header {
@@ -135,141 +154,169 @@
 </head>
 <body>
 
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <div style="font-size: 24px;">🌿</div>
-            <div class="sidebar-logo">ECOBANK</div>
-        </div>
-        
-        <ul class="menu-list">
-            <li class="menu-item active" onclick="switchView('management', this)">
-                <div class="menu-icon">🛠️</div>
-                <div class="menu-text">เมนูจัดการ</div>
-            </li>
-            <li class="menu-item" onclick="switchView('stats', this)">
-                <div class="menu-icon">📊</div>
-                <div class="menu-text">ภาพรวมสถิติ</div>
-            </li>
-        </ul>
+    <div id="loadingScreen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0b0e11; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff;">
+        <div style="font-size:50px; margin-bottom:20px;">🛡️</div>
+        <h2>กำลังตรวจสอบสิทธิ์ Admin...</h2>
+        <p id="loadingText" style="color:#888; margin-top:10px;">กรุณารอสักครู่</p>
+    </div>
 
-        <div class="sidebar-footer">
-            <li class="menu-item" id="logoutBtn" style="color:#f6465d;">
-                <div class="menu-icon">🚪</div>
-                <div class="menu-text">ออกจากระบบ</div>
-            </li>
-        </div>
-    </nav>
+    <div id="accessDenied" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#0b0e11; z-index:9999; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-align:center;">
+        <div style="font-size:60px; margin-bottom:20px; color:#f6465d;">⛔</div>
+        <h1 style="color:#f6465d;">Access Denied</h1>
+        <p style="color:#ccc; margin-bottom:30px;">คุณไม่มีสิทธิ์เข้าถึงหน้านี้ (Admin Only)</p>
+        <button id="deniedLogoutBtn" class="btn btn-outline" style="border-color:#f6465d; color:#f6465d;">ออกจากระบบ</button>
+    </div>
 
-    <main class="main-content">
-        
-        <div id="view-management" class="view-section active">
-            <div style="margin-bottom: 30px;">
-                <h1 class="page-title">🛠️ เมนูจัดการ</h1>
-                <p class="page-subtitle">จัดการข้อมูลระบบ, การรับซื้อ, และตั้งค่าต่างๆ</p>
+    <div id="adminContent" style="display:none;">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div style="font-size: 24px;">🌿</div>
+                <div class="sidebar-logo">ECOBANK</div>
             </div>
+            
+            <ul class="menu-list">
+                <li class="menu-item active" onclick="switchView('management', this)">
+                    <div class="menu-icon">🛠️</div>
+                    <div class="menu-text">เมนูจัดการ</div>
+                </li>
+                <li class="menu-item" onclick="switchView('stats', this)">
+                    <div class="menu-icon">📊</div>
+                    <div class="menu-text">ภาพรวมสถิติ</div>
+                </li>
+            </ul>
 
-            <div class="dashboard-grid">
-                <div class="dashboard-card" onclick="openPosModal()">
-                    <div class="card-icon-large">⚖️</div>
-                    <div class="card-title">บันทึกการรับซื้อ (POS)</div>
-                    <p style="color:var(--text-muted); font-size:14px;">ทำรายการรับซื้อและคำนวณเงิน</p>
-                    <button class="action-btn">เริ่มทำรายการ</button>
-                </div>
-                <div class="dashboard-card" onclick="openTrashModal()">
-                    <div class="card-icon-large">📦</div>
-                    <div class="card-title">จัดการประเภทขยะ</div>
-                    <p style="color:var(--text-muted); font-size:14px;">แก้ไขราคากลางและข้อมูลขยะ</p>
-                    <button class="action-btn">เข้าจัดการ</button>
-                </div>
-                <div class="dashboard-card" onclick="openEventModal()">
-                    <div class="card-icon-large">🏪</div>
-                    <div class="card-title">จัดการจุดรับซื้อ</div>
-                    <p style="color:var(--text-muted); font-size:14px;">ตั้งค่าสถานที่, เวลา, พิกัด</p>
-                    <button class="action-btn">เข้าจัดการ</button>
-                </div>
-                <div class="dashboard-card" onclick="openRewardModal()">
-                    <div class="card-icon-large">🎁</div>
-                    <div class="card-title">จัดการของรางวัล</div>
-                    <p style="color:var(--text-muted); font-size:14px;">เพิ่ม/ลด รายการของรางวัล</p>
-                    <button class="action-btn">เข้าจัดการ</button>
-                </div>
-                <div class="dashboard-card" onclick="runFixData()">
-                    <div class="card-icon-large">🔧</div>
-                    <div class="card-title">ซ่อมข้อมูลเก่า</div>
-                    <p style="color:var(--text-muted); font-size:14px;">เติมข้อมูลชุมชนให้สมาชิกเก่า</p>
-                    <button class="action-btn">เริ่มซ่อมแซม</button>
-                </div>
-                
-                <div class="dashboard-card" onclick="seedData()">
-                    <div class="card-icon-large">🔄</div>
-                    <div class="card-title">รีเซ็ตข้อมูลระบบ</div>
-                    <p style="color:var(--text-muted); font-size:14px;">ล้างข้อมูลเก่าและลงข้อมูลตัวอย่าง</p>
-                    <button class="action-btn btn-danger-custom">รีเซ็ตทันที</button>
-                </div>
+            <div class="sidebar-footer">
+                <li class="menu-item" id="logoutBtn" style="color:#f6465d;">
+                    <div class="menu-icon">🚪</div>
+                    <div class="menu-text">ออกจากระบบ</div>
+                </li>
             </div>
-        </div>
+        </nav>
 
-        <div id="view-stats" class="view-section">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap: wrap; gap: 15px;">
-                <div>
-                    <h1 class="page-title">📊 ภาพรวมสถิติ</h1>
-                    <p class="page-subtitle" style="margin-bottom:0;">สรุปข้อมูลการดำเนินงานของธนาคารขยะ</p>
+        <main class="main-content">
+            
+            <div id="view-management" class="view-section active">
+                <div style="margin-bottom: 30px;">
+                    <h1 class="page-title">🛠️ เมนูจัดการ</h1>
+                    <p class="page-subtitle">จัดการข้อมูลระบบ, การรับซื้อ, และตั้งค่าต่างๆ</p>
                 </div>
-                <select id="communityFilter" class="form-control" style="width:auto; min-width: 200px; background: #1e2329;">
-                    <option value="all">🌐 ทุกชุมชน (ภาพรวม)</option>
-                    <option value="muang_sakon_nakhon">📍 ชุมชนเมืองสกลนคร</option>
-                    <option value="banthala">📍 ชุมชนบ้านท่าแร่</option>
-                    <option value="kokpar_sil">📍 ชุมชนกกปลาซิว</option>
-                </select>
-            </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">♻️</div>
-                    <div class="stat-label">ขยะรีไซเคิลสะสม</div>
-                    <div class="stat-value"><span id="statWeight">0</span><span class="stat-unit">kg</span></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🪙</div>
-                    <div class="stat-label">แต้มหมุนเวียนในชุมชน</div>
-                    <div class="stat-value"><span id="statPoints">0</span><span class="stat-unit">แต้ม</span></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-label">สมาชิกทั้งหมด</div>
-                    <div class="stat-value"><span id="statMembers">0</span><span class="stat-unit">คน</span></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">💰</div>
-                    <div class="stat-label">ยอดเงินรับซื้อรวม</div>
-                    <div class="stat-value"><span id="statMoney">0</span><span class="stat-unit">฿</span></div>
-                </div>
-            </div>
-
-            <div class="stats-extended-row">
-                <div class="content-card">
-                    <div class="card-header">
-                        <div class="card-title-text">🕒 ธุรกรรมล่าสุด (5 รายการ)</div>
-                        <a href="#" style="font-size:12px; color:var(--primary-color);">ดูทั้งหมด</a>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card" onclick="openPosModal()">
+                        <div class="card-icon-large">⚖️</div>
+                        <div class="card-title">บันทึกการรับซื้อ (POS)</div>
+                        <p style="color:var(--text-muted); font-size:14px;">ทำรายการรับซื้อและคำนวณเงิน</p>
+                        <button class="action-btn">เริ่มทำรายการ</button>
                     </div>
-                    <table class="recent-table">
-                        <thead><tr><th>เวลา</th><th>สมาชิก</th><th>ประเภท</th><th style="text-align:right;">ยอดเงิน/แต้ม</th></tr></thead>
-                        <tbody id="recentTxTable"><tr><td colspan="4" style="text-align:center; color:#666;">กำลังโหลด...</td></tr></tbody>
-                    </table>
-                </div>
-
-                <div class="content-card">
-                    <div class="card-header">
-                        <div class="card-title-text">📊 สัดส่วนขยะที่รับซื้อ</div>
+                    <div class="dashboard-card" onclick="openTrashModal()">
+                        <div class="card-icon-large">📦</div>
+                        <div class="card-title">จัดการประเภทขยะ</div>
+                        <p style="color:var(--text-muted); font-size:14px;">แก้ไขราคากลางและข้อมูลขยะ</p>
+                        <button class="action-btn">เข้าจัดการ</button>
                     </div>
-                    <div id="trashDistribution" class="progress-list">
-                        <div style="text-align:center; color:#666;">กำลังโหลด...</div>
+                    <div class="dashboard-card" onclick="openEventModal()">
+                        <div class="card-icon-large">🏪</div>
+                        <div class="card-title">จัดการจุดรับซื้อ</div>
+                        <p style="color:var(--text-muted); font-size:14px;">ตั้งค่าสถานที่, เวลา, พิกัด</p>
+                        <button class="action-btn">เข้าจัดการ</button>
+                    </div>
+                    <div class="dashboard-card" onclick="openRewardModal()">
+                        <div class="card-icon-large">🎁</div>
+                        <div class="card-title">จัดการของรางวัล</div>
+                        <p style="color:var(--text-muted); font-size:14px;">เพิ่ม/ลด รายการของรางวัล</p>
+                        <button class="action-btn">เข้าจัดการ</button>
+                    </div>
+                    <div class="dashboard-card" onclick="runFixData()">
+                        <div class="card-icon-large">🔧</div>
+                        <div class="card-title">ซ่อมข้อมูลเก่า</div>
+                        <p style="color:var(--text-muted); font-size:14px;">เติมข้อมูลชุมชนให้สมาชิกเก่า</p>
+                        <button class="action-btn">เริ่มซ่อมแซม</button>
+                    </div>
+                    
+                    <div class="dashboard-card" onclick="seedData()">
+                        <div class="card-icon-large">🔄</div>
+                        <div class="card-title">รีเซ็ตข้อมูลระบบ</div>
+                        <p style="color:var(--text-muted); font-size:14px;">ล้างข้อมูลเก่าและลงข้อมูลตัวอย่าง</p>
+                        <button class="action-btn btn-danger-custom">รีเซ็ตทันที</button>
+                    </div>
+
+                    <div class="dashboard-card" onclick="runSeedDemo()">
+                        <div class="card-icon-large">🧪</div>
+                        <div class="card-title">สร้างข้อมูลทดสอบ</div>
+                        <p style="color:var(--text-muted); font-size:14px;">จำลองสมาชิกและธุรกรรม 20 รายการ</p>
+                        <button class="action-btn" style="border-color: #00bcd4; color: #00bcd4;">สร้างข้อมูล</button>
                     </div>
                 </div>
             </div>
-        </div>
 
-    </main>
+            <div id="view-stats" class="view-section">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h1 class="page-title">📊 ภาพรวมสถิติ</h1>
+                        <p class="page-subtitle" style="margin-bottom:0;">สรุปข้อมูลการดำเนินงานของธนาคารขยะ</p>
+                    </div>
+                    <select id="communityFilter" class="form-control" style="width:auto; min-width: 200px; background: #1e2329;">
+                        <option value="all">🌐 ทุกชุมชน (ภาพรวม)</option>
+                        <option value="muang_sakon_nakhon">📍 ชุมชนเมืองสกลนคร</option>
+                        <option value="banthala">📍 ชุมชนบ้านท่าแร่</option>
+                        <option value="kokpar_sil">📍 ชุมชนกกปลาซิว</option>
+                    </select>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">♻️</div>
+                        <div class="stat-label">ขยะรีไซเคิลสะสม</div>
+                        <div class="stat-value"><span id="statWeight">0</span><span class="stat-unit">kg</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🪙</div>
+                        <div class="stat-label">แต้มหมุนเวียนในชุมชน</div>
+                        <div class="stat-value"><span id="statPoints">0</span><span class="stat-unit">แต้ม</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-label">สมาชิกทั้งหมด</div>
+                        <div class="stat-value"><span id="statMembers">0</span><span class="stat-unit">คน</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-label">ยอดเงินรับซื้อรวม</div>
+                        <div class="stat-value"><span id="statMoney">0</span><span class="stat-unit">฿</span></div>
+                    </div>
+                </div>
+
+                <div class="stats-extended-row">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title-text"><span style="font-size:24px;">🧾</span> ประวัติธุรกรรมล่าสุด</div>
+                            <div style="display:flex; gap:10px;">
+                                <button onclick="exportToCSV()" class="btn btn-outline" style="padding: 5px 15px; font-size:12px;">📥 Export CSV</button>
+                                <a href="#" style="color:var(--primary-color); text-decoration:none; font-size:14px;" onclick="openHistoryModal()">ดูทั้งหมด →</a>
+                            </div>
+                        </div>
+                        <table class="recent-table">
+                            <thead><tr><th>เวลา</th><th>สมาชิก</th><th>รายการ</th><th style="text-align:right;">ยอดเงิน/แต้ม</th></tr></thead>
+                            <tbody id="recentTxTable"><tr><td colspan="4" style="text-align:center; color:#666;">กำลังโหลด...</td></tr></tbody>
+                        </table>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title-text">📊 สัดส่วนขยะที่รับซื้อ</div>
+                        </div>
+                        <div id="trashDistribution" class="progress-list">
+                            <div style="text-align:center; color:#666;">กำลังโหลด...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modals (POS, Trash, Event, Reward) -->
+    <!-- ... Modals are continued below in existing code ... -->
 
     <div class="modal" id="posModal">
         <div class="modal-content">
@@ -277,9 +324,10 @@
             <h2 style="margin-bottom:20px;">⚖️ รับซื้อขยะ / บันทึกรายการ</h2>
             <div class="pos-section">
                 <label class="form-label">ค้นหาสมาชิก (เบอร์โทรศัพท์)</label>
-                <div style="display: flex; gap: 10px;">
-                    <input type="tel" id="searchPhone" class="form-control" placeholder="กรอกเบอร์โทรลูกค้า...">
-                    <button onclick="searchUser()" class="btn btn-primary">ค้นหา</button>
+                <div class="search-box">
+                    <input type="tel" id="memberSearch" class="search-input" placeholder="เบอร์โทรศัพท์สมาชิก (08XXXXXXXX)">
+                    <button class="action-btn" onclick="searchMember()" style="width: auto; padding: 0 20px;">🔍 ค้นหา</button>
+                    <button class="action-btn" onclick="startScanner()" style="width: auto; padding: 0 20px; background: #00bcd4; margin-left: 10px;">📷 Scan</button>
                 </div>
                 <div id="posUserResult" class="pos-user-card" style="margin-top: 10px;">
                     <span style="font-size: 24px;">👤</span>
@@ -386,26 +434,89 @@
         </div>
     </div>
 
+    <div class="modal" id="scanner-modal">
+        <div class="scanner-container">
+            <button class="close-scanner" onclick="stopScanner()">❌ ปิดกล้อง</button>
+            <div id="reader"></div>
+            <div style="text-align:center; padding:10px; color:#fff;">วาง QR Code ให้อยู่ในกรอบ</div>
+        </div>
+    </div>
+
     <script type="module">
+        console.log("Admin Script Starting...");
         import { 
             getTrashTypes, addTrashType, updateTrashType, deleteTrashType, getTrashVolumeStats,
             getEvents, addEvent, updateEvent, deleteEvent, 
             getRewards, addReward, updateReward, deleteReward,
             seedInitialData, showPopup, showConfirm,
-            findUserByPhone, adminRecordTransaction, getCommunityStats, fixOldData,
-            getRecentTransactions 
+            findUserByPhone, getUserWallet, adminRecordTransaction, getCommunityStats, fixOldData,
+            getRecentTransactions, getAllTransactions, seedDemoData
         } from "./js/firebase-service.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDocs, collection, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getDocs, collection, query, orderBy, limit, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { auth, db } from "./js/firebase-config.js";
+
+        // Global Safety Check
+        window.startScanner = function() { alert("Script is still loading or failed. Please refresh."); };
 
         let currentPosUser = null;
         let currentPosItems = [];
         let allTrashTypes = [];
         let allTrashData = []; 
         
-        onAuthStateChanged(auth, (user) => { if (!user) window.location.href = 'login.html'; });
+        // --- STRICT ADMIN AUTH GUARD ---
+        onAuthStateChanged(auth, async (user) => { 
+            if (user) {
+                // Check Admin Role
+                try {
+                    const userRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(userRef);
+                    
+                    let isAdmin = false;
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        if (data.role === 'admin' || user.email === 'admin@ecobank.com') {
+                            isAdmin = true;
+                        }
+                    } else if (user.email === 'admin@ecobank.com') {
+                         // Hardcoded fallback for initial seed
+                         isAdmin = true;
+                    }
+
+                    if (isAdmin) {
+                        // Success: Show Content
+                        document.getElementById('loadingScreen').style.display = 'none';
+                        document.getElementById('adminContent').style.display = 'block';
+                        loadStats();
+                    } else {
+                        // Access Denied
+                        document.getElementById('loadingScreen').style.display = 'none';
+                        document.getElementById('accessDenied').style.display = 'flex';
+                    }
+
+                } catch (error) {
+                    console.error("Auth Check Error:", error);
+                    showPopup("Error", "Authentication check failed", "error");
+                    window.location.replace('login.html');
+                }
+
+            } else {
+                // Not Logged In
+                window.location.replace('login.html'); 
+            }
+        });
+
         document.getElementById('logoutBtn').addEventListener('click', async () => { if(await showConfirm("ยืนยัน","ออกจากระบบ?")) { await signOut(auth); window.location.href='login.html'; } });
+        document.getElementById('deniedLogoutBtn').addEventListener('click', async () => { await signOut(auth); window.location.href='login.html'; });
+
+        window.runSeedDemo = async () => {
+            if(await showConfirm("สร้างข้อมูลทดสอบ?", "ระบบจะสร้าง User จำลอง 5 คน และ Transaction 20 รายการ")) {
+                showPopup("กำลังทำงาน", "กรุณารอสักครู่...", "info");
+                await seedDemoData();
+                await showPopup("สำเร็จ", "สร้างข้อมูลเรียบร้อยแล้ว", "success");
+                loadStats();
+            }
+        };
 
         window.switchView = (viewName, el) => {
             document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
@@ -430,37 +541,210 @@
             loadRecentTransactions(selectedCommunity);
             loadTrashDistribution(selectedCommunity);
         }
-        loadStats();
         document.getElementById('communityFilter').addEventListener('change', loadStats);
 
         // --- Helper Functions ---
-        async function loadRecentTransactions(community) {
+        // --- Transactions Logic ---
+        window.loadRecentTransactions = async () => {
+            const table = document.getElementById('recentTxTable');
+            table.innerHTML = '<tr><td colspan="4" style="text-align:center;">กำลังโหลด...</td></tr>';
             try {
-                const transactions = await getRecentTransactions(community);
-                const table = document.getElementById('recentTxTable');
-                
-                if(transactions.length === 0) {
-                    table.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#666;">ไม่มีรายการ</td></tr>`;
-                    return;
-                }
+                const txs = await getRecentTransactions();
+                renderTransactionTable(txs, table);
+            } catch (err) {
+                console.error(err);
+                table.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">โหลดข้อมูลไม่สำเร็จ</td></tr>';
+            }
+        };
 
-                table.innerHTML = transactions.map(d => {
-                    const date = d.created_at?.seconds ? new Date(d.created_at.seconds*1000).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}) : '-';
-                    const typeBadge = d.type === 'sell' ? '<span class="badge-tx badge-sell">ขายขยะ</span>' : 
-                                      d.type === 'withdraw' ? '<span class="badge-tx badge-withdraw">ถอนเงิน</span>' : d.type;
-                    const amount = d.type === 'sell' ? `+${d.amount}` : `-${Math.abs(d.amount)}`;
-                    return `
-                        <tr>
-                            <td>${date}</td>
-                            <td>${d.member_name || 'Guest'}</td>
-                            <td>${typeBadge}</td>
-                            <td style="text-align:right; font-weight:bold; color:${d.type==='sell'?'#4caf50':'#f6465d'};">${amount}</td>
-                        </tr>
-                    `;
-                }).join('');
-            } catch(e) { console.log(e); }
+        window.openHistoryModal = async () => {
+             const tableBody = document.getElementById('historyTableBody');
+             document.getElementById('historyModal').classList.add('show');
+             tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">กำลังโหลด...</td></tr>';
+             
+             try {
+                const txs = await getAllTransactions(50);
+                renderTransactionTable(txs, tableBody);
+             } catch(err) {
+                console.error(err);
+                tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">โหลดล้มเหลว</td></tr>';
+             }
+        };
+        
+        window.closeHistoryModal = () => document.getElementById('historyModal').classList.remove('show');
+
+        function renderTransactionTable(txs, tableElement) {
+            if (txs.length === 0) {
+                tableElement.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#666;">ไม่มีรายการล่าสุด</td></tr>';
+                return;
+            }
+            
+            tableElement.innerHTML = txs.map(t => {
+                const date = t.created_at ? new Date(t.created_at.seconds * 1000).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}) : '-';
+                // Parse Items
+                let details = '';
+                if (t.type === 'sell' && t.items && t.items.length > 0) {
+                     details = t.items.map(i => `<span style="display:inline-block; background:#1e2329; border:1px solid #4caf50; padding:2px 6px; border-radius:4px; font-size:11px; margin-right:4px;">${i.name} ${i.weight}kg</span>`).join('');
+                } else if (t.type === 'withdraw') {
+                    details = `<span class="badge-tx badge-withdraw">ถอนเงิน</span>`;
+                } else if (t.type === 'redeem') {
+                     details = `<span class="badge-tx badge-withdraw">แลกของรางวัล</span>`;
+                } else {
+                     details = `<span class="badge-tx badge-sell">${t.type}</span>`;
+                }
+                
+                let amountClass = (t.type === 'sell' || t.type === 'deposit') ? 'text-success' : 'text-danger';
+                let amountSign = (t.type === 'sell' || t.type === 'deposit') ? '+' : '';
+                
+                return `
+                    <tr>
+                        <td style="color:#888;">${date}</td>
+                        <td style="color:#fff;">${t.member_name || t.member_username || t.member_id || 'Guest'}</td>
+                        <td>${details}</td>
+                        <td style="text-align:right; font-weight:bold; color:${amountClass === 'text-success' ? '#0ecb81' : '#f6465d'};">
+                            ${amountSign}${t.amount}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // Restore Variables
+        window.memberData = null; 
+        let html5QrcodeScanner = null;
+
+        // Update loadRecentTransactions to support Community Filter
+        window.loadRecentTransactions = async (community) => {
+            const table = document.getElementById('recentTxTable');
+            table.innerHTML = '<tr><td colspan="4" style="text-align:center;">กำลังโหลด...</td></tr>';
+            try {
+                // Pass community to service
+                const txs = await getRecentTransactions(community);
+                renderTransactionTable(txs, table);
+            } catch (err) {
+                console.error(err);
+                table.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">โหลดข้อมูลไม่สำเร็จ</td></tr>';
+            }
+        };
+        window.searchMember = async () => {
+            const phone = document.getElementById('memberSearch').value;
+            if(!phone) return;
+            try {
+                const user = await findUserByPhone(phone);
+                updateMemberUI(user);
+            } catch (error) {
+                console.error(error);
+                showPopup("Err", error.message, "error");
+                updateMemberUI(null);
+            }
+        };
+
+        // UI Update Function (Reuse for Search & Scan)
+        function updateMemberUI(user) {
+            const infoDiv = document.getElementById('posUserResult'); // ✅ Fix ID
+            if(user) {
+                window.memberData = user;
+                infoDiv.style.display = 'flex'; // Ensure it's visible
+                infoDiv.innerHTML = `
+                    <div style="background: rgba(14,203,129,0.1); padding: 15px; border-radius: 8px; border: 1px solid #0ecb81; width: 100%;">
+                        <div style="color: #0ecb81; font-weight: bold; margin-bottom: 5px;">✅ สมาชิก: ${user.username}</div>
+                        <div style="font-size: 14px; color: #ccc;">Wallet: ${user.balance?.cash || 0} ฿ | Points: ${user.points || 0}</div>
+                        <div style="font-size: 12px; color: #888;">ID: ${user.id}</div>
+                    </div>
+                `;
+            } else {
+                window.memberData = null;
+                // infoDiv.style.display = 'none'; // Optional: Hide if not found? Or show red text
+                 infoDiv.innerHTML = `<div style="text-align: center; color: #f6465d; padding: 10px; width: 100%;">ไม่พบข้อมูลสมาชิก</div>`;
+            }
         }
 
+        // Scanner Logic
+        window.startScanner = async () => {
+            if (typeof Html5Qrcode === "undefined") {
+                 showPopup("Error", "Library 'html5-qrcode' ไม่โหลด กรุณาเช็คอินเทอร์เน็ต", "error");
+                 return;
+            }
+
+            // Show Modal first
+            document.getElementById('scanner-modal').style.display = 'flex';
+            
+            // Wait for UI to render
+            await new Promise(r => setTimeout(r, 100));
+
+            // Cleanup previous instance if any
+            if (html5QrcodeScanner) {
+                try { await html5QrcodeScanner.stop(); } catch(e){}
+                try { await html5QrcodeScanner.clear(); } catch(e){}
+                html5QrcodeScanner = null;
+            }
+
+            try {
+                html5QrcodeScanner = new Html5Qrcode("reader");
+                const config = { 
+                    fps: 10, 
+                    qrbox: { width: 250, height: 250 },
+                    aspectRatio: 1.0
+                };
+                
+                await html5QrcodeScanner.start(
+                    { facingMode: "environment" }, 
+                    config, 
+                    onScanSuccess, 
+                    onScanFailure
+                );
+            } catch (err) {
+                console.error("Scanner Error:", err);
+                showPopup("กล้องไม่ทำงาน", "ไม่สามารถเปิดกล้องได้: " + err, "error");
+                document.getElementById('scanner-modal').style.display = 'none';
+            }
+        };
+
+        window.stopScanner = async () => {
+            if (html5QrcodeScanner) {
+                try {
+                    await html5QrcodeScanner.stop();
+                    await html5QrcodeScanner.clear();
+                } catch(e) { console.error(e); }
+                html5QrcodeScanner = null;
+            }
+            document.getElementById('scanner-modal').style.display = 'none';
+        };
+
+        const onScanSuccess = async (decodedText, decodedResult) => {
+            // Stop scanning immediately to prevent multiple triggers
+            if (html5QrcodeScanner) {
+                try {
+                    await html5QrcodeScanner.stop();
+                    await html5QrcodeScanner.clear(); // Clear canvas
+                } catch(e) {}
+                html5QrcodeScanner = null;
+            }
+            document.getElementById('scanner-modal').style.display = 'none';
+            
+            showPopup("กำลังค้นหา...", `ID: ${decodedText}`, "info");
+            
+            try {
+                // Assume the QR text is the User ID (UID)
+                const user = await getUserWallet(decodedText);
+                
+                if (user) {
+                    // Update UI with found user
+                    updateMemberUI({ id: decodedText, ...user });
+                    showPopup("สำเร็จ", `พบสมาชิก: ${user.username}`, "success");
+                } else {
+                    showPopup("ไม่พบข้อมูล", `ไม่พบ User ID: ${decodedText} ในระบบ`, "error");
+                    updateMemberUI(null);
+                }
+            } catch (err) {
+                console.error(err);
+                showPopup("System Error", "เกิดข้อผิดพลาดในการดึงข้อมูล: " + err.message, "error");
+            }
+        };
+
+        const onScanFailure = (error) => {
+            // console.warn(`Code scan error = ${error}`);
+        };
         async function loadTrashDistribution(community) {
             try {
                 const volumeStats = await getTrashVolumeStats(community); 
@@ -510,46 +794,69 @@
         window.openPosModal = async () => {
             document.getElementById('posModal').classList.add('show');
             currentPosUser = null; currentPosItems = [];
-            document.getElementById('searchPhone').value = '';
-            document.getElementById('posUserResult').style.display = 'none';
+            // Fix ID: searchPhone -> memberSearch
+            const searchInput = document.getElementById('memberSearch');
+            if(searchInput) {
+                searchInput.value = '';
+                searchInput.disabled = false;
+            }
+            
+            const userResult = document.getElementById('posUserResult');
+            if(userResult) userResult.style.display = 'none';
+
             document.getElementById('guestCheckbox').checked = false;
-            document.getElementById('searchPhone').disabled = false;
+            
             renderPosItems();
-            allTrashTypes = await getTrashTypes();
-            const select = document.getElementById('posTrashType');
-            select.innerHTML = '<option value="">-- เลือก --</option>';
-            allTrashTypes.forEach(t => select.innerHTML += `<option value="${t.id}" data-price="${t.price_per_unit}">${t.name}</option>`);
-        };
-        window.closePosModal = () => document.getElementById('posModal').classList.remove('show');
-        document.getElementById('posTrashType').addEventListener('change', (e) => {
-            const price = e.target.options[e.target.selectedIndex].dataset.price;
-            document.getElementById('posPricePerUnit').value = price || '';
-        });
-        window.searchUser = async () => {
-            const phone = document.getElementById('searchPhone').value.trim();
-            if(!phone) return showPopup("แจ้งเตือน","กรุณากรอกเบอร์","error");
+            
+            // Load Trash Types
             try {
-                const user = await findUserByPhone(phone);
-                if(user) {
-                    currentPosUser = user;
-                    document.getElementById('posUserName').textContent = user.username;
-                    document.getElementById('posUserPhone').textContent = user.phone;
-                    document.getElementById('posUserResult').style.display = 'flex';
-                    document.getElementById('guestCheckbox').checked = false;
-                } else showPopup("ไม่พบ","ไม่พบสมาชิก","error");
-            } catch(e) { console.error(e); }
+                allTrashTypes = await getTrashTypes();
+                const select = document.getElementById('posTrashType');
+                select.innerHTML = '<option value="">-- เลือก --</option>';
+                allTrashTypes.forEach(t => select.innerHTML += `<option value="${t.id}" data-price="${t.price_per_unit}">${t.name}</option>`);
+            } catch (err) {
+                console.error("Error loading trash types:", err);
+            }
         };
+
+        window.closePosModal = () => document.getElementById('posModal').classList.remove('show');
+        
+        document.getElementById('posTrashType').addEventListener('change', (e) => {
+            try {
+                const price = e.target.options[e.target.selectedIndex].dataset.price;
+                document.getElementById('posPricePerUnit').value = price || '';
+            } catch(e) {}
+        });
+
+        // (Original searchUser function removed/superseded by window.memberSearch above)
+        
         window.toggleGuestMode = () => {
             const isGuest = document.getElementById('guestCheckbox').checked;
+            const searchInput = document.getElementById('memberSearch');
+            const userResult = document.getElementById('posUserResult');
+            
             if(isGuest) {
-                currentPosUser = { id: null, username: 'Guest', phone: '-' };
-                document.getElementById('searchPhone').disabled = true;
-                document.getElementById('posUserResult').style.display = 'flex';
-                document.getElementById('posUserName').textContent = "Guest";
+                // Mock Guest User
+                window.memberData = { id: 'guest', username: 'Guest', phone: '-' };
+                if(searchInput) searchInput.disabled = true;
+                
+                // Manually show result for guest
+                if(userResult) {
+                    userResult.style.display = 'flex';
+                    userResult.innerHTML = `
+                         <div style="background: rgba(14,203,129,0.1); padding: 15px; border-radius: 8px; border: 1px solid #0ecb81; width: 100%;">
+                            <div style="color: #0ecb81; font-weight: bold; margin-bottom: 5px;">👤 สมาชิก: Guest (Walk-in)</div>
+                            <div style="font-size: 14px; color: #ccc;">ไม่ได้เป็นสมาชิก</div>
+                        </div>
+                    `;
+                }
             } else {
-                currentPosUser = null;
-                document.getElementById('searchPhone').disabled = false;
-                document.getElementById('posUserResult').style.display = 'none';
+                window.memberData = null;
+                if(searchInput) searchInput.disabled = false;
+                if(userResult) {
+                   userResult.style.display = 'none';
+                   userResult.innerHTML = '';
+                }
             }
         };
         window.addPosItem = () => {
@@ -574,10 +881,12 @@
         }
         window.removePosItem = (idx) => { currentPosItems.splice(idx, 1); renderPosItems(); };
         window.submitTransaction = async () => {
-            if(!currentPosUser || currentPosItems.length===0) return showPopup("แจ้งเตือน","ข้อมูลไม่ครบ","error");
+            // Fix: Use window.memberData instead of currentPosUser
+            if(!window.memberData || currentPosItems.length===0) return showPopup("แจ้งเตือน","ข้อมูลไม่ครบ (สมาชิก/รายการ)","error");
+            
             const total = parseFloat(document.getElementById('posTotalAmount').textContent);
             if(await showConfirm("ยืนยัน", `ยอดรวม ${total} บาท?`)) {
-                await adminRecordTransaction(currentPosUser, currentPosItems, total);
+                await adminRecordTransaction(window.memberData, currentPosItems, total);
                 await showPopup("สำเร็จ","บันทึกแล้ว","success");
                 closePosModal();
                 loadStats();
@@ -789,6 +1098,48 @@
         
         window.seedData = async () => { if(await showConfirm("Reset?","ยืนยัน")) { await seedInitialData(); showPopup("สำเร็จ","รีเซ็ตแล้ว","success"); loadStats(); } };
         window.runFixData = async () => { if(await showConfirm("ยืนยัน","เติมข้อมูลชุมชน?")) { const c = await fixOldData(); showPopup("สำเร็จ",`อัปเดต ${c} รายการ`,"success"); loadStats(); } };
+
+        window.exportToCSV = async () => {
+            if(!await showConfirm("Confirm", "ต้องการดาวน์โหลดข้อมูลทั้งหมดเป็น CSV หรือไม่?")) return;
+            showPopup("กำลังประมวลผล", "กำลังดึงข้อมูล...", "info");
+            
+            try {
+                const txs = await getAllTransactions(1000); // Limit 1000 for now
+                if(txs.length === 0) return showPopup("ไม่มีข้อมูล", "ไม่พบรายการธุรกรรม", "error");
+
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Date,Type,Member,Community,Amount,Items,TotalWeight,Status\n";
+
+                txs.forEach(t => {
+                    const date = t.created_at ? new Date(t.created_at.seconds * 1000).toLocaleString('th-TH') : '-';
+                    const itemsStr = t.items ? t.items.map(i => `${i.name}(${i.weight}kg)`).join(';') : '-';
+                    const row = [
+                        `"${date}"`,
+                        `"${t.type}"`,
+                        `"${t.member_name || t.member_username || 'Guest'}"`,
+                        `"${t.community}"`,
+                        `"${t.amount}"`,
+                        `"${itemsStr}"`,
+                        `"${t.total_weight || 0}"`,
+                        `"${t.status}"`
+                    ].join(",");
+                    csvContent += row + "\n";
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `ecobank_transactions_${new Date().toISOString().slice(0,10)}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showPopup("สำเร็จ", "ดาวน์โหลดเรียบร้อย", "success");
+            } catch(e) {
+                console.error(e);
+                showPopup("ผิดพลาด", "ไม่สามารถดาวน์โหลดได้", "error");
+            }
+        };
 
         window.removePosItem = removePosItem;
     </script>

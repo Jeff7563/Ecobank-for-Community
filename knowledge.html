@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ศูนย์เรียนรู้ - ECOBANK</title>
+    <link rel="icon" href="./images/icon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hero-banner {
+            background: linear-gradient(135deg, #0ecb81 0%, #00a86b 100%);
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #fff;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(14, 203, 129, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-banner::after {
+            content: "📚";
+            font-size: 150px;
+            position: absolute;
+            right: -20px;
+            bottom: -30px;
+            opacity: 0.2;
+            transform: rotate(-15deg);
+        }
+        
+        .section-header { margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        
+        /* Guide Cards */
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .guide-card {
+            background: #1e2329;
+            border: 1px solid #2b3139;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .guide-card:hover { transform: translateY(-5px); border-color: var(--primary-color); }
+        .guide-icon { font-size: 40px; margin-bottom: 10px; display: block; }
+        .guide-title { font-weight: bold; color: #fff; margin-bottom: 5px; }
+        .guide-subtitle { font-size: 12px; color: #888; }
+
+        /* Accordion */
+        .faq-item {
+            background: #1e2329;
+            border: 1px solid #2b3139;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .faq-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: #fff;
+        }
+        .faq-header:hover { background: rgba(255,255,255,0.05); }
+        .faq-body {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: 0.3s;
+            color: #ccc;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        .faq-item.active .faq-body { padding: 0 20px 20px 20px; max-height: 500px; }
+        .faq-icon { transition: 0.3s; }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
+    </style>
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="container animate-fade-in">
+        
+        <div class="hero-banner animate-slide-up">
+            <h1 style="margin:0; font-size: 28px;">ศูนย์เรียนรู้นักแยกขยะ</h1>
+            <p style="margin: 10px 0 0; opacity: 0.9;">คู่มือและเกร็ดความรู้สู่สังคม Zero Waste</p>
+        </div>
+
+        <div class="section-header">
+            <span style="font-size: 24px;">♻️</span>
+            <h2 style="margin:0;">วิธีแยกขยะเบื้องต้น</h2>
+        </div>
+
+        <div class="guide-grid">
+            <div class="guide-card" onclick="showDetail('plastic')">
+                <span class="guide-icon">🥤</span>
+                <div class="guide-title">พลาสติก</div>
+                <div class="guide-subtitle">ขวดน้ำ, แก้วน้ำ</div>
+            </div>
+            <div class="guide-card" onclick="showDetail('glass')">
+                <span class="guide-icon">🍾</span>
+                <div class="guide-title">แก้ว</div>
+                <div class="guide-subtitle">ขวดไวน์, ขวดเบียร์</div>
+            </div>
+            <div class="guide-card" onclick="showDetail('paper')">
+                <span class="guide-icon">📄</span>
+                <div class="guide-title">กระดาษ</div>
+                <div class="guide-subtitle">ลัง, หนังสือพิมพ์</div>
+            </div>
+            <div class="guide-card" onclick="showDetail('metal')">
+                <span class="guide-icon">🥫</span>
+                <div class="guide-title">โลหะ/อลูฯ</div>
+                <div class="guide-subtitle">กระป๋องน้ำอัดลม</div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <span style="font-size: 24px;">❓</span>
+            <h2 style="margin:0;">คำถามที่พบบ่อย (FAQ)</h2>
+        </div>
+
+        <div class="faq-container">
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-header">
+                    1. ขยะชิ้นไหนขายได้บ้าง?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-body">
+                    ขยะที่เรารับซื้อต้องเป็นขยะรีไซเคิลที่ทำความสะอาดแล้ว เช่น ขวดพลาสติกใส (PET), กระป๋องอลูมิเนียม, กระดาษลัง, และขวดแก้วที่ไม่แตกครับ <br><br>
+                    ❌ ไม่รับ: ขยะเปียก, ทิชชู่ใช้แล้ว, ถุงพลาสติกเลอะแกง
+                </div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-header">
+                    2. ต้องแกะฉลากก่อนไหม?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-body">
+                    👍 แนะนำให้แกะฉลากและแยกฝาขวดออกจะดีมากครับ เพราะฝาและขวดเป็นพลาสติกคนละชนิดกัน ราคารับซื้ออาจต่างกันเล็กน้อย แต่ถ้าไม่สะดวกแกะ ก็สามารถนำมาขายได้เช่นกันครับ
+                </div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-header">
+                    3. แต้ม Eco Point เอาไปทำอะไร?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-body">
+                    แต้มสะสมสามารถนำไปแลกของรางวัลรักษ์โลกในเมนู "Rewards" ได้ครับ หรือในอนาคตอาจใช้แลกเป็นส่วนลดกับร้านค้าชุมชนที่เข้าร่วมโครงการได้ครับ
+                </div>
+            </div>
+        </div>
+
+        <footer class="site-footer"></footer>
+    </main>
+
+    <script type="module">
+        import { renderHeader, renderFooter, setupAuthListener } from "./js/components.js";
+        import { showPopup, showConfirm } from "./js/firebase-service.js";
+        import { auth } from "./js/firebase-config.js";
+        import { signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        renderHeader('knowledge');
+        renderFooter();
+        setupAuthListener(auth, showConfirm, signOut);
+
+        window.toggleFaq = (el) => {
+            el.classList.toggle('active');
+        };
+
+        window.showDetail = (type) => {
+            let title, msg;
+            switch(type) {
+                case 'plastic':
+                    title = "วิธีแยกพลาสติก";
+                    msg = "1. เทน้ำออกให้หมด<br>2. บีบให้แบนเพื่อประหยัดพื้นที่<br>3. แยกฝาและฉลาก (ถ้าทำได้)";
+                    break;
+                case 'glass':
+                    title = "วิธีแยกแก้ว";
+                    msg = "1. ล้างด้านในให้สะอาด<br>2. แยกสีของขวด (ใส/ชา/เขียว)<br>⚠️ ระวังแตก! ห้ามทิ้งรวมกับขยะอื่น";
+                    break;
+                case 'paper':
+                    title = "วิธีแยกกระดาษ";
+                    msg = "1. ห้ามเปียกน้ำเด็ดขาด<br>2. มัดรวบเป็นกอง<br>3. แยกกระดาษขาวดำกับกระดาษสี";
+                    break;
+                case 'metal':
+                    title = "วิธีแยกอลูมิเนียม";
+                    msg = "1. เทน้ำออก<br>2. บีบกระป๋องให้แบน หรือดึงห่วงออกแยกเก็บ<br>ราคาดีมากครับ!";
+                    break;
+            }
+            showPopup(title, msg, 'info');
+        };
+    </script>
+</body>
+</html>

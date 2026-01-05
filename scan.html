@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Scan - ECOBANK</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        .camera-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+        #camera-feed {
+            width: 100%;
+            display: block;
+        }
+        .scan-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            pointer-events: none;
+        }
+        .scan-overlay::after {
+            content: "วางขยะในกรอบ";
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 14px;
+        }
+        .scan-btn {
+            display: block;
+            width: 70px;
+            height: 70px;
+            background: #fff;
+            border-radius: 50%;
+            margin: 20px auto;
+            border: 5px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .scan-btn:active { transform: scale(0.9); }
+        
+        .result-card {
+            background: #1e2329;
+            border: 1px solid #2b3139;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none; 
+            animation: slideUp 0.3s;
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .scanning-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #0ecb81;
+            box-shadow: 0 0 10px #0ecb81;
+            animation: scan 2s infinite;
+            display: none;
+        }
+        @keyframes scan { 0% { top: 10%; } 50% { top: 90%; } 100% { top: 10%; } }
+    </style>
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="container animate-fade-in" style="text-align: center;">
+        <h1 class="page-title">📸 AI Scan (Beta)</h1>
+        <p style="color: #888; font-size: 14px;">ถ่ายรูปขยะเพื่อตรวจสอบประเภทและราคา</p>
+
+        <div class="camera-container">
+            <video id="camera-feed" autoplay playsinline></video>
+            <div class="scan-overlay"></div>
+            <div class="scanning-line" id="scanLine"></div>
+        </div>
+
+        <button class="scan-btn" onclick="captureImage()"></button>
+
+        <div id="result" class="result-card">
+            <div style="font-size: 40px; margin-bottom: 10px;">🥤</div>
+            <h2 style="color: #fff; margin-bottom: 5px;" id="resultTitle">Plastic Bottle</h2>
+            <p style="color: #0ecb81; font-size: 18px; font-weight: bold;" id="resultPrice">8.50 ฿ / kg</p>
+            <p style="color: #888; font-size: 13px; margin-top: 10px;">ความแม่นยำ: 92%</p>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="window.location.reload()">สแกนใหม่</button>
+        </div>
+
+    </main>
+
+    <footer class="site-footer"></footer>
+
+    <!-- Hidden Canvas for Image Capture -->
+    <canvas id="captureCanvas" style="display:none;"></canvas>
+
+    <script type="module">
+        import { renderHeader, renderFooter, setupAuthListener } from "./js/components.js";
+        import { showPopup, showConfirm, getTrashTypes } from "./js/firebase-service.js";
+        import { auth } from "./js/firebase-config.js";
+        import { signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        renderHeader('scan'); 
+        renderFooter();
+        setupAuthListener(auth, showConfirm, signOut);
+
+        // --- Camera Logic ---
+        // ==========================================
+        // ⚙️ CONFIGURATION (ใส่ API Key ตรงนี้)
+        // ==========================================
+        const GEMINI_API_KEY = "AIzaSyD--4cZP0392zrv_c1R-l97_fHauJSe7OU"; // ⚠️ เปลี่ยนเป็น Key ของตัวเอง
+        // ขอ Key ฟรีได้ที่: https://aistudio.google.com/app/apikey
+        // ==========================================
+
+        let videoStream = null;
+        let trashData = [];
+
+        // 1. Start Camera
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "environment" } 
+                });
+                videoStream = stream;
+                const video = document.getElementById('camera-feed');
+                video.srcObject = stream;
+                
+                // Pre-load trash types data
+                trashData = await getTrashTypes();
+            } catch (err) {
+                console.error("Camera Error:", err);
+                showPopup("กล้องมีปัญหา", "ไม่สามารถเปิดกล้องได้ (กรุณาใช้บนมือถือหรือ HTTPS)", "error");
+            }
+        }
+
+        // 2. Capture & Analyze
+        window.captureImage = async () => {
+            if (!videoStream) return;
+
+            const video = document.getElementById('camera-feed');
+            const canvas = document.getElementById('captureCanvas');
+            const context = canvas.getContext('2d');
+
+            // Draw video frame to canvas
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert to Base64 (remove prefix)
+            const base64Image = canvas.toDataURL('image/jpeg').split(',')[1];
+
+            // Show Scanning Effect
+            const scanLine = document.getElementById('scanLine');
+            scanLine.style.display = 'block';
+
+            try {
+                // Call Gemini API
+                const result = await analyzeWithGemini(base64Image);
+                
+                // Display Result
+                displayResult(result);
+            } catch (error) {
+                console.error("AI Error:", error);
+                showPopup("AI ผิดพลาด", "ไม่สามารถวิเคราะห์ภาพได้: " + error.message, "error");
+            } finally {
+                scanLine.style.display = 'none';
+            }
+        };
+
+        // 3. Update Text to match database
+        async function analyzeWithGemini(base64Image) {
+            if (GEMINI_API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
+                throw new Error("กรุณาใส่ API Key ในไฟล์ scan.html ก่อนครับ");
+            }
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
+            
+            // Prompt: Ask for JSON output mapping to our categories
+            const promptText = `
+                Look at this image. Identify the main trash object.
+                Match it to one of these categories if possible: [Plastic Bottle, Aluminum Can, Glass Bottle, Paper, Cardboard].
+                Return ONLY a JSON object with this format (no markdown):
+                {
+                    "name": "Short name of item (in Thai language)",
+                    "category": "One of the categories above",
+                    "confidence": "Low/Medium/High"
+                }
+            `;
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [
+                            { text: promptText },
+                            { inline_data: { mime_type: "image/jpeg", data: base64Image } }
+                        ]
+                    }]
+                })
+            });
+
+            const data = await response.json();
+            if (!data.candidates || data.candidates.length === 0) {
+                throw new Error("AI ไม่ตอบกลับ");
+            }
+
+            const text = data.candidates[0].content.parts[0].text;
+            // Clean JSON string (sometimes AI adds markdown code blocks)
+            const jsonStr = text.replace(/```json|```/g, '').trim();
+            return JSON.parse(jsonStr);
+        }
+
+        function displayResult(aiResult) {
+            // Find matching price in our database
+            const match = trashData.find(t => 
+                aiResult.name.includes(t.name) || 
+                t.name.includes(aiResult.name) ||
+                (t.category.includes('พลาสติก') && aiResult.category.includes('Plastic')) ||
+                (t.category.includes('โลหะ') && aiResult.category.includes('Alu'))
+            );
+
+            // Update UI
+            document.getElementById('resultTitle').innerText = aiResult.name;
+            
+            if (match) {
+                document.getElementById('resultPrice').innerText = `${match.price_per_unit.toFixed(2)} ฿ / ${match.unit}`;
+                document.getElementById('resultPrice').style.color = '#0ecb81';
+            } else {
+                document.getElementById('resultPrice').innerText = "ไม่พบราคาในระบบ";
+                document.getElementById('resultPrice').style.color = '#f6465d';
+            }
+
+            document.getElementById('result').style.display = 'block';
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        startCamera();
+    </script>
+</body>
+</html>

@@ -107,40 +107,12 @@
         .btn-modal-cancel { background: #2b3139; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; flex: 1; font-weight: bold; }
         .btn-modal-confirm { background: #f6465d; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; flex: 1; opacity: 0.5; pointer-events: none; transition: 0.2s; font-weight: bold; }
         .btn-modal-confirm.active { opacity: 1; pointer-events: auto; }
-
-        /* Dropdown */
-        .user-dropdown { position: relative; display: inline-block; }
-        .user-btn { background: #1e2329; color: #eaecef; padding: 8px 16px; border-radius: 20px; border: 1px solid #2b3139; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; font-size: 14px; }
-        .user-btn:hover { border-color: var(--primary-color); background: #2b3139; }
-        .user-avatar-xs { width: 24px; height: 24px; background: var(--primary-color); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-        .dropdown-content { display: none; position: absolute; right: 0; top: 100%; margin-top: 10px; background-color: #1e2329; min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border-radius: 12px; border: 1px solid #2b3139; z-index: 1000; overflow: visible; }
-        .dropdown-content::before { content: ""; position: absolute; top: -20px; left: 0; width: 100%; height: 20px; background: transparent; }
-        .user-dropdown:hover .dropdown-content { display: block; animation: fadeIn 0.2s; }
-        .dropdown-content a { color: #eaecef; padding: 12px 16px; text-decoration: none; display: block; font-size: 14px; border-bottom: 1px solid #2b3139; transition: 0.2s; }
-        .dropdown-content a:last-child { border-bottom: none; }
-        .dropdown-content a:hover { background-color: #2b3139; color: var(--primary-color); padding-left: 20px; }
-        .dropdown-content a.logout-item:hover { color: #f6465d; background-color: rgba(246, 70, 93, 0.1); }
     </style>
 </head>
 <body>
+    <header class="header"></header>
 
-    <header class="header">
-        <div class="header-left">
-            <div class="logo">🌿 ECOBANK</div>
-            <nav class="nav">
-                <a href="index.html" class="nav-link">หน้าแรก</a>
-                <a href="trash_types.html" class="nav-link">ราคาขยะวันนี้</a>
-                <a href="leaderboard.html" class="nav-link">จัดอันดับ</a>
-                <a href="exchange.html" class="nav-link">ตลาดซื้อขาย</a>
-                <a href="booths.html" class="nav-link">จุดรับซื้อ</a>
-                <a href="rewards.html" class="nav-link">ของรางวัล</a>
-                <a href="wallet.html" class="nav-link">กระเป๋าเงิน</a>
-            </nav>
-        </div>
-        <div id="authSection" class="header-right"></div>
-    </header>
-
-    <main class="container animate-fade-in">
+    <main class="container animate-fade-in" id="profileContent" style="display:none;">
         <div class="profile-container">
             
             <div class="profile-card">
@@ -151,6 +123,45 @@
                 
                 <div class="community-tag">
                     <span>📍</span> <span id="displayCommunity">กำลังโหลด...</span>
+                </div>
+
+                <!-- Gamification Section -->
+                <div id="levelSection" style="margin: 20px 0; width: 100%; text-align: left; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid #2b3139;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span id="levelIcon" style="font-size:24px;">🌱</span>
+                            <div>
+                                <div style="font-size:12px; color:#888;">Current Rank</div>
+                                <div id="levelName" style="font-weight:bold; color:#fff;">Green Rookie</div>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:12px; color:#888;">Total Recycled</div>
+                            <div style="font-weight:bold; color:var(--primary-color);"><span id="totalWeightDisplay">0</span> kg</div>
+                        </div>
+                    </div>
+                    
+                    <div style="height: 6px; background: #000; border-radius: 3px; position: relative; overflow: hidden;">
+                        <div id="xpBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary-color), #00bcd4); transition: width 1s;"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:10px; color:#666; margin-top:5px;">
+                        <span>0 kg</span>
+                        <span id="nextLevelTarget">10 kg</span>
+                    </div>
+                </div>
+
+                <!-- Impact Stats -->
+                <div class="impact-stats-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%; margin-bottom:20px;">
+                    <div style="background:rgba(0,210,255,0.1); border:1px solid rgba(0,210,255,0.3); padding:10px; border-radius:10px;">
+                        <div style="font-size:20px;">☁️</div>
+                        <div style="font-size:16px; font-weight:bold; color:#00d2ff;" id="myCo2">0 kg</div>
+                        <div style="font-size:10px; color:#888;">ลด CO₂</div>
+                    </div>
+                    <div style="background:rgba(14,203,129,0.1); border:1px solid rgba(14,203,129,0.3); padding:10px; border-radius:10px;">
+                        <div style="font-size:20px;">🌳</div>
+                        <div style="font-size:16px; font-weight:bold; color:#0ecb81;" id="myTrees">0</div>
+                        <div style="font-size:10px; color:#888;">ต้นไม้</div>
+                    </div>
                 </div>
 
                 <div class="qr-section">
@@ -207,7 +218,13 @@
             </div>
 
         </div>
+        <footer class="site-footer"></footer>
     </main>
+
+    <div id="loginWarning" style="display:none; text-align: center; padding: 60px; background: var(--bg-card); border-radius: 12px; margin-top: 50px;">
+        <div style="font-size: 50px; margin-bottom: 20px;">⏳</div>
+        <h2>กำลังตรวจสอบข้อมูล...</h2>
+    </div>
 
     <div id="deleteModal" class="modal">
         <div class="modal-box">
@@ -232,78 +249,112 @@
 
     <script type="module">
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { doc, getDoc, updateDoc, collection, query, where, getAggregateFromServer, sum } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { auth, db } from "./js/firebase-config.js";
-        import { showPopup, showConfirm, deleteUserAccount } from "./js/firebase-service.js";
+        import { showPopup, showConfirm, deleteUserAccount, calculateLevel, calculateImpact } from "./js/firebase-service.js";
+        import { renderHeader, renderFooter } from "./js/components.js";
 
-        let currentUser = null;
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('authSection').innerHTML = `
-                    <div class="user-dropdown">
-                        <div class="user-btn">
-                            <div class="user-avatar-xs">👤</div>
-                            <span>${user.email.split('@')[0]}</span>
-                            <span style="font-size:10px; color:#888;">▼</span>
-                        </div>
-                        <div class="dropdown-content">
-                            <a href="profile.html">👤 ข้อมูลส่วนตัว (Profile)</a>
-                            <a href="wallet.html">💰 กระเป๋าเงิน (Wallet)</a>
-                            <a href="#" id="logoutBtn" class="logout-item">🚪 ออกจากระบบ</a>
-                        </div>
-                    </div>
-                `;
-                document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    if(await showConfirm("ยืนยัน", "ต้องการออกจากระบบ?")) {
-                        await signOut(auth);
-                        window.location.href = 'login.html';
-                    }
-                });
-                await loadProfile(user.uid);
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
+        // ... imports ...
 
         async function loadProfile(uid) {
             try {
-                const docRef = doc(db, "users", uid);
-                const docSnap = await getDoc(docRef);
-                
+                const userRef = doc(db, "users", uid);
+                const docSnap = await getDoc(userRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data();
+                    document.getElementById('username').value = data.username || '';
+                    document.getElementById('phone').value = data.phone || '';
+                    document.getElementById('email').value = data.email || '';
+                    document.getElementById('address').value = data.address || '';
+                    document.getElementById('community').value = data.community || 'muang_sakon_nakhon';
                     
-                    document.getElementById('displayName').innerText = data.username || 'User';
+                    document.getElementById('displayName').innerText = data.username || 'No Name';
                     document.getElementById('displayEmail').innerText = data.email;
-                    document.getElementById('displayRole').innerText = (data.role || 'USER').toUpperCase();
+                    document.getElementById('displayRole').innerText = (data.role || 'MEMBER').toUpperCase();
                     
-                    // ✅ สร้าง QR Code จาก UID (ใช้ API ของ Google Charts หรืออื่นๆ)
-                    // ใช้ quickchart.io เพราะรองรับ Dark mode พื้นขาวได้ดี
+                    const communityNames = {
+                        'muang_sakon_nakhon': 'ชุมชนเมืองสกลนคร',
+                        'banthala': 'ชุมชนบ้านท่าแร่',
+                        'kokpar_sil': 'ชุมชนกกปลาซิว',
+                        'other': 'อื่นๆ'
+                    };
+                    document.getElementById('displayCommunity').innerText = communityNames[data.community] || data.community;
+                    
                     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${uid}`;
                     document.getElementById('myQrCode').src = qrUrl;
 
-                    const comName = {
-                        'muang_sakon_nakhon': 'เมืองสกลนคร',
-                        'banthala': 'บ้านท่าแร่',
-                        'kokpar_sil': 'กกปลาซิว',
-                        'other': 'อื่นๆ'
-                    };
-                    document.getElementById('displayCommunity').innerText = comName[data.community] || 'ไม่ระบุ';
+                    // --- GAMIFICATION LOGIC ---
+                    // Calculate Total Weight from Transactions
+                    const qTx = query(collection(db, "transactions"), where("member_id", "==", uid), where("type", "==", "sell"));
+                    const snap = await getAggregateFromServer(qTx, { totalWeight: sum("total_weight") });
+                    const myTotalWeight = snap.data().totalWeight || 0;
 
-                    document.getElementById('username').value = data.username || '';
-                    document.getElementById('phone').value = data.phone || '';
-                    document.getElementById('email').value = data.email;
-                    document.getElementById('address').value = data.address || '';
-                    document.getElementById('community').value = data.community || 'other';
+                    const levelInfo = calculateLevel(myTotalWeight);
+                    document.getElementById('levelName').innerText = levelInfo.level;
+                    document.getElementById('levelName').style.color = levelInfo.color;
+                    document.getElementById('levelIcon').innerText = levelInfo.icon;
+                    document.getElementById('totalWeightDisplay').innerText = myTotalWeight.toFixed(1);
+
+                    const progress = Math.min((myTotalWeight / levelInfo.next) * 100, 100);
+                    document.getElementById('xpBar').style.width = `${progress}%`;
+                    document.getElementById('nextLevelTarget').innerText = `${levelInfo.next} kg`;
+                    // --- IMPACT LOGIC ---
+                    const impact = calculateImpact(myTotalWeight);
+                    document.getElementById('myCo2').innerText = `${impact.co2} kg`;
+                    document.getElementById('myTrees').innerText = `${impact.trees}`;
                 }
             } catch (error) {
                 console.error("Error loading profile:", error);
-                showPopup("ผิดพลาด", "ไม่สามารถโหลดข้อมูลได้", "error");
             }
         }
+
+        // 1. Render Components
+        renderHeader('profile'); 
+        renderFooter();
+
+        let currentUser = null;
+
+        // 2. Strict Auth Guard
+        onAuthStateChanged(auth, async (user) => {
+            const authSection = document.getElementById('authSection');
+            if (user) {
+                currentUser = user;
+                if(authSection) {
+                    authSection.innerHTML = `
+                        <div class="user-dropdown">
+                            <div class="user-btn">
+                                <div class="user-avatar-xs">👤</div>
+                                <span>${user.email.split('@')[0]}</span>
+                                <span style="font-size:10px; color:#888;">▼</span>
+                            </div>
+                            <div class="dropdown-content">
+                                <a href="profile.html">👤 ข้อมูลส่วนตัว (Profile)</a>
+                                <a href="wallet.html">💰 กระเป๋าเงิน (Wallet)</a>
+                                <a href="#" id="logoutBtn" class="logout-item">🚪 ออกจากระบบ</a>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        if(await showConfirm("ยืนยัน", "ต้องการออกจากระบบ?")) {
+                            await signOut(auth);
+                            window.location.href = 'login.html';
+                        }
+                    });
+                }
+                
+                // Show Content
+                document.getElementById('profileContent').style.display = 'block';
+                document.getElementById('loginWarning').style.display = 'none';
+
+                await loadProfile(user.uid);
+            } else {
+                // Strict Redirect
+                window.location.replace('login.html');
+            }
+        });
+
+
 
         window.updateProfile = async (e) => {
             e.preventDefault();

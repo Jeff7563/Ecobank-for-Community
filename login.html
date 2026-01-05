@@ -35,15 +35,41 @@
             <button type="submit" class="auth-btn">เข้าสู่ระบบ</button>
 
             <div class="auth-link">
+                <a href="#" id="forgotPwdBtn" style="color: #ffffff !important; font-size: 13px; font-weight: bold;">ลืมรหัสผ่าน?</a>
+                <span style="margin: 0 10px; color: #333;">|</span>
                 ยังไม่มีบัญชี? <a href="register.html">สมัครสมาชิกใหม่</a>
             </div>
         </form>
     </div>
 
+    <!-- Modal Reset Password -->
+    <div id="resetModal" class="modal">
+        <div class="modal-box">
+            <h3 style="color:#fff; margin-bottom:15px;">🔑 รีเซ็ตรหัสผ่าน</h3>
+            <p style="color:#bbb; font-size:14px; margin-bottom: 20px;">
+                กรุณากรอกอีเมลที่ใช้สมัคร <br>ระบบจะส่งลิงก์ตั้งรหัสผ่านใหม่ไปให้
+            </p>
+            <input type="email" id="resetEmail" class="form-control" placeholder="example@email.com" 
+                   style="width: 100%; padding: 12px; background: #0b0e11; border: 1px solid #2b3139; border-radius: 8px; color: #fff; margin-bottom: 20px;">
+            
+            <div style="display: flex; gap: 10px;">
+                <button id="closeResetBtn" style="background: #2b3139; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; flex: 1;">ยกเลิก</button>
+                <button id="confirmResetBtn" style="background: var(--primary-color); color: #000; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; flex: 1; font-weight: bold;">ส่งลิงก์</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-box { background: #1e2329; border: 1px solid #2b3139; border-radius: 16px; padding: 30px; width: 90%; max-width: 400px; text-align: center; position: relative; animation: slideUp 0.3s; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+
     <script type="module">
-        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"; // ✅ นำเข้า Firestore
-        import { auth, db } from "./js/firebase-config.js"; // ✅ นำเข้า db ด้วย
+        import { signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"; 
+        import { auth, db } from "./js/firebase-config.js"; 
         import { showPopup } from "./js/firebase-service.js";
 
         // Toggle Password
@@ -53,6 +79,50 @@
             const type = pwdInput.getAttribute('type') === 'password' ? 'text' : 'password';
             pwdInput.setAttribute('type', type);
             toggleBtn.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+
+        // Forgot Password Modal Logic
+        const resetModal = document.getElementById('resetModal');
+        const forgotBtn = document.getElementById('forgotPwdBtn');
+        const closeResetBtn = document.getElementById('closeResetBtn');
+        const confirmResetBtn = document.getElementById('confirmResetBtn');
+
+        forgotBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            resetModal.classList.add('show');
+        });
+
+        closeResetBtn.addEventListener('click', () => {
+            resetModal.classList.remove('show');
+        });
+
+        confirmResetBtn.addEventListener('click', async () => {
+            const email = document.getElementById('resetEmail').value.trim();
+            if (!email) {
+                alert("กรุณากรอกอีเมล");
+                return;
+            }
+
+            try {
+                confirmResetBtn.textContent = "กำลังส่ง...";
+                confirmResetBtn.disabled = true;
+
+                await sendPasswordResetEmail(auth, email);
+                
+                resetModal.classList.remove('show');
+                showPopup("ส่งสำเร็จ", "กรุณาเช็คอีเมลเพื่อตั้งรหัสผ่านใหม่", "success");
+            } catch (error) {
+                console.error("Reset Password Error:", error);
+                
+                let msg = "เกิดข้อผิดพลาด";
+                if (error.code === 'auth/user-not-found') msg = "ไม่พบอีเมลนี้ในระบบ";
+                if (error.code === 'auth/invalid-email') msg = "รูปแบบอีเมลไม่ถูกต้อง";
+                
+                showPopup("ผิดพลาด", msg, "error");
+            } finally {
+                confirmResetBtn.textContent = "ส่งลิงก์";
+                confirmResetBtn.disabled = false;
+            }
         });
 
         // Login Logic
@@ -81,8 +151,7 @@
 
                 if (userDocSnap.exists()) {
                     const userData = userDocSnap.data();
-                    console.log("User Role:", userData.role); // ดูใน Console ว่าเป็น role อะไร
-
+                    
                     // ถ้ามี field role = 'admin' ให้ไปหน้า Dashboard
                     if (userData.role === 'admin') {
                         targetUrl = "admin-dashboard.html";

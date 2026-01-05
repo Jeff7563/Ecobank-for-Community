@@ -1,0 +1,49 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to check if user is signed in
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if user is owner
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    // 1. Users Collection
+    match /users/{userId} {
+      allow read: if true; // ✅ Allow public read for "Total Members" stats
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update, delete: if isOwner(userId) || (isSignedIn() && request.auth.token.email == "admin@ecobank.com"); // Allow Admin to update (simplified)
+    }
+
+    // 2. Transactions
+    match /transactions/{txId} {
+      allow read: if true; // ✅ Allow public read for "Community Stats" aggregation
+      allow create: if isSignedIn();
+      allow update: if isSignedIn(); // Allow fixes
+      allow delete: if false; 
+    }
+
+    // 3. Public Data (Trash Types, Booths, Rewards)
+    // - Everyone can read
+    // - Only Admin can write (For now, restricting write to Auth users or specific Admin UID)
+    match /trash_types/{docId} {
+      allow read: if true;
+      allow write: if isSignedIn(); // TODO: Add check for Admin Role
+    }
+    
+    match /booths/{docId} {
+      allow read: if true;
+      allow write: if isSignedIn(); // TODO: Add check for Admin Role
+    }
+
+    match /rewards/{docId} {
+      allow read: if true;
+      allow write: if isSignedIn(); // TODO: Add check for Admin Role
+    }
+  }
+}

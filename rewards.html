@@ -155,7 +155,9 @@
 
             } else {
                 // กรณีไม่ได้ Login
+                currentUser = null;
                 if(authSection) authSection.innerHTML = `<a href="login.html" class="btn btn-login">เข้าสู่ระบบ</a><a href="register.html" class="btn btn-register">สมัครสมาชิก</a>`;
+                loadRewards(); // Load rewards for guest
             }
         });
 
@@ -177,23 +179,34 @@
             }
 
             container.innerHTML = rewards.map(r => {
-                const canRedeem = currentUser && userPoints >= r.cost;
+                let btnText = "แลกเลย";
+                let btnDisabled = false;
+                let btnClass = "";
+
+                if (!currentUser) {
+                    btnText = "เข้าสู่ระบบเพื่อแลก";
+                    btnDisabled = true;
+                } else if (userPoints < r.cost) {
+                    btnText = "แต้มไม่พอ";
+                    btnDisabled = true;
+                }
+
                 return `
                 <div class="reward-card">
                     <div class="reward-icon">${r.icon}</div>
                     <div class="reward-name">${r.name}</div>
                     <div class="reward-desc">${r.desc}</div>
                     <div class="reward-cost">${r.cost} แต้ม</div>
-                    <button class="btn-redeem" ${canRedeem ? '' : 'disabled'} 
+                    <button class="btn-redeem" ${btnDisabled ? 'disabled' : ''} 
                         onclick="triggerRedeem('${r.id}', '${r.name}', ${r.cost})">
-                        ${canRedeem ? 'แลกเลย' : 'แต้มไม่พอ'}
+                        ${btnText}
                     </button>
                 </div>`;
             }).join('');
         }
 
         window.triggerRedeem = async (id, name, cost) => {
-            if (!currentUser) return showPopup("แจ้งเตือน", "กรุณาเข้าสู่ระบบก่อน", "error");
+            if (!currentUser) return window.location.href = 'login.html';
             
             if (await showConfirm("ยืนยันการแลก", `ต้องการแลก "${name}" ใช้ ${cost} แต้ม?`)) {
                 const result = await redeemReward(currentUser.uid, { id, name, cost });

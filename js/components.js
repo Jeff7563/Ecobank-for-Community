@@ -156,7 +156,7 @@ export function setupAuthListener(auth, showConfirm, signOut) {
                 });
             }
         } else {
-            if(authSection) authSection.innerHTML = `<a href="login.html" class="btn btn-login">เข้าสู่ระบบ</a><a href="register.html" class="btn btn-register">สมัครสมาชิก</a>`;
+            if(authSection) authSection.innerHTML = `<div style="display:flex; gap:10px;"><a href="login.html" class="btn btn-login">เข้าสู่ระบบ</a><a href="register.html" class="btn btn-register">สมัครสมาชิก</a></div>`;
         }
     });
 }

@@ -80,10 +80,11 @@
 
     <script type="module">
         import { getEvents, showPopup } from "./js/firebase-service.js";
-        import { renderHeader, renderFooter } from "./js/components.js";
+        import { renderHeader, renderFooter, setupAuthListener } from "./js/components.js";
 
         renderHeader('map');
         renderFooter();
+        setupAuthListener();
 
         // 1. Initialize Map
         // Default: Sakon Nakhon

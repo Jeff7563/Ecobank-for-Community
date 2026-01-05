@@ -663,9 +663,12 @@ export async function getLeaderboard() {
 */
 export async function getLeaderboard() {
   try {
-    const q = query(collection(db, "users"), orderBy("points", "desc"), limit(10));
+    const q = query(collection(db, "users"), orderBy("points", "desc"), limit(15)); // Fetch more to allow filtering
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    return querySnapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .filter(user => user.email !== 'admin@ecobank.com') // Hide Admin
+      .slice(0, 10); // Return top 10
   } catch (error) {
     return [];
   }

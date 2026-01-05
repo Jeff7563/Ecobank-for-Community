@@ -1,10 +1,4 @@
 {
-  "version": 2,
-  "public": true,
-  "cleanUrls": false,
-  "trailingSlash": false,
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "status": 404, "dest": "/404.html" }
-  ]
+  "cleanUrls": true,
+  "trailingSlash": false
 }

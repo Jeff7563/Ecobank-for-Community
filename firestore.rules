@@ -13,11 +13,17 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
     
+    // Helper function to check if user is Admin (Role-based)
+    function isAdmin() {
+      return isSignedIn() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+
     // 1. Users Collection
     match /users/{userId} {
       allow read: if true; // ✅ Allow public read for "Total Members" stats
       allow create: if isSignedIn() && request.auth.uid == userId;
-      allow update, delete: if isOwner(userId) || (isSignedIn() && request.auth.token.email == "admin@ecobank.com"); // Allow Admin to update (simplified)
+      allow update, delete: if isOwner(userId) || isAdmin(); // Allow Admin to update
     }
 
     // 2. Transactions
@@ -30,20 +36,20 @@ service cloud.firestore {
 
     // 3. Public Data (Trash Types, Booths, Rewards)
     // - Everyone can read
-    // - Only Admin can write (For now, restricting write to Auth users or specific Admin UID)
+    // - Only Admin can write
     match /trash_types/{docId} {
       allow read: if true;
-      allow write: if isSignedIn() && request.auth.token.email == "admin@ecobank.com"; 
+      allow write: if isAdmin();
     }
     
     match /booths/{docId} {
       allow read: if true;
-      allow write: if isSignedIn() && request.auth.token.email == "admin@ecobank.com"; 
+      allow write: if isAdmin();
     }
 
     match /rewards/{docId} {
       allow read: if true;
-      allow write: if isSignedIn() && request.auth.token.email == "admin@ecobank.com"; 
+      allow write: if isAdmin();
     }
   }
 }

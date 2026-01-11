@@ -119,18 +119,7 @@
         setupAuthListener(auth, showConfirm, signOut);
 
         // --- Camera Logic ---
-        // ⚙️ CONFIGURATION (SECURE)
-        // ==========================================
-        let GEMINI_API_KEY = localStorage.getItem("ECOBANK_GEMINI_KEY");
-
-        if (!GEMINI_API_KEY) {
-            GEMINI_API_KEY = prompt("🔑 Security Check: เลี่ยงการฝัง Key ในไฟล์\nกรุณากรอก Gemini API Key ของคุณ:", "");
-            if (GEMINI_API_KEY) {
-                localStorage.setItem("ECOBANK_GEMINI_KEY", GEMINI_API_KEY);
-            }
-        }
-        // ==========================================
-
+        // 🌟 SECURE MODE: Using Vercel Backend Proxy
         let videoStream = null;
         let trashData = [];
 
@@ -173,9 +162,8 @@
             scanLine.style.display = 'block';
 
             try {
-                // Call Gemini API
-                const result = await analyzeWithGemini(base64Image);
-                
+                // Call Backend Proxy API
+                const result = await analyzeWithBackend(base64Image);
                 // Display Result
                 displayResult(result);
             } catch (error) {
@@ -186,48 +174,27 @@
             }
         };
 
-        // 3. Update Text to match database
-        async function analyzeWithGemini(base64Image) {
-            if (GEMINI_API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
-                throw new Error("กรุณาใส่ API Key ในไฟล์ scan.html ก่อนครับ");
-            }
-
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
-            
-            // Prompt: Ask for JSON output mapping to our categories
-            const promptText = `
-                Look at this image. Identify the main trash object.
-                Match it to one of these categories if possible: [Plastic Bottle, Aluminum Can, Glass Bottle, Paper, Cardboard].
-                Return ONLY a JSON object with this format (no markdown):
-                {
-                    "name": "Short name of item (in Thai language)",
-                    "category": "One of the categories above",
-                    "confidence": "Low/Medium/High"
-                }
-            `;
-
-            const response = await fetch(url, {
+        // 3. Call Serverless Function
+        async function analyzeWithBackend(base64Image) {
+            const response = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [
-                            { text: promptText },
-                            { inline_data: { mime_type: "image/jpeg", data: base64Image } }
-                        ]
-                    }]
-                })
+                body: JSON.stringify({ imageBase64: base64Image })
             });
 
-            const data = await response.json();
-            if (!data.candidates || data.candidates.length === 0) {
-                throw new Error("AI ไม่ตอบกลับ");
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error || "Server Error");
             }
-
-            const text = data.candidates[0].content.parts[0].text;
-            // Clean JSON string (sometimes AI adds markdown code blocks)
-            const jsonStr = text.replace(/```json|```/g, '').trim();
-            return JSON.parse(jsonStr);
+            
+            const data = await response.json();
+            // Data structure from backend is already JSON
+            if(data.candidates && data.candidates.length > 0) {
+                 const text = data.candidates[0].content.parts[0].text;
+                 const jsonStr = text.replace(/```json|```/g, '').trim();
+                 return JSON.parse(jsonStr);
+            }
+            return data;
         }
 
         function displayResult(aiResult) {

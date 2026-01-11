@@ -6,8 +6,14 @@
 export function renderHeader(activePage = '') {
     const headerHtml = `
         <div class="header-left">
+            <div class="mobile-menu-btn" id="mobileMenuBtn">☰</div>
             <div class="logo" onclick="window.location.href='index.html'">🌿 ECOBANK</div>
-            <nav class="nav">
+            <div class="nav-overlay" id="navOverlay"></div>
+            <nav class="nav" id="mainNav">
+                <div class="nav-header-mobile">
+                    <span class="logo">🌿 ECOBANK</span>
+                    <span class="close-nav" id="closeNav">×</span>
+                </div>
                 <a href="index.html" class="nav-link ${activePage === 'home' ? 'active' : ''}">หน้าแรก</a>
                 <a href="trash_types.html" class="nav-link ${activePage === 'price' ? 'active' : ''}">ราคาขยะวันนี้</a>
                 <a href="exchange.html" class="nav-link ${activePage === 'market' ? 'active' : ''}">ตลาดซื้อขาย</a>
@@ -25,6 +31,9 @@ export function renderHeader(activePage = '') {
             </div>
         </div>
     `;
+
+    // 2. Inject Styles for Mobile Menu (Critical for it to work immediately without editing css yet)
+    // Actually, I will add logic here to toggle it.
     
     // Inject Head Styles if not present (optional, but good for self-contained)
     // ... we assume style.css is already loaded.
@@ -32,6 +41,27 @@ export function renderHeader(activePage = '') {
     const headerEl = document.querySelector('.header');
     if (headerEl) {
         headerEl.innerHTML = headerHtml;
+        
+        // Mobile Menu Logic
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const nav = document.getElementById('mainNav');
+        const overlay = document.getElementById('navOverlay');
+        const closeBtn = document.getElementById('closeNav');
+
+        function toggleMenu() {
+            nav.classList.toggle('mobile-active');
+            overlay.classList.toggle('active');
+            
+            // Blur Main Content
+            const mainContent = document.querySelector('main');
+            if(mainContent) {
+                mainContent.classList.toggle('content-blur');
+            }
+        }
+
+        if(mobileBtn) mobileBtn.addEventListener('click', toggleMenu);
+        if(closeBtn) closeBtn.addEventListener('click', toggleMenu);
+        if(overlay) overlay.addEventListener('click', toggleMenu);
     }
 }
 

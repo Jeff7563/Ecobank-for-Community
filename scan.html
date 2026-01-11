@@ -119,11 +119,16 @@
         setupAuthListener(auth, showConfirm, signOut);
 
         // --- Camera Logic ---
+        // ⚙️ CONFIGURATION (SECURE)
         // ==========================================
-        // ⚙️ CONFIGURATION (ใส่ API Key ตรงนี้)
-        // ==========================================
-        const GEMINI_API_KEY = "AIzaSyD--4cZP0392zrv_c1R-l97_fHauJSe7OU"; // ⚠️ เปลี่ยนเป็น Key ของตัวเอง
-        // ขอ Key ฟรีได้ที่: https://aistudio.google.com/app/apikey
+        let GEMINI_API_KEY = localStorage.getItem("ECOBANK_GEMINI_KEY");
+
+        if (!GEMINI_API_KEY) {
+            GEMINI_API_KEY = prompt("🔑 Security Check: เลี่ยงการฝัง Key ในไฟล์\nกรุณากรอก Gemini API Key ของคุณ:", "");
+            if (GEMINI_API_KEY) {
+                localStorage.setItem("ECOBANK_GEMINI_KEY", GEMINI_API_KEY);
+            }
+        }
         // ==========================================
 
         let videoStream = null;

@@ -33,17 +33,17 @@ service cloud.firestore {
     // - Only Admin can write (For now, restricting write to Auth users or specific Admin UID)
     match /trash_types/{docId} {
       allow read: if true;
-      allow write: if isSignedIn(); // TODO: Add check for Admin Role
+      allow write: if isSignedIn() && request.auth.token.email == "admin@ecobank.com"; 
     }
     
     match /booths/{docId} {
       allow read: if true;
-      allow write: if isSignedIn(); // TODO: Add check for Admin Role
+      allow write: if isSignedIn() && request.auth.token.email == "admin@ecobank.com"; 
     }
 
     match /rewards/{docId} {
       allow read: if true;
-      allow write: if isSignedIn(); // TODO: Add check for Admin Role
+      allow write: if isSignedIn() && request.auth.token.email == "admin@ecobank.com"; 
     }
   }
 }

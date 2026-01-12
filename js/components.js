@@ -39,6 +39,29 @@ export function renderHeader(activePage = '') {
     // ... we assume style.css is already loaded.
 
     const headerEl = document.querySelector('.header');
+    
+    // Auto-Inject Mobile CSS Fix (Global for all pages)
+    if (!document.getElementById('mobile-header-fix')) {
+        const style = document.createElement('style');
+        style.id = 'mobile-header-fix';
+        style.textContent = `
+            @media (max-width: 480px) {
+                .header { padding: 10px 15px !important; }
+                .logo { font-size: 20px !important; }
+                .btn, .btn-login, .btn-register {
+                    padding: 6px 10px !important;
+                    font-size: 11px !important;
+                    white-space: nowrap !important;
+                    height: 32px !important;
+                    display: flex !important; align-items: center !important;
+                    min-width: auto !important;
+                }
+                #authSection div { gap: 5px !important; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
     if (headerEl) {
         headerEl.innerHTML = headerHtml;
         

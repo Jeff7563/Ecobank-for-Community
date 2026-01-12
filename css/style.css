@@ -1313,3 +1313,35 @@ tr:hover {
       padding: 15px;
   }
 }
+
+/* --- Mobile Header Fixes (Step 1920) --- */
+@media (max-width: 480px) {
+  /* Shrink Header Padding */
+  .header {
+    padding: 10px 15px;
+  }
+  
+  /* Shrink Logo */
+  .logo {
+    font-size: 20px;
+  }
+  
+  /* Adjust Button Size for Mobile */
+  .btn, .btn-login, .btn-register {
+    padding: 6px 12px !important; /* Force override */
+    font-size: 12px !important;
+    white-space: nowrap; /* Prevent line break */
+    min-width: auto; /* Remove minimum width if any */
+    height: auto !important;
+  }
+  
+  /* Reduce Gap between buttons */
+  #authSection div { /* Targeting the flex container in JS */
+    gap: 5px !important;
+  }
+  
+  /* Header Right Gap */
+  .header-right {
+    gap: 8px;
+  }
+}

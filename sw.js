@@ -1,4 +1,4 @@
-const CACHE_NAME = "ecobank-v17";
+const CACHE_NAME = "ecobank-v18";
 const ASSETS = [
   "./",
   "./index.html",

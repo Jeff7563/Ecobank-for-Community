@@ -169,6 +169,13 @@
                 </div>
                 <div class="qr-label">สแกนเพื่อยืนยันตัวตน (Member ID)</div>
 
+                <!-- PWA Install Button -->
+                <div id="installContainer" style="display:none; margin-bottom: 10px;">
+                    <button id="installAppBtn" class="btn" style="width:100%; background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%); color:#000; font-weight:bold; border:none;">
+                        📲 ติดตั้งแอป ECOBANK
+                    </button>
+                </div>
+
                 <div class="logout-container">
                     <button onclick="logout()" class="btn btn-outline" style="width:100%; border-color:#f6465d; color:#f6465d;">ออกจากระบบ</button>
                 </div>
@@ -418,6 +425,34 @@
                 closeDeleteModal();
             }
         };
+
+        // --- PWA Helper ---
+        const installBtn = document.getElementById('installAppBtn');
+        const installContainer = document.getElementById('installContainer');
+
+        function showInstallBtn() {
+            if(window.deferredPrompt) {
+                installContainer.style.display = 'block';
+            }
+        }
+
+        // Check if event already fired
+        if(window.deferredPrompt) {
+            showInstallBtn();
+        }
+
+        // Listen for future event
+        window.addEventListener('pwa-ready', showInstallBtn);
+
+        installBtn.addEventListener('click', async () => {
+            if (window.deferredPrompt) {
+                window.deferredPrompt.prompt();
+                const { outcome } = await window.deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                window.deferredPrompt = null;
+                installContainer.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>

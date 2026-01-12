@@ -21,14 +21,6 @@
         /* --- Sidebar Styles --- */
         body { overflow-x: hidden; background-color: #0b0e11; }
         
-        .sidebar {
-            position: fixed; top: 0; left: 0; height: 100%; width: 60px;
-            background: #0b0e11; border-right: 1px solid #2b3139;
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000; overflow: hidden; display: flex; flex-direction: column;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
-        }
-
         /* History Modal */
         #historyModal .modal-content { max-width: 900px; }
         
@@ -36,29 +28,43 @@
         .scanner-container { width: 100%; max-width: 500px; background: #000; border-radius: 12px; overflow: hidden; position: relative; padding: 0; }
         #reader { width: 100%; height: 350px; background: #000; }
         .close-scanner { position: absolute; top: 10px; right: 10px; z-index: 10; background: rgba(0,0,0,0.5); border: none; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
-        .sidebar:hover { width: 260px; } 
-
-        .sidebar-header {
-            height: 70px; display: flex; align-items: center; padding: 0 18px;
-            border-bottom: 1px solid #2b3139; white-space: nowrap; overflow: hidden;
+        
+        /* Sidebar Modern UI (Reverted) */
+        .sidebar {
+            position: fixed; left: 0; top: 0; bottom: 0;
+            width: 60px;
+            background: #15181d;
+            padding: 20px 0;
+            transition: width 0.3s;
+            z-index: 1000;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
         }
-        .sidebar-logo { font-weight: 800; font-size: 20px; color: #fff; margin-left: 10px; opacity: 0; transition: 0.2s; }
+        .sidebar:hover { width: 260px; }
+        
+        .sidebar-header { margin-bottom: 30px; display: flex; align-items: center; padding: 0 18px; white-space: nowrap; }
+        .sidebar-logo { font-size: 22px; font-weight: bold; color: var(--primary-color); margin-left: 15px; opacity: 0; transition: 0.3s; }
         .sidebar:hover .sidebar-logo { opacity: 1; }
 
-        .menu-list { flex: 1; padding: 20px 10px; list-style: none; }
+        .menu-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
         .menu-item {
-            display: flex; align-items: center; padding: 12px 15px;
-            color: #848e9c; cursor: pointer; border-radius: 8px; margin-bottom: 5px;
-            transition: 0.2s; white-space: nowrap; overflow: hidden;
+            padding: 15px 18px;
+            display: flex; align-items: center;
+            cursor: pointer;
+            color: #848e9c;
+            transition: 0.2s;
+            white-space: nowrap;
         }
-        .menu-item:hover { background: #1e2329; color: #fff; }
-        .menu-item.active { background: var(--primary-color); color: #000; font-weight: bold; }
+        .menu-item:hover { background: #2b3139; color: #fff; }
+        .menu-item.active { background: var(--primary-color); color: #000; font-weight: bold; border-radius: 0 25px 25px 0; }
         
-        .menu-icon { font-size: 20px; min-width: 30px; text-align: center; }
-        .menu-text { margin-left: 15px; font-size: 14px; opacity: 0; transition: 0.2s; }
+        .menu-icon { font-size: 20px; margin-right: 20px; min-width: 24px; text-align: center; }
+        .menu-text { opacity: 0; transition: 0.3s; }
         .sidebar:hover .menu-text { opacity: 1; }
+        
+        .sidebar-footer { padding-bottom: 20px; }
 
-        .sidebar-footer { padding: 15px; border-top: 1px solid #2b3139; }
 
         /* --- Main Content --- */
         .main-content {
@@ -150,6 +156,110 @@
         .pos-table th { text-align: left; color: #848e9c; padding: 10px; border-bottom: 1px solid #2b3139; }
         .pos-table td { padding: 10px; border-bottom: 1px solid #2b3139; }
         .pos-total { text-align: right; font-size: 24px; font-weight: 700; color: var(--primary-color); margin-top: 20px; }
+
+        /* --- Mobile Responsive --- */
+        .mobile-header { display: none; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #2b3139; }
+        .mobile-menu-btn { background: #1e2329; border: 1px solid #2b3139; color: #fff; width: 40px; height: 40px; border-radius: 8px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .sidebar-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.5); z-index: 999; 
+            display: none; opacity: 0; transition: opacity 0.3s;
+            backdrop-filter: blur(2px);
+        }
+        .sidebar-overlay.active { display: block; opacity: 1; }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 260px; transform: translateX(-100%); transition: transform 0.3s; box-shadow: none; left: 0; }
+            .sidebar.mobile-open { transform: translateX(0); box-shadow: 2px 0 20px rgba(0,0,0,0.5); }
+            /* Disable Hover on Mobile */
+            .sidebar:hover { width: 260px; } 
+            
+            .main-content { margin-left: 0; padding: 15px; width: 100%; }
+            .mobile-header { display: flex; }
+            
+            /* 2 Column Grid for Mobile */
+            .dashboard-grid { grid-template-columns: 1fr 1fr !important; gap: 10px; }
+            .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 10px; }
+            
+            /* Compact Dashboard Cards */
+            .dashboard-card { padding: 15px; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+            .card-icon-large { font-size: 32px; margin-bottom: 8px; margin-top: 0; }
+            .card-title { font-size: 13px; font-weight: 600; margin-bottom: 0; height: auto; display: flex; align-items: center; justify-content: center; text-align: center; }
+            
+            /* Hide Descriptions & Buttons on Mobile */
+            .dashboard-card p { display: none; }
+            .dashboard-card .action-btn { display: none; }
+            
+            /* Stats Compact */
+            .stat-card { padding: 15px; }
+            .stat-icon { font-size: 24px; margin-bottom: 5px; }
+            .stat-value { font-size: 20px; }
+            .stat-unit { font-size: 12px; }
+            
+            /* Extended Stats Full Width */
+            .stats-extended-row { grid-template-columns: 1fr !important; }
+            .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .card-header button { width: 100%; }
+            
+            /* Filter full width */
+            #communityFilter { width: 100% !important; margin-top: 10px; }
+
+            /* FAB Scanner */
+            .fab-scanner {
+                position: fixed; bottom: 30px; right: 30px;
+                width: 60px; height: 60px;
+                background: var(--primary-color);
+                border-radius: 50%;
+                border: none;
+                box-shadow: 0 4px 15px rgba(14, 203, 129, 0.4);
+                z-index: 1000;
+                cursor: pointer;
+                display: flex; align-items: center; justify-content: center;
+                transition: transform 0.2s;
+                animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            .fab-scanner:active { transform: scale(0.9); }
+            @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+            
+            /* Responsive Table (Card View) */
+            .recent-table, .recent-table tbody, .recent-table tr { display: block; width: 100%; }
+            .recent-table thead { display: none; } /* Hide Header */
+            
+            .recent-table tr {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                grid-template-areas: 
+                    "member amount"
+                    "item item" 
+                    "time time";
+                gap: 5px;
+                background: rgba(255,255,255,0.03); 
+                padding: 12px; 
+                border-radius: 12px; 
+                margin-bottom: 10px; 
+                border: 1px solid #2b3139;
+            }
+            .recent-table tr:last-child { border-bottom: 1px solid #2b3139; } /* Fix last child border */
+            
+            .recent-table td { border: none !important; padding: 0 !important; }
+            
+            /* 1. Time -> Bottom Right */
+            .recent-table td:nth-child(1) { grid-area: time; font-size: 11px; color: #666; text-align: right; margin-top: 5px; }
+            
+            /* 2. Member -> Top Left */
+            .recent-table td:nth-child(2) { 
+                grid-area: member; 
+                font-weight: 600; font-size: 14px; color: #eaecef; 
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+                max-width: 200px;
+            }
+            
+            /* 3. Item -> Middle */
+            .recent-table td:nth-child(3) { grid-area: item; font-size: 13px; margin-top: 5px; color: #aaa; }
+            
+            /* 4. Amount -> Top Right */
+            .recent-table td:nth-child(4) { grid-area: amount; text-align: right; font-size: 16px; font-weight: bold; }
+        }
     </style>
 </head>
 <body>
@@ -168,32 +278,40 @@
     </div>
 
     <div id="adminContent" style="display:none;">
-        <nav class="sidebar">
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div> <!-- Overlay -->
+        <nav class="sidebar" id="adminSidebar">
             <div class="sidebar-header">
                 <div style="font-size: 24px;">🌿</div>
-                <div class="sidebar-logo">ECOBANK</div>
+                <div class="sidebar-logo" style="opacity: 1;">ECOBANK</div>
             </div>
             
             <ul class="menu-list">
-                <li class="menu-item active" onclick="switchView('management', this)">
+                <li class="menu-item active" onclick="switchView('management', this); toggleSidebar(false);">
                     <div class="menu-icon">🛠️</div>
-                    <div class="menu-text">เมนูจัดการ</div>
+                    <div class="menu-text" style="opacity:1;">เมนูจัดการ</div>
                 </li>
-                <li class="menu-item" onclick="switchView('stats', this)">
+                <li class="menu-item" onclick="switchView('stats', this); toggleSidebar(false);">
                     <div class="menu-icon">📊</div>
-                    <div class="menu-text">ภาพรวมสถิติ</div>
+                    <div class="menu-text" style="opacity:1;">ภาพรวมสถิติ</div>
                 </li>
             </ul>
 
             <div class="sidebar-footer">
                 <li class="menu-item" id="logoutBtn" style="color:#f6465d;">
                     <div class="menu-icon">🚪</div>
-                    <div class="menu-text">ออกจากระบบ</div>
+                    <div class="menu-text" style="opacity:1;">ออกจากระบบ</div>
                 </li>
             </div>
         </nav>
 
         <main class="main-content">
+            <!-- Mobile Header -->
+            <div class="mobile-header">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+                    <div style="font-weight:bold; font-size:18px;">ECOBANK ADMIN</div>
+                </div>
+            </div>
             
             <div id="view-management" class="view-section active">
                 <div style="margin-bottom: 30px;">
@@ -363,6 +481,11 @@
                     <input type="hidden" id="trashId"> <div class="form-group"><label class="form-label">ชื่อ</label><input id="trashName" class="form-control" required></div>
                     <div class="form-group"><label class="form-label">หมวดหมู่</label><select id="trashCategory" class="form-control"><option>พลาสติก</option><option>กระดาษ</option><option>โลหะ</option><option>แก้ว</option></select></div>
                     <div class="form-group"><label class="form-label">ราคา</label><input id="trashPrice" type="number" step="0.01" class="form-control" required></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div class="form-group"><label class="form-label">ราคาเดือนก่อน</label><input id="trashPriceMonth" type="number" step="0.01" class="form-control" placeholder="Optional"></div>
+                        <div class="form-group"><label class="form-label">ราคาปีก่อน</label><input id="trashPriceYear" type="number" step="0.01" class="form-control" placeholder="Optional"></div>
+                    </div>
+                    <div class="form-group"><label class="form-label">แต้ม/หน่วย (Points)</label><input id="trashPoints" type="number" class="form-control" required></div>
                     <div class="form-group"><label class="form-label">ไอคอน</label><input id="trashIcon" class="form-control" value="📦"></div>
                     <button type="submit" class="btn btn-primary" style="width:100%" id="trashSubmitBtn">บันทึก</button>
                     <button type="button" class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="cancelTrashEdit()">ยกเลิก</button>
@@ -434,14 +557,37 @@
         </div>
     </div>
 
-    <div class="modal" id="scanner-modal">
-        <div class="scanner-container">
-            <button class="close-scanner" onclick="stopScanner()">❌ ปิดกล้อง</button>
-            <div id="reader"></div>
-            <div style="text-align:center; padding:10px; color:#fff;">วาง QR Code ให้อยู่ในกรอบ</div>
-        </div>
-    </div>
+    <!-- FAB Scanner Button -->
+    <button class="fab-scanner" onclick="startScanner()" title="สแกน QR Code">
+        <span style="font-size:24px;">📷</span>
+    </button>
 
+    <div class="modal" id="scanner-modal">
+                    <div class="scanner-container">
+                        <button class="close-scanner" onclick="stopScanner()">❌ ปิดกล้อง</button>
+                        <div id="reader"></div>
+                        <div style="text-align:center; padding:10px; color:#fff;">วาง QR Code ให้อยู่ในกรอบ</div>
+                    </div>
+                </div>
+
+    <script>
+        // Init logic
+        // ... (Existing init logic)
+
+        // Mobile Sidebar Toggle
+        window.toggleSidebar = (forceState) => {
+            const sb = document.getElementById('adminSidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            if (forceState === false) {
+                sb.classList.remove('mobile-open');
+                overlay.classList.remove('active');
+            } else {
+                sb.classList.toggle('mobile-open');
+                overlay.classList.toggle('active');
+            }
+        };
+    </script>
     <script type="module">
         console.log("Admin Script Starting...");
         import { 
@@ -457,7 +603,89 @@
         import { auth, db } from "./js/firebase-config.js";
 
         // Global Safety Check
-        window.startScanner = function() { alert("Script is still loading or failed. Please refresh."); };
+        // --- SCANNER LOGIC ---
+        let html5QrcodeScanner = null;
+
+        window.startScanner = function() {
+            document.getElementById('scanner-modal').classList.add('show');
+            // If already initialized, do nothing
+            if(html5QrcodeScanner) return;
+
+            html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader", { fps: 10, qrbox: {width: 250, height: 250} });
+            
+            html5QrcodeScanner.render(onScanSuccess, (err) => {});
+        };
+
+        window.stopScanner = function() {
+            document.getElementById('scanner-modal').classList.remove('show');
+            if(html5QrcodeScanner) {
+                html5QrcodeScanner.clear().catch(err => console.error(err));
+                html5QrcodeScanner = null;
+            }
+        };
+
+        async function onScanSuccess(decodedText, decodedResult) {
+            console.log(`Scan result: ${decodedText}`);
+            
+            try {
+                // Try parsing JSON
+                let data = null;
+                try { data = JSON.parse(decodedText); } catch(e) {}
+
+                if (data && data.action === 'verify' && data.id) {
+                    // Case 1: Verify Redemption
+                    window.stopScanner();
+                    await verifyTransaction(data.id);
+                } else {
+                    // Case 2: Member Search (Assume Text is Phone or UID)
+                    // If we are in POS mode? 
+                    // Let's just assume if it looks like a UID/Phone, we fill the Member Search.
+                    // But we might not be in POS modal.
+                    // Let's check if posModal is open?
+                    const posModal = document.getElementById('posModal');
+                    if (posModal.classList.contains('show')) {
+                         document.getElementById('memberSearch').value = decodedText; // Use raw text
+                         window.stopScanner();
+                         // Trigger Search
+                         searchMember(); 
+                    } else {
+                        // If not in POS, maybe just show info?
+                         window.stopScanner();
+                         showPopup("Scan Result", decodedText, "info");
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                window.stopScanner();
+            }
+        }
+
+        async function verifyTransaction(txId) {
+            showPopup("Checking", "Verifying Transaction...", "info");
+            try {
+                const docRef = doc(db, "transactions", txId);
+                const snap = await getDoc(docRef);
+                if(snap.exists()) {
+                    const tx = snap.data();
+                    const date = new Date(tx.created_at.seconds*1000).toLocaleString('th-TH');
+                    let msg = `
+                        <div style="text-align:left;">
+                        <b>Type:</b> ${tx.type}<br>
+                        <b>Member:</b> ${tx.member_name || tx.member_id}<br>
+                        <b>Amount/Points:</b> ${Math.abs(tx.amount)}<br>
+                        <b>Date:</b> ${date}<br>
+                        <b>Detail:</b> ${tx.detail || '-'}
+                        </div>
+                    `;
+                    showPopup("✅ VALID / ตรวจสอบผ่าน", msg, "success");
+                } else {
+                     showPopup("❌ INVALID / ไม่พบข้อมูล", "Transaction ID not found.", "error");
+                }
+            } catch(err) {
+                showPopup("Error", err.message, "error");
+            }
+        }
 
         let currentPosUser = null;
         let currentPosItems = [];
@@ -610,8 +838,9 @@
         }
         
         // Restore Variables
+        // Restore Variables
         window.memberData = null; 
-        let html5QrcodeScanner = null;
+        // let html5QrcodeScanner = null; // Removed duplicate
 
         // Update loadRecentTransactions to support Community Filter
         window.loadRecentTransactions = async (community) => {
@@ -660,91 +889,8 @@
         }
 
         // Scanner Logic
-        window.startScanner = async () => {
-            if (typeof Html5Qrcode === "undefined") {
-                 showPopup("Error", "Library 'html5-qrcode' ไม่โหลด กรุณาเช็คอินเทอร์เน็ต", "error");
-                 return;
-            }
+        // Scanner Logic moved to top of file
 
-            // Show Modal first
-            document.getElementById('scanner-modal').style.display = 'flex';
-            
-            // Wait for UI to render
-            await new Promise(r => setTimeout(r, 100));
-
-            // Cleanup previous instance if any
-            if (html5QrcodeScanner) {
-                try { await html5QrcodeScanner.stop(); } catch(e){}
-                try { await html5QrcodeScanner.clear(); } catch(e){}
-                html5QrcodeScanner = null;
-            }
-
-            try {
-                html5QrcodeScanner = new Html5Qrcode("reader");
-                const config = { 
-                    fps: 10, 
-                    qrbox: { width: 250, height: 250 },
-                    aspectRatio: 1.0
-                };
-                
-                await html5QrcodeScanner.start(
-                    { facingMode: "environment" }, 
-                    config, 
-                    onScanSuccess, 
-                    onScanFailure
-                );
-            } catch (err) {
-                console.error("Scanner Error:", err);
-                showPopup("กล้องไม่ทำงาน", "ไม่สามารถเปิดกล้องได้: " + err, "error");
-                document.getElementById('scanner-modal').style.display = 'none';
-            }
-        };
-
-        window.stopScanner = async () => {
-            if (html5QrcodeScanner) {
-                try {
-                    await html5QrcodeScanner.stop();
-                    await html5QrcodeScanner.clear();
-                } catch(e) { console.error(e); }
-                html5QrcodeScanner = null;
-            }
-            document.getElementById('scanner-modal').style.display = 'none';
-        };
-
-        const onScanSuccess = async (decodedText, decodedResult) => {
-            // Stop scanning immediately to prevent multiple triggers
-            if (html5QrcodeScanner) {
-                try {
-                    await html5QrcodeScanner.stop();
-                    await html5QrcodeScanner.clear(); // Clear canvas
-                } catch(e) {}
-                html5QrcodeScanner = null;
-            }
-            document.getElementById('scanner-modal').style.display = 'none';
-            
-            showPopup("กำลังค้นหา...", `ID: ${decodedText}`, "info");
-            
-            try {
-                // Assume the QR text is the User ID (UID)
-                const user = await getUserWallet(decodedText);
-                
-                if (user) {
-                    // Update UI with found user
-                    updateMemberUI({ id: decodedText, ...user });
-                    showPopup("สำเร็จ", `พบสมาชิก: ${user.username}`, "success");
-                } else {
-                    showPopup("ไม่พบข้อมูล", `ไม่พบ User ID: ${decodedText} ในระบบ`, "error");
-                    updateMemberUI(null);
-                }
-            } catch (err) {
-                console.error(err);
-                showPopup("System Error", "เกิดข้อผิดพลาดในการดึงข้อมูล: " + err.message, "error");
-            }
-        };
-
-        const onScanFailure = (error) => {
-            // console.warn(`Code scan error = ${error}`);
-        };
         async function loadTrashDistribution(community) {
             try {
                 const volumeStats = await getTrashVolumeStats(community); 
@@ -813,7 +959,7 @@
                 allTrashTypes = await getTrashTypes();
                 const select = document.getElementById('posTrashType');
                 select.innerHTML = '<option value="">-- เลือก --</option>';
-                allTrashTypes.forEach(t => select.innerHTML += `<option value="${t.id}" data-price="${t.price_per_unit}">${t.name}</option>`);
+                allTrashTypes.forEach(t => select.innerHTML += `<option value="${t.id}" data-price="${t.price_per_unit}" data-points="${t.points||0}">${t.name}</option>`);
             } catch (err) {
                 console.error("Error loading trash types:", err);
             }
@@ -865,8 +1011,9 @@
             const trashName = select.options[select.selectedIndex].text;
             const weight = parseFloat(document.getElementById('posWeight').value);
             const price = parseFloat(document.getElementById('posPricePerUnit').value);
+            const points = parseFloat(select.options[select.selectedIndex].dataset.points || 0); // Get Points
             if(!trashId || !weight) return;
-            currentPosItems.push({ id: trashId, name: trashName, weight, price, subtotal: weight*price });
+            currentPosItems.push({ id: trashId, name: trashName, weight, price, points, subtotal: weight*price });
             document.getElementById('posWeight').value = '';
             renderPosItems();
         };
@@ -908,28 +1055,55 @@
             const l = document.getElementById('trashList'); const i = await getTrashTypes(); window._allTrash = i;
             l.innerHTML = i.map(x => `
                 <div class="admin-list-item">
-                    <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:20px;">${x.icon||'📦'}</span><div><div>${x.name}</div><div style="font-size:12px; color:#888;">${x.price_per_unit} ฿/kg</div></div></div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:20px;">${x.icon||'📦'}</span>
+                        <div>
+                            <div>${x.name}</div>
+                            <div style="font-size:12px; color:#888;">${x.price_per_unit} ฿/kg <span style="color:#ffeb3b; margin-left:5px;">(+${x.points || 0} pts)</span></div>
+                        </div>
+                    </div>
                     <div class="admin-actions"><button class="btn-edit" onclick="editTrash('${x.id}')">✏️</button><button class="btn-del" onclick="delTrash('${x.id}')">🗑️</button></div>
                 </div>`).join('');
         }
         window.editTrash = (id) => {
-            const t = window._allTrash.find(x => x.id === id); if(!t) return;
-            document.getElementById('trashId').value = t.id; document.getElementById('trashName').value = t.name;
-            document.getElementById('trashCategory').value = t.category; document.getElementById('trashPrice').value = t.price_per_unit;
+            const t = window._allTrash.find(x => x.id === id);
+            if(!t) return;
+            document.getElementById('trashId').value = t.id;
+            document.getElementById('trashName').value = t.name;
+            document.getElementById('trashCategory').value = t.category;
+            document.getElementById('trashPrice').value = t.price_per_unit;
+            document.getElementById('trashPriceMonth').value = t.price_month || ''; // Load Month
+            document.getElementById('trashPriceYear').value = t.price_year || '';   // Load Year
+            document.getElementById('trashPoints').value = t.points || 0;
             document.getElementById('trashIcon').value = t.icon;
-            document.getElementById('trashFormTitle').innerText = 'แก้ไขประเภทขยะ'; document.getElementById('trashSubmitBtn').innerText = 'บันทึกการแก้ไข';
+            document.getElementById('trashFormTitle').innerText = 'แก้ไขประเภทขยะ';
+            document.getElementById('trashSubmitBtn').innerText = 'บันทึกการแก้ไข';
             document.getElementById('trashForm').style.display = 'block';
         };
         window.cancelTrashEdit = () => {
-            document.getElementById('trashId').value = ''; document.getElementById('trashName').value = '';
-            document.getElementById('trashPrice').value = ''; document.getElementById('trashIcon').value = '📦';
-            document.getElementById('trashFormTitle').innerText = 'เพิ่มประเภทขยะใหม่'; document.getElementById('trashSubmitBtn').innerText = 'บันทึก';
+            document.getElementById('trashId').value = '';
+            document.getElementById('trashName').value = '';
+            document.getElementById('trashPrice').value = '';
+            document.getElementById('trashPriceMonth').value = ''; // Clear
+            document.getElementById('trashPriceYear').value = '';  // Clear
+            document.getElementById('trashPoints').value = '';
+            document.getElementById('trashIcon').value = '📦';
+            document.getElementById('trashFormTitle').innerText = 'เพิ่มประเภทขยะใหม่';
+            document.getElementById('trashSubmitBtn').innerText = 'บันทึก';
             document.getElementById('trashForm').style.display = 'none';
         };
         window.saveTrash = async (e) => {
             e.preventDefault();
             const id = document.getElementById('trashId').value;
-            const d = { name: document.getElementById('trashName').value, price_per_unit: document.getElementById('trashPrice').value, category: document.getElementById('trashCategory').value, icon: document.getElementById('trashIcon').value };
+            const d = { 
+                name: document.getElementById('trashName').value, 
+                price_per_unit: parseFloat(document.getElementById('trashPrice').value), 
+                price_month: parseFloat(document.getElementById('trashPriceMonth').value || 0),
+                price_year: parseFloat(document.getElementById('trashPriceYear').value || 0),
+                points: parseFloat(document.getElementById('trashPoints').value || 0), // Save Points
+                category: document.getElementById('trashCategory').value, 
+                icon: document.getElementById('trashIcon').value 
+            };
             if (id) await updateTrashType(id, d); else await addTrashType(d);
             showPopup("สำเร็จ", id ? "แก้ไขข้อมูลเรียบร้อย" : "เพิ่มข้อมูลเรียบร้อย", "success");
             cancelTrashEdit(); loadTrashList();

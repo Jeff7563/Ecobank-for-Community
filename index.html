@@ -19,6 +19,38 @@
         });
       }
     </script>
+    <style>
+        /* Expandable Card CSS (Ported from exchange.html) */
+        .price-card {
+            background: #1e2329; border: 1px solid #2b3139; border-radius: 12px; padding: 20px;
+            margin-bottom: 12px; transition: all 0.3s ease; cursor: pointer;
+            display: flex; flex-direction: column; position: relative; overflow: hidden;
+        }
+        .price-card:hover { border-color: var(--primary-color); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        
+        .pc-header { display: flex; align-items: center; justify-content: space-between; width: 100%; z-index: 2; }
+        .pc-info { display: flex; align-items: center; gap: 15px; }
+        .pc-icon { font-size: 28px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 8px; }
+        
+        .pc-details {
+            max-height: 0; opacity: 0; overflow: hidden; transition: all 0.4s ease;
+            margin-top: 0; background: #15181d; border-radius: 8px;
+        }
+        /* Hover to Expand */
+        .price-card:hover .pc-details { max-height: 300px; opacity: 1; margin-top: 15px; padding: 15px; border-top: 1px solid #2b3139; }
+        
+        .pc-hint { font-size: 11px; color: #555; margin-top: 5px; text-align: right; transition: 0.3s; }
+        .price-card:hover .pc-hint { opacity: 0; }
+        
+        .comparison-table { width: 100%; font-size: 13px; margin-top: 10px; border-collapse: separate; border-spacing: 0 5px; }
+        .comparison-table td { padding: 8px; background: #1e2329; border-radius: 4px; color: #ccc; }
+        .c-label { color: #848e9c; width: 40%; }
+        .c-val { font-weight: bold; text-align: right; }
+        .c-diff { text-align: right; font-size: 11px; width: 25%; }
+        
+        .diff-up { color: #0ecb81; }
+        .diff-down { color: #f6465d; }
+    </style>
   </head>
   <body>
     <header class="header"></header>
@@ -62,16 +94,14 @@
         </div>
 
         <!-- Table Section -->
-        <div class="section-header">
+        <div class="section-header" style="justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div class="page-title" style="font-size:24px; margin:0;">📈 ราคาขยะล่าสุด</div>
-            <a href="trash_types.html" class="btn btn-outline">ดูทั้งหมด →</a>
+            <a href="trash_types.html" class="btn btn-outline" style="font-size: 14px;">ดูทั้งหมด →</a>
         </div>
 
-        <div class="table-card">
-            <table class="home-table" id="priceTable">
-                <!-- Data will be injected here -->
-                <tr><td colspan="4" style="text-align:center; padding:40px; color:#666;">กำลังโหลดข้อมูล...</td></tr>
-            </table>
+
+        <div id="priceList" class="price-list-container">
+            <div style="text-align:center; padding:40px; color:#666;">กำลังโหลดข้อมูล...</div>
         </div>
         
     </main>
@@ -133,31 +163,64 @@
           animateValue("co2Saved", 0, parseFloat(impact.co2), 2000); 
           document.getElementById('treeSaved').innerText = parseFloat(impact.trees).toFixed(0);
 
-          // Prices (Show top 5)
+          // Prices Logic using Expandable Cards
           const prices = await getTrashTypes();
-          const table = document.getElementById('priceTable');
-          if(prices.length === 0) { table.innerHTML = '<tr><td colspan="4" style="text-align:center;">ไม่พบข้อมูล</td></tr>'; return; }
+          const listContainer = document.getElementById('priceList');
+
+          if(prices.length === 0) { listContainer.innerHTML = '<div style="text-align:center; padding:40px; color:#666;">ไม่พบข้อมูล</div>'; return; }
           
-          table.innerHTML = prices.slice(0, 5).map(item => `
-              <tr>
-                  <td style="width:50%;">
-                      <div style="display:flex; align-items:center;">
-                          <span class="trash-icon-sm">${item.icon}</span>
+          listContainer.innerHTML = prices.slice(0, 5).map(item => {
+              // Historical Data (From Admin Input)
+              const current = item.price_per_unit;
+              
+              // Use saved historical prices, or default to current (0% change) if not set
+              // This fixes the "Random on refresh" issue
+              const priceMonth = item.price_month || current; 
+              const priceYear = item.price_year || current;
+              
+              const diffMonth = priceMonth > 0 ? ((current - priceMonth) / priceMonth) * 100 : 0;
+              const diffYear = priceYear > 0 ? ((current - priceYear) / priceYear) * 100 : 0;
+              
+              const formatDiff = (val) => {
+                  const s = val > 0 ? '+' : '';
+                  const c = val > 0 ? 'diff-up' : (val < 0 ? 'diff-down' : '');
+                  return `<span class="${c}">${s}${val.toFixed(1)}%</span>`;
+              };
+
+              return `
+              <div class="price-card">
+                  <div class="pc-header">
+                      <div class="pc-info">
+                          <div class="pc-icon">${item.icon}</div>
                           <div>
-                              <div style="font-weight:600; color:#eaecef;">${item.name}</div>
+                              <div style="font-weight:600; color:#eaecef; font-size:16px;">${item.name}</div>
                               <span class="badge-cate">${item.category}</span>
                           </div>
                       </div>
-                  </td>
-                  <td class="text-price">${item.price_per_unit.toFixed(2)} ฿</td>
-                  <td style="color:#848e9c; font-size:13px;">/${item.unit}</td>
-                  <td style="text-align:right;">
-                      <span class="${item.trend === 'up' ? 'text-up' : (item.trend === 'down' ? 'text-down' : 'text-muted')}">
-                          ${item.trend === 'up' ? '▲' : (item.trend === 'down' ? '▼' : '●')}
-                      </span>
-                  </td>
-              </tr>
-          `).join('');
+                      <div style="text-align:right;">
+                          <div style="color: #0ecb81; font-weight:bold; font-size:18px;">${current.toFixed(2)} ฿</div>
+                          <div style="color:#666; font-size:12px;">ต่อ ${item.unit}</div>
+                          <div class="pc-hint">ชี้เพื่อดูแนวโน้ม ▼</div>
+                      </div>
+                  </div>
+                  
+                  <div class="pc-details">
+                      <div style="font-size:12px; color:#848e9c; border-bottom:1px solid #333; padding-bottom:5px; margin-bottom:5px;">📊 เปรียบเทียบราคาตลาด</div>
+                      <table class="comparison-table">
+                          <tr>
+                              <td class="c-label">เดือนที่แล้ว</td>
+                              <td class="c-val">${priceMonth.toFixed(2)} ฿</td>
+                              <td class="c-diff">${formatDiff(diffMonth)}</td>
+                          </tr>
+                          <tr>
+                              <td class="c-label">ปีที่แล้ว</td>
+                              <td class="c-val">${priceYear.toFixed(2)} ฿</td>
+                              <td class="c-diff">${formatDiff(diffYear)}</td>
+                          </tr>
+                      </table>
+                  </div>
+              </div>`;
+          }).join('');
       }
 
       function animateValue(id, start, end, duration) {

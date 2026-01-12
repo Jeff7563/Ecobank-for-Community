@@ -136,11 +136,13 @@
                     <div class="receipt-points-info">Current Balance: <b id="rcpBalance">0</b></div>
                 </div>
 
+                <div id="rcpQrCode" style="display:flex; justify-content:center; margin-top:15px; padding-top:10px; border-top:1px dotted #ccc;"></div>
                 <div class="receipt-footer">Thank you for saving the world!<br>www.ecobank.com<div style="margin-top:10px; font-size:24px;">🌱</div></div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script type="module">
         import { 
             getUserWallet, getUserTransactions, getTrashTypes, getTrashTypeById,
@@ -305,6 +307,19 @@
                 itemsHtml = `<tr><td>${label}</td><td style="text-align:right;">${Math.abs(tx.amount)}</td></tr>`;
             }
             document.getElementById('rcpItems').innerHTML = itemsHtml;
+            
+            // Generate QR Code for Redemption
+            const qrContainer = document.getElementById('rcpQrCode');
+            qrContainer.innerHTML = '';
+            if (tx.type === 'redeem') {
+                 // Format: { "id": "tx_id", "type": "redeem_verify" }
+                new QRCode(qrContainer, {
+                    text: JSON.stringify({ id: tx.id, action: 'verify' }),
+                    width: 100,
+                    height: 100
+                });
+            }
+            
             document.getElementById('receiptModal').classList.add('show');
         };
         window.closeReceipt = () => document.getElementById('receiptModal').classList.remove('show');

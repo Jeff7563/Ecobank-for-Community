@@ -543,13 +543,22 @@ export async function adminRecordTransaction(userData, items, totalAmount) {
         const currentPoints = currentData.points || 0;
         const currentPortfolio = currentData.portfolio || {};
 
+        let totalPoints = 0;
+        
         items.forEach((item) => {
           if (currentPortfolio[item.id])
             currentPortfolio[item.id] += parseFloat(item.weight);
           else currentPortfolio[item.id] = parseFloat(item.weight);
-        });
 
-        const pointsEarned = Math.floor(totalAmount);
+          // Calculate Points based on specific item config
+          // If points_per_unit is defined, use it. Otherwise, fallback to 0 (or 1 point per baht if preferred, but user asked for specific config).
+          const pointsPerUnit = parseFloat(item.points || 0);
+          totalPoints += parseFloat(item.weight) * pointsPerUnit;
+        });
+        
+        // Round points
+        const pointsEarned = Math.floor(totalPoints);
+        
         await updateDoc(userRef, {
           "balance.cash": currentBalance + parseFloat(totalAmount),
           points: currentPoints + pointsEarned,

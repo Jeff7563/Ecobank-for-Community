@@ -57,7 +57,18 @@ export function renderHeader(activePage = '') {
             if(mainContent) {
                 mainContent.classList.toggle('content-blur');
             }
-        }
+            
+    // --- PWA Logic ---
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault();
+        // Stash the event so it can be triggered later.
+        window.deferredPrompt = e;
+        // Optionally dispatch a custom event to notify UI components
+        window.dispatchEvent(new Event('pwa-ready'));
+        console.log("PWA Install Prompt Captured");
+    });
+}
 
         if(mobileBtn) mobileBtn.addEventListener('click', toggleMenu);
         if(closeBtn) closeBtn.addEventListener('click', toggleMenu);

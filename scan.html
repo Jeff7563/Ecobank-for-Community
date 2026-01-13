@@ -125,6 +125,12 @@
 
         // 1. Start Camera
         async function startCamera() {
+            // Check API Support
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showPopup("ไม่รองรับกล้อง", "Browser ของคุณไม่รองรับการเปิดกล้อง (ลองใช้ Safari หรือ Chrome)", "error");
+                return;
+            }
+
             try {
                 // Try Back Camera first
                 const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -144,13 +150,18 @@
                 } catch (err2) {
                     console.error("Camera Error:", err2);
                     let msg = "ไม่สามารถเปิดกล้องได้";
+                    
+                    // Handle Specific Errors
                     if(err2.name === 'NotAllowedError' || err2.name === 'PermissionDeniedError') {
                         msg = "กรุณากด 'อนุญาต' (Allow) ให้เว็บไซต์ใช้กล้อง";
                     } else if (err2.name === 'NotFoundError') {
                         msg = "ไม่พบกล้องในอุปกรณ์นี้";
                     } else if (err2.name === 'NotReadableError') {
                         msg = "กล้องถูกใช้งานโดยแอปอื่น";
+                    } else if (err2.name === 'TypeError') {
+                        msg = "การตั้งค่ากล้องไม่ถูกต้อง (TypeError)";
                     }
+                    
                     showPopup("กล้องมีปัญหา", `${msg} (${err2.name})`, "error");
                 }
             }

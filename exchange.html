@@ -24,7 +24,10 @@
             max-height: 0; opacity: 0; overflow: hidden; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             margin-top: 0; background: #15181d; border-radius: 8px;
         }
-        .schedule-card:hover .card-details { max-height: 500px; opacity: 1; margin-top: 20px; padding: 20px; border-top: 1px solid #2b3139; }
+        /* Mobile Toggle Logic */
+        .schedule-card.expanded .card-details {
+            max-height: 1000px; opacity: 1; margin-top: 20px; padding: 20px; border-top: 1px solid #2b3139;
+        }
         
         .detail-table { width: 100%; border-collapse: collapse; font-size: 14px; }
         .detail-table th { color: #848e9c; text-align: left; padding: 10px; border-bottom: 1px solid #2b3139; font-weight: 600; font-size: 12px; }
@@ -32,7 +35,7 @@
         .detail-table tr:last-child td { border-bottom: none; }
         
         .expand-hint { font-size: 11px; color: #555; margin-top: 5px; transition: 0.3s; cursor: pointer; }
-        .schedule-card:hover .expand-hint { opacity: 0; }
+        .schedule-card.expanded .expand-hint { opacity: 0; }
         
         .st-open { color: #b2ff59; font-weight: bold; font-size: 14px; }
         .st-closed { color: #f6465d; font-weight: bold; font-size: 14px; }
@@ -151,7 +154,7 @@
                     else if(evt.status === 'closed') statusHtml = '<span class="st-closed">● ปิดรับซื้อ</span>';
 
                     return `
-                    <div class="schedule-card">
+                    <div class="schedule-card" onclick="this.classList.toggle('expanded')">
                         <div class="card-header-row">
                             <div class="date-box">
                                 <div class="date-day">${day}</div>
@@ -163,7 +166,7 @@
                                 <div>${tagsHtml}</div> </div>
                             <div style="text-align: right;">
                                 <div>${statusHtml}</div>
-                                <div class="expand-hint">ชี้เพื่อดูรายละเอียด ▼</div>
+                                <div class="expand-hint">กดเพื่อดูรายละเอียด ▼</div>
                             </div>
                         </div>
                         

@@ -8,12 +8,12 @@
   "description": "เปลี่ยนขยะให้เป็นเงินทอง ร่วมสร้างสังคมคาร์บอนต่ำ",
   "icons": [
     {
-      "src": "./images/icon.png",
+      "src": "./images/logo_new.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "./images/icon.png",
+      "src": "./images/logo_new.png",
       "sizes": "512x512",
       "type": "image/png"
     }

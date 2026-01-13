@@ -262,7 +262,9 @@
                       <div style="text-align:right;">
                           <div style="color: #0ecb81; font-weight:bold; font-size:18px;">${current.toFixed(2)} ฿</div>
                           <div style="color:#666; font-size:12px;">ต่อ ${item.unit}</div>
-                          <div class="pc-hint">ชี้เพื่อดูแนวโน้ม ▼</div>
+                          <div class="pc-hint" onclick="this.closest('.price-card').classList.toggle('expanded')">
+                              <span>ดูแนวโน้ม</span> <span style="font-size:10px;">▼</span>
+                          </div>
                       </div>
                   </div>
                   

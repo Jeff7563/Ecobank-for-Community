@@ -433,6 +433,7 @@ tr:hover {
   color: var(--text-main);
   padding: 5px;
 }
+/* Fix Nav Overlay Blocking */
 .nav-overlay {
   display: none;
   position: fixed;
@@ -443,7 +444,17 @@ tr:hover {
   z-index: 998;
   opacity: 0;
   transition: opacity 0.3s;
+  pointer-events: none; /* Critical: Allow clicks to pass through when hidden */
 }
+.nav-overlay.active {
+  display: block;
+  opacity: 1;
+  pointer-events: auto; /* Enable clicks when active */
+}
+
+/* Hide Vercel Toolbar on Mobile PWA */
+vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events: none !important; }
+
 .nav-overlay.active {
   display: block;
   opacity: 1;

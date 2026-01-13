@@ -37,14 +37,21 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
-  // Network First for HTML, Cache First for others
-  if (e.request.mode === 'navigate') {
-    e.respondWith(
-        fetch(e.request).catch(() => caches.match(e.request))
-    );
-  } else {
-    e.respondWith(
-        caches.match(e.request).then((res) => res || fetch(e.request))
-    );
-  }
+  // Strategy: Network First, Fallback to Cache
+  // This ensures users always get the latest version if they have internet.
+  e.respondWith(
+    fetch(e.request)
+      .then((res) => {
+        // Clone the response to put in cache (for offline next time)
+        const resClone = res.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(e.request, resClone);
+        });
+        return res;
+      })
+      .catch(() => {
+        // If network fails, try cache
+        return caches.match(e.request);
+      })
+  );
 });

@@ -207,8 +207,12 @@ export async function getTrashTypes() {
       orderBy("price_per_unit", "desc")
     );
     const querySnapshot = await getDocs(q);
+    console.log("DEBUG: Trash Types Found:", querySnapshot.size);
+    if (querySnapshot.size === 0) console.warn("DEBUG: Collection 'trash_types' is empty or query failed.");
+    
     return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   } catch (e) {
+    console.error("DEBUG: Error fetching trash types:", e.code, e.message);
     return [];
   }
 }

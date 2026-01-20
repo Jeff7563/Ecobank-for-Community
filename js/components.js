@@ -150,9 +150,10 @@ export function renderFooter() {
             <a href="knowledge.html" class="fab-btn fab-secondary" title="ศูนย์ความรู้">
                 <span style="font-size:20px;">📚</span>
             </a>
-            <a href="scan.html" class="fab-btn fab-primary" title="AI Scan">
+            <!-- Scan Removed as per user request -->
+            <!-- <a href="scan.html" class="fab-btn fab-primary" title="AI Scan">
                 <span style="font-size:20px;">📸</span>
-            </a>
+            </a> -->
         </div>
         <style>
             .fab-container {

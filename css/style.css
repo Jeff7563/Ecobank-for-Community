@@ -1054,7 +1054,15 @@ vercel-live-feedback,
   height: 20px;
   background: transparent;
 }
-.user-dropdown:hover .dropdown-content,
+/* Desktop: Hover works */
+@media (min-width: 769px) {
+  .user-dropdown:hover .dropdown-content {
+    display: block;
+    animation: fadeIn 0.2s;
+  }
+}
+
+/* Mobile & Desktop Click: Active class works everywhere */
 .user-dropdown.active .dropdown-content {
   display: block;
   animation: fadeIn 0.2s;

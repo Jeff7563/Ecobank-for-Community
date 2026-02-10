@@ -9,9 +9,9 @@
   --success: #0ecb81; /* สีเขียวหุ้นขึ้น */
   --danger: #f6465d; /* สีแดงหุ้นตก */
   --shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    sans-serif;
-  
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
   /* Shared Defaults */
   --header-bg: #181a20;
   --border-color: #2b3139;
@@ -437,8 +437,11 @@ tr:hover {
 .nav-overlay {
   display: none;
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   z-index: 998;
@@ -453,7 +456,11 @@ tr:hover {
 }
 
 /* Hide Vercel Toolbar on Mobile PWA */
-vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events: none !important; }
+vercel-live-feedback,
+#vercel-toolbar {
+  display: none !important;
+  pointer-events: none !important;
+}
 
 .nav-overlay.active {
   display: block;
@@ -470,7 +477,7 @@ vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events
   .mobile-menu-btn {
     display: block;
   }
-  
+
   /* Mobile Sidebar Nav */
   .nav {
     position: fixed;
@@ -486,14 +493,14 @@ vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events
     gap: 10px;
     transition: left 0.3s ease;
     z-index: 999;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
     display: flex; /* Override display:none */
-    border-right: 1px solid rgba(255,255,255,0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
   }
   .nav.mobile-active {
     left: 0;
   }
-  
+
   .nav-header-mobile {
     display: flex;
     justify-content: space-between;
@@ -515,11 +522,11 @@ vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events
   .header-right {
     position: static; /* Allow dropdown to be relative to screen */
   }
-  
+
   .user-dropdown {
     position: static; /* Changed from relative to allow full width dropdown */
   }
-  
+
   .dropdown-content {
     position: fixed;
     left: 10px;
@@ -529,14 +536,25 @@ vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events
     min-width: unset;
     margin-top: 0;
   }
-  
+
   /* Adjust Cards */
-  .grid-cards { grid-template-columns: 1fr; }
-  .home-stats-grid { grid-template-columns: 1fr; }
-  .footer-container { grid-template-columns: 1fr; text-align: center; }
-  
-  .h-value { font-size: 24px; }
-  .hero-title { font-size: 28px; }
+  .grid-cards {
+    grid-template-columns: 1fr;
+  }
+  .home-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .h-value {
+    font-size: 24px;
+  }
+  .hero-title {
+    font-size: 28px;
+  }
 }
 
 /* --- 11. New Animated Auth Design (เพิ่มต่อท้ายไฟล์) --- */
@@ -753,12 +771,12 @@ vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events
 @media (max-width: 768px) {
   /* Content Blur Effect */
   main {
-      transition: filter 0.3s ease;
+    transition: filter 0.3s ease;
   }
   .content-blur {
-      filter: blur(8px);
-      transition: filter 0.5s ease; /* Slower transition */
-      pointer-events: none;
+    filter: blur(8px);
+    transition: filter 0.5s ease; /* Slower transition */
+    pointer-events: none;
   }
 
   .footer-container {
@@ -771,7 +789,7 @@ vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events
   .footer-container > .footer-col:first-child {
     grid-column: 1 / -1;
     text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     padding-bottom: 20px;
   }
 }
@@ -1036,7 +1054,8 @@ vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events
   height: 20px;
   background: transparent;
 }
-.user-dropdown:hover .dropdown-content {
+.user-dropdown:hover .dropdown-content,
+.user-dropdown.active .dropdown-content {
   display: block;
   animation: fadeIn 0.2s;
 }
@@ -1075,7 +1094,9 @@ vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events
   padding: 25px;
   border-radius: 16px;
   border: 1px solid var(--border-color);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -1180,88 +1201,107 @@ vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events
   margin-bottom: 20px;
 }
 .page-title {
-    color: var(--text-main);
+  color: var(--text-main);
 }
-
 
 /* --- Rewards Page Styles --- */
 .points-banner {
-    background: linear-gradient(135deg, #1e2329 0%, #15181d 100%);
-    border: 1px solid var(--primary-color);
-    border-radius: 16px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    box-shadow: 0 0 20px rgba(178,255,89,0.1);
+  background: linear-gradient(135deg, #1e2329 0%, #15181d 100%);
+  border: 1px solid var(--primary-color);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  box-shadow: 0 0 20px rgba(178, 255, 89, 0.1);
 }
 .my-points {
-    font-size: 32px;
-    font-weight: 800;
-    color: var(--primary-color);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--primary-color);
 }
-.points-label { font-size: 14px; color: #848e9c; }
+.points-label {
+  font-size: 14px;
+  color: #848e9c;
+}
 
 /* Grid ของรางวัล */
 .rewards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
 }
 
 .reward-card {
-    background: #1e2329;
-    border: 1px solid #2b3139;
-    border-radius: 16px;
-    padding: 20px;
-    text-align: center;
-    transition: 0.3s;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  background: #1e2329;
+  border: 1px solid #2b3139;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .reward-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--primary-color);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transform: translateY(-5px);
+  border-color: var(--primary-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-.reward-icon { font-size: 50px; margin-bottom: 15px; display: inline-block; }
-.reward-name { font-weight: bold; font-size: 16px; margin-bottom: 5px; color: #fff; }
-.reward-desc { font-size: 12px; color: #848e9c; margin-bottom: 15px; height: 32px; overflow: hidden; }
+.reward-icon {
+  font-size: 50px;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+.reward-name {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: #fff;
+}
+.reward-desc {
+  font-size: 12px;
+  color: #848e9c;
+  margin-bottom: 15px;
+  height: 32px;
+  overflow: hidden;
+}
 
 .reward-cost {
-    background: rgba(178, 255, 89, 0.1);
-    color: var(--primary-color);
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-weight: bold;
-    display: inline-block;
-    margin-bottom: 15px;
+  background: rgba(178, 255, 89, 0.1);
+  color: var(--primary-color);
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 15px;
 }
 
 .btn-redeem {
-    width: 100%;
-    padding: 10px;
-    background: transparent;
-    border: 1px solid var(--primary-color);
-    color: var(--primary-color);
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
 }
 .btn-redeem:hover {
-    background: var(--primary-color);
-    color: #000;
+  background: var(--primary-color);
+  color: #000;
 }
 .btn-redeem:disabled {
-    border-color: #444; color: #666; cursor: not-allowed; background: transparent;
+  border-color: #444;
+  color: #666;
+  cursor: not-allowed;
+  background: transparent;
 }
-
 
 @media (max-width: 768px) {
   .auth-card {
@@ -1286,7 +1326,10 @@ vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events
     padding: 15px;
   }
   .h-icon-box {
-    width: 40px; height: 40px; font-size: 20px; margin-bottom: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    margin-bottom: 10px;
   }
   .h-value {
     font-size: 20px;
@@ -1303,25 +1346,39 @@ vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events
   }
 
   /* --- 2-Column Grid for Trash & Rewards --- */
-  .grid-cards, 
+  .grid-cards,
   .rewards-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
 
   /* Compact Reward Card */
   .reward-card {
-      padding: 15px;
+    padding: 15px;
   }
-  .reward-icon { font-size: 36px; margin-bottom: 10px; }
-  .reward-name { font-size: 14px; }
-  .reward-desc { display: none; } /* Hide desc on mobile */
-  .reward-cost { font-size: 12px; padding: 3px 8px; margin-bottom: 10px; }
-  .btn-redeem { font-size: 12px; padding: 8px; }
+  .reward-icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+  .reward-name {
+    font-size: 14px;
+  }
+  .reward-desc {
+    display: none;
+  } /* Hide desc on mobile */
+  .reward-cost {
+    font-size: 12px;
+    padding: 3px 8px;
+    margin-bottom: 10px;
+  }
+  .btn-redeem {
+    font-size: 12px;
+    padding: 8px;
+  }
 
   /* Compact Trash Card (Adjust .trash-card if that's the class) */
   .trash-card {
-      padding: 15px;
+    padding: 15px;
   }
 }
 
@@ -1331,26 +1388,29 @@ vercel-live-feedback, #vercel-toolbar { display: none !important; pointer-events
   .header {
     padding: 10px 15px;
   }
-  
+
   /* Shrink Logo */
   .logo {
     font-size: 20px;
   }
-  
+
   /* Adjust Button Size for Mobile */
-  .btn, .btn-login, .btn-register {
+  .btn,
+  .btn-login,
+  .btn-register {
     padding: 6px 12px !important; /* Force override */
     font-size: 12px !important;
     white-space: nowrap; /* Prevent line break */
     min-width: auto; /* Remove minimum width if any */
     height: auto !important;
   }
-  
+
   /* Reduce Gap between buttons */
-  #authSection div { /* Targeting the flex container in JS */
+  #authSection div {
+    /* Targeting the flex container in JS */
     gap: 5px !important;
   }
-  
+
   /* Header Right Gap */
   .header-right {
     gap: 8px;

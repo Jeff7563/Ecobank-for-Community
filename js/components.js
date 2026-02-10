@@ -225,3 +225,27 @@ export function setupAuthListener(auth, showConfirm, signOut) {
         }
     });
 }
+
+// --- Global Dropdown Handler (Mobile Fix) ---
+document.addEventListener('click', (e) => {
+    // 1. Find the dropdown wrapper
+    const dropdown = e.target.closest('.user-dropdown');
+
+    // 2. Close ANY open dropdowns that are NOT the one we just clicked
+    document.querySelectorAll('.user-dropdown.active').forEach(d => {
+        if (d !== dropdown) {
+            d.classList.remove('active');
+        }
+    });
+
+    // 3. If we clicked inside a dropdown...
+    if (dropdown) {
+        // Check if we clicked the TOGGLE button (user-btn)
+        if (e.target.closest('.user-btn')) {
+            // Toggle the current one
+            dropdown.classList.toggle('active');
+        }
+        // If we clicked inside dropdown-content, do nothing (let links work)
+        // If we clicked elsewhere in .user-dropdown (unlikely), do nothing
+    }
+});
